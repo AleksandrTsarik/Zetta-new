@@ -8,10 +8,4 @@
 // Логика хедера
 </script>
 
-<style scoped lang="scss">
-.header {
-  background: #42b983;
-  color: #fff;
-  padding: 1rem 2rem;
-}
-</style>
+<style scoped lang="scss"></style>
