@@ -1,16 +1,13 @@
 //*** Colors ***
 :root {
-  --primary: #ffd37e;
-  --darkSecondary: #1d1f76;
-  --lightSecondary: #d7ebff;
-  --gray: #e5e5e5;
-  --tetxL: #2d2d2d;
+  --primary: 125, 81, 254, 1;
 
-  --black: 0, 0, 0;
+  --text: rgb(20, 21, 23);
+  --balcl: 0, 0, 0;
   --white: 255, 255, 255;
 
   //*** Fonts ***
-  --ff: "Lato", Arial, Helvetica, sans-serif;
+  --ff: "Manrope", Arial, Helvetica, sans-serif;
 }
 
 //*** Font sizes ***
