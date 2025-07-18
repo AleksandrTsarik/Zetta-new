@@ -1,14 +1,14 @@
 <template>
   <section>
-    <MainBAnner />
+    <MainBanner />
   </section>
 </template>
 
 <script>
-import MainBAnner from "../components/TheMAinBanner.vue";
+import MainBanner from "../components/TheMainBanner.vue";
 export default {
   components: {
-    MainBAnner,
+    MainBanner,
   },
   data() {
     return {};

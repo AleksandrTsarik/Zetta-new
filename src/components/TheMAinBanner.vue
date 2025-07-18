@@ -160,6 +160,9 @@ export default {
   }
   &__title {
     text-align: center;
+    .color-primary {
+      display: block;
+    }
   }
   &__subtitle {
     text-align: center;
