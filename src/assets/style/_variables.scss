@@ -1,13 +1,18 @@
 //*** Colors ***
 :root {
-  --primary: 125, 81, 254, 1;
-
-  --text: rgb(20, 21, 23);
-  --balcl: 0, 0, 0;
+  --primary: 125, 81, 254;
+  --primary2: 25, 121, 54;
+  --bg: 246, 246, 246;
+  --text: 20, 21, 23;
+  --black: 0, 0, 0;
   --white: 255, 255, 255;
 
   //*** Fonts ***
   --ff: "Manrope", Arial, Helvetica, sans-serif;
+}
+
+:root {
+  --radius: 16px;
 }
 
 //*** Font sizes ***

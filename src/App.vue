@@ -11,19 +11,4 @@ import TheFooter from "./components/TheFooter.vue";
   <TheFooter />
 </template>
 
-<style lang="scss">
-.vue-logo-fixed {
-  position: fixed;
-  left: 50%;
-  bottom: 32px;
-  transform: translateX(-50%);
-  z-index: 1000;
-  pointer-events: none;
-  opacity: 0.8;
-  img {
-    width: 64px;
-    height: 64px;
-    display: block;
-  }
-}
-</style>
+<style lang="scss"></style>
