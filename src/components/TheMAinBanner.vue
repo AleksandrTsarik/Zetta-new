@@ -62,7 +62,7 @@ export default {
     };
     setTimeout(type, 400);
 
-    // GSAP-анимация кругов (оставить как было)
+    // GSAP-анимация кругов
     const circles = [
       this.$refs.circle1,
       this.$refs.circle2,
@@ -121,23 +121,57 @@ export default {
 .m-banner {
   position: relative;
   width: 100%;
-  min-height: 500px;
+  //min-height: 500px;
+
   overflow-x: hidden;
   background: rgb(var(--bg));
+  position: relative;
+
   &__circle {
     width: 100%;
     height: 100%;
     position: absolute;
-    z-index: -1;
+    z-index: 0;
+    img {
+      filter: blur(70px);
+      opacity: 0.1;
+      display: block;
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
   }
-  img {
-    filter: blur(70px);
-    opacity: 0.15;
-    display: block;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    left: 0;
+  &__inner {
+    padding: 140px 0;
+    &:after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 500px;
+      background-image: url(/img/circle/item1.png);
+      background-position: 50% 50%;
+      background-repeat: no-repeat;
+      position: absolute;
+      left: 0;
+      top: 0;
+      background-size: contain;
+    }
+  }
+  &__title {
+    text-align: center;
+  }
+  &__subtitle {
+    text-align: center;
+  }
+  &__btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 40px;
+    position: relative;
+    z-index: 1;
   }
 }
 .cursor {
