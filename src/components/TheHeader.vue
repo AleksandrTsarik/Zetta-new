@@ -27,15 +27,15 @@ export default {
       nav: [
         {
           name: "ОСГОП такси",
-          url: "#",
+          url: "/osgop",
         },
         {
           name: "Страхование имущества",
-          url: "#",
+          url: "/insurance",
         },
         {
           name: "Страхование ЧОП",
-          url: "#",
+          url: "/insurance-cop",
         },
       ],
     };

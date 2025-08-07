@@ -45,6 +45,38 @@ export default {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
+    @media (max-width: 1023px) {
+      grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: 767px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  &__item {
+    background-color: rgb(var(--white));
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    &:last-child {
+      color: rgb(var(--white));
+      background: linear-gradient(
+        123.1deg,
+        rgba(var(--primary), 0.5) 0%,
+        rgb(var(--primary)) 100%
+      );
+      .choice__text {
+        color: rgb(var(--white));
+      }
+    }
+  }
+  &__name {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 30px;
+  }
+  &__text {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(var(--text), 0.6);
   }
 }
 </style>
