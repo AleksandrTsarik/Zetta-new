@@ -94,17 +94,17 @@ export default {
     //grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 
     gap: 30px;
-  }
-  &--third {
-    grid-template-columns: repeat(3, 1fr);
-    @media (max-width: 767px) {
-      grid-template-columns: 1fr;
+    &--third {
+      grid-template-columns: repeat(3, 1fr);
+      @media (max-width: 767px) {
+        grid-template-columns: 1fr;
+      }
     }
-  }
-  &--fourth {
-    grid-template-columns: repeat(4, 1fr);
-    @media (max-width: 767px) {
-      grid-template-columns: 1fr;
+    &--fourth {
+      grid-template-columns: repeat(4, 1fr);
+      @media (max-width: 767px) {
+        grid-template-columns: 1fr;
+      }
     }
   }
 }

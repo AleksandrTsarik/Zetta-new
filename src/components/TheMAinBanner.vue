@@ -216,7 +216,7 @@ export default {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
-    @media (max-width: 1023px) {
+    @media (max-width: 10232px) {
       grid-template-columns: repeat(2, 1fr);
     }
   }

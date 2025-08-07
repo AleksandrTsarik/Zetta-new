@@ -115,6 +115,10 @@ h2 {
   position: absolute;
 }
 
+section.section {
+  padding: 55px 0 55px;
+}
+
 //---для теста! потом удалить!!!
 .color-primary2 {
   color: rgb(var(--primary2)) !important;
