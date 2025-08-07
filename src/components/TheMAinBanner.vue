@@ -9,10 +9,10 @@
       <div class="m-banner__inner">
         <div class="m-banner__info">
           <h1 class="title m-banner__title">
-            Ваш надежный партнёр в
-            <span class="color-primary"
-              >{{ typedText }}<span class="cursor">|</span></span
-            >
+            Ваш&nbsp;надежный партнёр в&nbsp;
+            <span class="color-primary">
+              {{ typedText }}<span class="cursor">|</span>
+            </span>
           </h1>
           <div class="m-banner__subtitle">
             Мы — дочерний проект Code7, обеспечивающий удобное и быстрое
@@ -160,12 +160,19 @@ export default {
   }
   &__title {
     text-align: center;
+    max-width: 80%;
+    margin: 0 auto;
     .color-primary {
       display: block;
     }
   }
   &__subtitle {
     text-align: center;
+    max-width: 40%;
+    margin: 0 auto;
+    @media (max-width: 1023px) {
+      max-width: 100%;
+    }
   }
   &__btns {
     display: flex;
