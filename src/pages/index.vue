@@ -17,17 +17,27 @@
       subtitle="Выбирая Code7 Страхование, вы получаете надежного партнера, который делает процесс оформления страховых полисов максимально простым и удобным."
     />
   </section>
+  <section class="section">
+    <Service />
+  </section>
+  <section class="section">
+    <FAQ title="Вопросы и ответы" :faqOptions="faqDescription" />
+  </section>
 </template>
 
 <script>
 import MainBanner from "../components/TheMainBanner.vue";
 import TurnCard from "../components/TheTurnCard.vue";
 import Choice from "../components/TheChoice.vue";
+import Service from "../components/TheService.vue";
+import FAQ from "../components/TheFAQ.vue";
 export default {
   components: {
     MainBanner,
     TurnCard,
     Choice,
+    Service,
+    FAQ,
   },
   data() {
     return {
@@ -82,6 +92,20 @@ export default {
         {
           name: "Поддержка",
           text: "Наша команда всегда на связи, чтобы помочь с любыми вопросами.",
+        },
+      ],
+      faqDescription: [
+        {
+          name: "Являетесь ли вы страховой компанией?",
+          text: "Нет, мы выступаем агентами и сотрудничаем со страховыми компаниями для удобного оформления полисов.",
+        },
+        {
+          name: "Как быстро я получу полис?",
+          text: "Полис приходит на указанный email в течение 2-4 часов после оплаты.",
+        },
+        {
+          name: "Что делать при страховом случае?",
+          text: "Свяжитесь со страховой компанией, указанной в полисе. Мы готовы проконсультировать и помочь с оформлением обращения.",
         },
       ],
     };
