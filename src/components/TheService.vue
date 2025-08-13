@@ -86,12 +86,18 @@ export default {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 24px;
-    // @media (max-width: 1200px) {
-    //   grid-template-columns: 1fr;
-    // }
+    @media (max-width: 767px) {
+      grid-template-columns: 1fr;
+    }
   }
   &__item {
     height: 100%;
+    @media (max-width: 767px) {
+      a {
+        width: 100%;
+        text-align: center;
+      }
+    }
   }
 }
 .service-block {
@@ -210,6 +216,9 @@ export default {
   grid-template-columns: 1fr 1fr;
   gap: 24px;
   height: 100%;
+  @media (max-width: 374px) {
+    grid-template-columns: 1fr;
+  }
   &__item {
     background-color: rgb(var(--white));
     border-radius: var(--radius);
@@ -222,6 +231,7 @@ export default {
     font-weight: 500;
     line-height: 100%;
     color: rgb(var(--primary));
+    margin-bottom: 24px;
     @media (max-width: 1200px) {
       font-size: 24px;
     }
