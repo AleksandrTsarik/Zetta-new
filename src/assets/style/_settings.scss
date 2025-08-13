@@ -119,6 +119,35 @@ section.section {
   padding: 55px 0 55px;
 }
 
+.btn-up {
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(var(--primary));
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  opacity: 0.5;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  transition: 0.3s;
+  cursor: pointer;
+  z-index: 100;
+  display: none;
+  &.active {
+    display: flex;
+  }
+  @media (any-hover: hover) {
+    &:hover {
+      opacity: 1;
+    }
+  }
+  svg {
+    transform: rotate(-90deg);
+  }
+}
+
 //---для теста! потом удалить!!!
 .color-primary2 {
   color: rgb(var(--primary2)) !important;
