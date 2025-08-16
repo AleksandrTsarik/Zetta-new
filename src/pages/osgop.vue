@@ -15,6 +15,9 @@
   <section class="section">
     <Pay />
   </section>
+  <section class="section">
+    <Order :orderInfo="orderDescription" title="Как оформить?" orderLink="#" />
+  </section>
 </template>
 
 <script>
@@ -22,12 +25,14 @@ import Banner from "../components/TheBanner.vue";
 import Choice from "../components/TheChoice.vue";
 import Osgop from "../components/TheOsgopDescription.vue";
 import Pay from "../components/ThePay.vue";
+import Order from "../components/TheOrder.vue";
 export default {
   components: {
     Banner,
     Choice,
     Osgop,
     Pay,
+    Order,
   },
   data() {
     return {
@@ -71,6 +76,26 @@ export default {
         {
           name: "Надёжная поддержка",
           text: "Наша команда всегда на связи, чтобы помочь с любыми вопросами.",
+        },
+      ],
+      orderDescription: [
+        {
+          name: "Проверка разрешения на перевозку",
+          text: "<p>Убедитесь, что у вас есть действующее разрешение. Проверьте его на сайте .<a href='#'>ФГИС «Такси»</a></p>",
+        },
+        {
+          name: "Оформление заявления",
+          text: "Укажите данные перевозчика, такси и пассажиров при оформлении заявления на сайте. Оформление занимает 5-7 минут",
+        },
+        {
+          name: "Оплата",
+          text: "После оформления заявления необходимо оплатить полис ОСГОП по появившейся ссылке, выбрав удобный вариант оплаты.",
+          attention:
+            "Ссылка на оплату дейтсвует 20 минут. Если не успели оплатить, необходимо заново оформить заявления на получение полиса.",
+        },
+        {
+          name: "Получение полиса",
+          text: "После подтверждения и оплаты полис будет отправлен на указанный Вами Email в течение 2-4 часов.",
         },
       ],
     };
