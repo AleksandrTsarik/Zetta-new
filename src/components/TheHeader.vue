@@ -34,7 +34,7 @@
         <div class="header-mobile" :class="{ active: isOpenMenu }">
           <div class="header-mobile__overlay"></div>
           <div class="header-mobile__wrap">
-            <nav class="header-nav">
+            <nav class="header-nav" @click.stop="closeMenu">
               <ul>
                 <li v-for="(item, i) in nav" :key="i">
                   <router-link :to="item.url">{{ item.name }}</router-link>
@@ -92,6 +92,10 @@ export default {
       if (!this.isOpenMenu) document.body.classList.add("lock");
       else document.body.classList.remove("lock");
       this.isOpenMenu = !this.isOpenMenu;
+    },
+    closeMenu() {
+      this.isOpenMenu = false;
+      document.body.classList.remove("lock");
     },
     hide() {
       this.isOpenMenu = false;
