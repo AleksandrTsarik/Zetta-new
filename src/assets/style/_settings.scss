@@ -117,6 +117,9 @@ h2 {
 
 section.section {
   padding: 55px 0 55px;
+  &-bg {
+    background-color: rgba(238, 238, 238, 1);
+  }
 }
 
 .btn-up {

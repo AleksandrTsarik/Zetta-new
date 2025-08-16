@@ -18,6 +18,9 @@
   <section class="section">
     <Order :orderInfo="orderDescription" title="Как оформить?" orderLink="#" />
   </section>
+  <section class="section section-bg">
+    <Tab />
+  </section>
 </template>
 
 <script>
@@ -26,6 +29,7 @@ import Choice from "../components/TheChoice.vue";
 import Osgop from "../components/TheOsgopDescription.vue";
 import Pay from "../components/ThePay.vue";
 import Order from "../components/TheOrder.vue";
+import Tab from "../components/TheExtra.vue";
 export default {
   components: {
     Banner,
@@ -33,6 +37,7 @@ export default {
     Osgop,
     Pay,
     Order,
+    Tab,
   },
   data() {
     return {
