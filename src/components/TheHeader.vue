@@ -36,6 +36,7 @@
           <div class="header-mobile__wrap">
             <nav class="header-nav" @click.stop="closeMenu">
               <ul>
+                <li><router-link to="/">Главная</router-link></li>
                 <li v-for="(item, i) in nav" :key="i">
                   <router-link :to="item.url">{{ item.name }}</router-link>
                 </li>

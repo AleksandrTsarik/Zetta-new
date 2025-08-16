@@ -12,17 +12,22 @@
   <section class="section">
     <Osgop />
   </section>
+  <section class="section">
+    <Pay />
+  </section>
 </template>
 
 <script>
 import Banner from "../components/TheBanner.vue";
 import Choice from "../components/TheChoice.vue";
 import Osgop from "../components/TheOsgopDescription.vue";
+import Pay from "../components/ThePay.vue";
 export default {
   components: {
     Banner,
     Choice,
     Osgop,
+    Pay,
   },
   data() {
     return {
