@@ -3,21 +3,36 @@
     <div class="pay-block__container">
       <div class="pay-block__list">
         <div class="pay-block__item">
-          <span></span>
-          <div class="pay-block__img"></div>
-          <div class="pay-block__info">
-            <div class="pay-block__ico"></div>
-            <div class="pay-block__name">
-              <p></p>
-              <p></p>
+          <div class="pay-block-descr">
+            <span class="span-primary">Выплаты</span>
+            <div class="pay-block-descr__info">
+              <div class="pay-block-descr__info-inner">
+                <div class="pay-block-descr__overlay"></div>
+                <div class="pay-block-descr__head">
+                  <div class="pay-block-descr__ico">
+                    <img src="/img/zetta-ico.png" alt="ico" />
+                  </div>
+                  <div class="pay-block-descr__name">
+                    <p>Zetta</p>
+                    <p>Страховая компания</p>
+                  </div>
+                </div>
+                <div class="pay-block-descr__body">
+                  <div class="pay-block-descr__text">
+                    Компенсации по договору ОСГОП регулируются Федеральным
+                    законом № 67-ФЗ
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="pay-block__text"></div>
           </div>
         </div>
-        <div class="pay-block__item">
-          <div class="pay-block__descr" v-for="(item, i) in descr" :key="i">
-            <div class="pay-block__descr-head">
-              {{ item.name }}
+        <div class="pay-block__item pay-block-cards">
+          <div class="pay-block-card" v-for="(item, i) in descr" :key="i">
+            <div class="pay-block-card__head">
+              <p>
+                {{ item.name }}
+              </p>
               <span>
                 <svg
                   width="24"
@@ -48,9 +63,9 @@
                 </svg>
               </span>
             </div>
-            <div class="pay-block__descr-body">
+            <div class="pay-block-card__body">
               <p>{{ item.text }}</p>
-              <p v-if="item.snock">{{ item.snock }}</p>
+              <span v-if="item.snock">{{ item.snock }}</span>
             </div>
           </div>
         </div>
@@ -84,4 +99,153 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.pay-block {
+  &__list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    @media (max-width: 767px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  &__item {
+    position: relative;
+    &:first-child {
+      border-radius: var(--radius);
+      background-color: rgb(var(--white));
+      &::after {
+        content: "";
+        background-image: url("/img/pay.webp");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+      }
+      .span-primary {
+        position: absolute;
+        top: 24px;
+        left: 24px;
+      }
+    }
+    &:last-child {
+    }
+  }
+}
+.pay-block-descr {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  &__info {
+    z-index: 2;
+    padding: 50% 24px 24px;
+    position: relative;
+  }
+  &__info-inner {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    padding: 20px;
+  }
+  &__overlay {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 1;
+    background: rgba(238, 238, 238, 0.52);
+    backdrop-filter: blur(10px);
+  }
+
+  &__info {
+    margin-top: auto;
+  }
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  &__name {
+    p {
+      &:first-child {
+        font-size: 20px;
+        line-height: 110%;
+        margin-bottom: 5px;
+        @media (max-width: 767px) {
+          font-size: 16px;
+        }
+      }
+      &:last-child {
+        color: rgba(var(--text), 0.6);
+        font-size: 16px;
+      }
+    }
+  }
+  &__text {
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+.pay-block-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: space-between;
+  height: 100%;
+}
+.pay-block-card {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(var(--white));
+  border-radius: var(--radius);
+  padding: 24px;
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+    p {
+      font-size: 40px;
+      font-weight: 500;
+      color: rgb(var(--primary));
+      margin-bottom: 15px;
+      @media (max-width: 1023px) {
+        font-size: 32px;
+      }
+      @media (max-width: 767px) {
+        font-size: 24px;
+      }
+    }
+    svg {
+      margin-top: 1em;
+      path {
+        fill: rgb(var(--primary));
+      }
+    }
+  }
+  &__body {
+    margin-top: auto;
+    p {
+      font-size: 20px;
+      font-weight: 500;
+      @media (max-width: 767px) {
+        font-size: 16px;
+      }
+    }
+    span {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(var(--text), 0.6);
+      margin-top: 15px;
+    }
+  }
+}
+</style>
