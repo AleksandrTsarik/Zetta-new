@@ -74,8 +74,66 @@
         </div>
 
         <div class="extra-tab__content">
-          <div class="extra-tab__content-item" v-show="activeTab === 0">
-            <h3>1</h3>
+          <div
+            class="extra-tab__content-item tab-content"
+            v-show="activeTab === 0"
+          >
+            <div class="tab-content__head">
+              Что считается страховым случаем?
+            </div>
+            <div class="tab-content__body">
+              <router-link to="/" class="tab-content-card">
+                <div class="tab-content-card__img">
+                  <img src="/img/tabs/item1.webp" alt="picture" />
+                </div>
+                <div class="tab-content-card__text">
+                  Дорожно-транспортное происшествие
+                </div>
+                <div class="tab-content-card__more">
+                  <div>
+                    Инструкция действий
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M21.2704 10.1026L17.4487 6L16.2703 7.26495L19.8221 11.0786L2 11.1054V12.8946L19.8721 12.8677L16.2695 16.7351L17.4478 18L21.2704 13.8974C21.7377 13.3933 22 12.7111 22 12C22 11.2889 21.7377 10.6067 21.2704 10.1026Z"
+                        fill="#7D51FE"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </router-link>
+
+              <router-link to="/" class="tab-content-card">
+                <div class="tab-content-card__img">
+                  <img src="/img/tabs/item2.webp" alt="picture" />
+                </div>
+                <div class="tab-content-card__text">
+                  Несчастный случай на дороге
+                </div>
+                <div class="tab-content-card__more">
+                  <div>
+                    Инструкция действий
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M21.2704 10.1026L17.4487 6L16.2703 7.26495L19.8221 11.0786L2 11.1054V12.8946L19.8721 12.8677L16.2695 16.7351L17.4478 18L21.2704 13.8974C21.7377 13.3933 22 12.7111 22 12C22 11.2889 21.7377 10.6067 21.2704 10.1026Z"
+                        fill="#7D51FE"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </router-link>
+            </div>
           </div>
 
           <!-- Вкладка 2 -->
@@ -162,6 +220,71 @@ export default {
           fill: rgb(var(--white));
         }
       }
+    }
+  }
+}
+.tab-content {
+  &__head {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 28px;
+    font-weight: 500;
+    @media (max-width: 767px) {
+      margin-bottom: 20px;
+    }
+  }
+  &__body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+}
+.tab-content-card {
+  border-radius: var(--radius);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(var(--bg));
+  transition: 0.3s;
+  &:hover {
+    @media (any-hover: hover) {
+      .tab-content-card__img img {
+        transform: scale(1.2);
+      }
+      .tab-content-card__more div {
+        background-color: rgba(var(--primary), 1);
+        color: rgb(var(--white));
+        svg path {
+          fill: rgb(var(--white));
+        }
+      }
+    }
+  }
+  &__img {
+    margin-bottom: 24px;
+    transition: 0.3s;
+    overflow: hidden;
+    border-radius: var(--radius);
+    img {
+      transition: 0.3s;
+    }
+  }
+  &__text {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 24px;
+    color: rgb(var(--text));
+  }
+  &__more {
+    div {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: rgb(var(--primary));
+      background-color: rgba(var(--primary), 0.1);
+      padding: 12px 24px;
+      border-radius: 50px;
+      transition: 0.3s;
     }
   }
 }
