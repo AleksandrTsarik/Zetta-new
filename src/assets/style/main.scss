@@ -12,6 +12,10 @@ body {
   margin: 0;
   font-family: var(--ff);
   background-color: rgb(var(--bg));
+  &.lock {
+    overflow: hidden;
+    padding-right: 17px;
+  }
 }
 
 .vue-devtools__anchor {

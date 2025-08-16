@@ -282,6 +282,7 @@ export default {
 <style scoped lang="scss">
 .footer {
   margin-bottom: 20px;
+  padding-top: 55px;
   &__inner {
     display: grid;
     grid-template-columns: 1fr 1fr;

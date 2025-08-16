@@ -40,6 +40,9 @@ export default {
     display: grid;
     grid-template-columns: 1fr 1fr;
     margin-bottom: 64px;
+    @media (max-width: 767px) {
+      grid-template-columns: 1fr;
+    }
   }
   &__body {
     display: grid;

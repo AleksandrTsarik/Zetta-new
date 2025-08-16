@@ -1,15 +1,28 @@
 <template>
-  <div>
+  <section class="section">
     <Banner :descr="bannerDescription" />
-  </div>
-  <div></div>
+  </section>
+  <section class="section">
+    <Choice
+      :choiceInfo="choiceDescription"
+      title="Почему полис от Code7?"
+      subtitle="Выбирая Code7 Страхование, вы получаете надежного партнера, который делает процесс оформления страховых полисов максимально простым и удобным."
+    />
+  </section>
+  <section class="section">
+    <Osgop />
+  </section>
 </template>
 
 <script>
 import Banner from "../components/TheBanner.vue";
+import Choice from "../components/TheChoice.vue";
+import Osgop from "../components/TheOsgopDescription.vue";
 export default {
   components: {
     Banner,
+    Choice,
+    Osgop,
   },
   data() {
     return {
@@ -37,6 +50,24 @@ export default {
           },
         ],
       },
+      choiceDescription: [
+        {
+          name: "Простота оформления",
+          text: "Полностью онлайн — от заполнения заявки до получения полиса на email.",
+        },
+        {
+          name: "Соотвествие ФЗ РФ",
+          text: "Полис соответствует требованиям Федерального закона № 67-ФЗ.",
+        },
+        {
+          name: "Минимум усилий",
+          text: "Отсутствие необходимости в предъявлении документов для оформления онлайн.",
+        },
+        {
+          name: "Надёжная поддержка",
+          text: "Наша команда всегда на связи, чтобы помочь с любыми вопросами.",
+        },
+      ],
     };
   },
 };

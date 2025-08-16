@@ -25,17 +25,14 @@
           </div>
         </div>
       </div>
-      <div class="header__item mobile-item">
-        <div
-          class="burger"
-          @click="toggleBurger"
-          :class="{ active: showBurger }"
-        >
+      <div class="header__item mobile-item" v-click-outside="hide">
+        <div class="burger" @click="menuOpen" :class="{ active: isOpenMenu }">
           <div class="burger__btn">
             <span></span>
           </div>
         </div>
-        <div class="header-mobile" :class="{ active: showBurger }">
+        <div class="header-mobile" :class="{ active: isOpenMenu }">
+          <div class="header-mobile__overlay"></div>
           <div class="header-mobile__wrap">
             <nav class="header-nav">
               <ul>
@@ -73,7 +70,7 @@ export default {
   },
   data() {
     return {
-      showBurger: false,
+      isOpenMenu: false,
       nav: [
         {
           name: "ОСГОП такси",
@@ -91,8 +88,14 @@ export default {
     };
   },
   methods: {
-    toggleBurger() {
-      this.showBurger = !this.showBurger;
+    menuOpen() {
+      if (!this.isOpenMenu) document.body.classList.add("lock");
+      else document.body.classList.remove("lock");
+      this.isOpenMenu = !this.isOpenMenu;
+    },
+    hide() {
+      this.isOpenMenu = false;
+      document.body.classList.remove("lock");
     },
   },
 };
@@ -124,6 +127,9 @@ export default {
     display: flex;
     align-items: center;
     gap: 20px;
+    &:nth-child(2) {
+      margin-left: auto;
+    }
     @media (max-width: 1200px) {
       justify-content: space-between;
       width: 100%;
@@ -235,19 +241,6 @@ export default {
     &:focus-visible {
       outline: none;
     }
-    // display: flex;
-    // flex: 0 0 24px;
-    // height: 24px;
-    // width: 24px;
-    // flex-direction: column;
-    // justify-content: space-between;
-    // cursor: pointer;
-    // span {
-    //   display: block;
-    //   background-color: rgb(var(--primary));
-    //   width: 100%;
-    //   height: 1px;
-    // }
   }
   &.active {
     .burger__btn {
@@ -278,15 +271,27 @@ export default {
   bottom: 0;
   background-color: rgb(var(--white));
   border-radius: 16px 0 0 16px;
-  padding: 20px;
+
   box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
   opacity: 0;
   visibility: hidden;
   transition: right 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+  // &__overlay {
+  //   display: block;
+
+  //   position: fixed;
+  //   top: 0;
+  //   left: 0;
+  //   width: 100%;
+  //   height: 100%;
+  //   background-color: rgba(0, 0, 0, 0.5);
+  //   z-index: -1;
+  // }
   &__wrap {
     height: 100%;
     display: flex;
     flex-direction: column;
+    padding: 20px;
   }
   &.active {
     right: 0;
@@ -294,5 +299,7 @@ export default {
     visibility: visible;
     z-index: 1000;
   }
+}
+.mobile-item {
 }
 </style>
