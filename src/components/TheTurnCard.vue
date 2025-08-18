@@ -39,7 +39,11 @@
               <div class="turn-item-back__title">{{ item.backTitle }}</div>
               <div class="turn-item-back__text">{{ item.backText }}</div>
             </div>
-            <router-link :to="item.url" class="turn-item-back__more">
+            <router-link
+              :to="item.url"
+              v-if="item.url"
+              class="turn-item-back__more"
+            >
               <span>Оформить сейчас</span>
             </router-link>
           </div>
@@ -102,6 +106,9 @@ export default {
     }
     &--fourth {
       grid-template-columns: repeat(4, 1fr);
+      .turn-item-back__text {
+        margin-top: auto;
+      }
       @media (max-width: 767px) {
         grid-template-columns: 1fr;
       }
@@ -218,6 +225,8 @@ export default {
 
   &__info {
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   &__title {
@@ -229,6 +238,7 @@ export default {
   &__text {
     font-size: 16px;
     font-weight: 400;
+
     color: rgba(var(--text), 0.6);
   }
   &__more {

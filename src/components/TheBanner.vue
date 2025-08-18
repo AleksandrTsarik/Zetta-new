@@ -197,7 +197,7 @@ export default {
     margin-bottom: 12px;
   }
   &__text {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
     color: rgba(var(--text), 0.6);
   }
