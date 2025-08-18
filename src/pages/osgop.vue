@@ -16,7 +16,11 @@
     <Pay />
   </section>
   <section class="section">
-    <Order :orderInfo="orderDescription" title="Как оформить?" orderLink="#" />
+    <Order
+      :orderInfo="orderDescription"
+      title="Как оформить?"
+      orderLink="https://zettains.ru/calculators/osgop/?utm_source=2512541&utm_medium=9519741456&utm_campaign=9510823705"
+    />
   </section>
   <section class="section section-bg">
     <Tab />
@@ -86,7 +90,7 @@ export default {
       orderDescription: [
         {
           name: "Проверка разрешения на перевозку",
-          text: "<p>Убедитесь, что у вас есть действующее разрешение. Проверьте его на сайте .<a href='#'>ФГИС «Такси»</a></p>",
+          text: "<p>Убедитесь, что у вас есть действующее разрешение. Проверьте его на сайте .<a target='_blank' href='https://sicmt.ru/fgis-taksi'>ФГИС «Такси»</a></p>",
         },
         {
           name: "Оформление заявления",

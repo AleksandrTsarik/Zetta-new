@@ -82,7 +82,11 @@
               Что считается страховым случаем?
             </div>
             <div class="tab-content__body">
-              <router-link to="/" class="tab-content-card">
+              <a
+                href="https://zettains.ru/strahovanie-fizicheskih-lic/avtostrahovanie/strahovoy-sluchay/"
+                target="_blank"
+                class="tab-content-card"
+              >
                 <div class="tab-content-card__img">
                   <img src="/img/tabs/item1.webp" alt="picture" />
                 </div>
@@ -106,9 +110,13 @@
                     </svg>
                   </div>
                 </div>
-              </router-link>
+              </a>
 
-              <router-link to="/" class="tab-content-card">
+              <a
+                href="https://zettains.ru/strahovanie-fizicheskih-lic/information/insuranced-accident/accident-approach/"
+                target="_blank"
+                class="tab-content-card"
+              >
                 <div class="tab-content-card__img">
                   <img src="/img/tabs/item2.webp" alt="picture" />
                 </div>
@@ -132,7 +140,7 @@
                     </svg>
                   </div>
                 </div>
-              </router-link>
+              </a>
             </div>
           </div>
 

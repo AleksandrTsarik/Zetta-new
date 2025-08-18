@@ -36,8 +36,8 @@
             </div>
           </div>
           <div class="order-info__more" v-if="orderLink">
-            <router-link class="btn btn-primary" :to="orderLink"
-              >Оформить полис</router-link
+            <a :href="orderLink" class="btn btn-primary" target="_blank"
+              >Оформить полис</a
             >
           </div>
         </div>
