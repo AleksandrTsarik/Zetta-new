@@ -146,7 +146,79 @@
 
           <!-- Вкладка 2 -->
           <div class="extra-tab__content-item" v-show="activeTab === 1">
-            <h3>2</h3>
+            <div class="tab-link">
+              <div class="tab-link__item">
+                <p>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7.25 12H15.75V13.6667H7.25V12ZM7.25 17H13.2V15.3333H7.25V17ZM20 8.32167V22H3V4.5C3 3.83696 3.26866 3.20107 3.74688 2.73223C4.2251 2.26339 4.8737 2 5.55 2H13.5519L20 8.32167ZM14.05 7.83333H17.0981L14.05 4.845V7.83333ZM18.3 20.3333V9.5H12.35V3.66667H5.55C5.32457 3.66667 5.10837 3.75446 4.94896 3.91074C4.78955 4.06702 4.7 4.27899 4.7 4.5V20.3333H18.3Z"
+                      fill="#7D51FE"
+                    />
+                  </svg>
+                  Правила страхования
+                </p>
+                <a
+                  href="https://zettains.ru/upload/rules/%D0%9F%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0%20%D0%9E%D0%A1%D0%93%D0%9E%D0%9F%20%D0%BD%D0%B0%20%D1%81%D0%B0%D0%B9%D1%82.pdf"
+                  class="btn btn-light"
+                  target="_blank"
+                  >Смотреть</a
+                >
+              </div>
+
+              <div class="tab-link__item">
+                <p>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7.25 12H15.75V13.6667H7.25V12ZM7.25 17H13.2V15.3333H7.25V17ZM20 8.32167V22H3V4.5C3 3.83696 3.26866 3.20107 3.74688 2.73223C4.2251 2.26339 4.8737 2 5.55 2H13.5519L20 8.32167ZM14.05 7.83333H17.0981L14.05 4.845V7.83333ZM18.3 20.3333V9.5H12.35V3.66667H5.55C5.32457 3.66667 5.10837 3.75446 4.94896 3.91074C4.78955 4.06702 4.7 4.27899 4.7 4.5V20.3333H18.3Z"
+                      fill="#7D51FE"
+                    />
+                  </svg>
+                  Осуществление Страховщиком страховой деятельности
+                </p>
+                <a
+                  href="https://zettains.ru/vss_info/#_ga=2.234079454.1387420564.1736426837-270621958.1735288439"
+                  class="btn btn-light"
+                  target="_blank"
+                  >Смотреть</a
+                >
+              </div>
+
+              <div class="tab-link__item">
+                <p>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7.25 12H15.75V13.6667H7.25V12ZM7.25 17H13.2V15.3333H7.25V17ZM20 8.32167V22H3V4.5C3 3.83696 3.26866 3.20107 3.74688 2.73223C4.2251 2.26339 4.8737 2 5.55 2H13.5519L20 8.32167ZM14.05 7.83333H17.0981L14.05 4.845V7.83333ZM18.3 20.3333V9.5H12.35V3.66667H5.55C5.32457 3.66667 5.10837 3.75446 4.94896 3.91074C4.78955 4.06702 4.7 4.27899 4.7 4.5V20.3333H18.3Z"
+                      fill="#7D51FE"
+                    />
+                  </svg>
+                  Образец договора страхования
+                </p>
+                <a
+                  href="https://zettains.ru/local/modules/zetta.calc/lib/Pdf/osgop/files/obrazec_osgop.pdf"
+                  class="btn btn-light"
+                  target="_blank"
+                  >Смотреть</a
+                >
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -293,6 +365,41 @@ export default {
       padding: 12px 24px;
       border-radius: 50px;
       transition: 0.3s;
+    }
+  }
+}
+.tab-link {
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+    background-color: rgb(var(--bg));
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 400;
+    border-radius: 50px;
+    margin: 10px;
+    @media (max-width: 575px) {
+      flex-direction: column;
+      align-items: flex-start;
+      font-size: 14px;
+      a {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+      }
+    }
+    svg {
+      flex: 0 0 16px;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
+    p {
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
   }
 }

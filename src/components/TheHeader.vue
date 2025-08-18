@@ -21,7 +21,9 @@
             <a href="tel:+7 (909) 005-85-85">+7 (909) 005-85-85</a>
           </div>
           <div class="header-contact__write">
-            <Button label="Написать" class="btn-light" />
+            <a href="mailto:info@codeseven.ru" class="btn btn-light"
+              >Написать</a
+            >
           </div>
         </div>
       </div>
@@ -51,7 +53,9 @@
                 <a href="tel:+7 (909) 005-85-85">+7 (909) 005-85-85</a>
               </div>
               <div class="header-contact__write">
-                <Button label="Написать" class="btn-light" />
+                <a href="mailto:info@codeseven.ru" class="btn btn-light"
+                  >Написать</a
+                >
               </div>
             </div>
           </div>

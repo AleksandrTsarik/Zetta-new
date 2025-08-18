@@ -103,7 +103,7 @@
     </svg>
   </router-link>
 
-  <a href="#" target="_blank" v-if="type === 'wp'">
+  <a href="https://wa.me/89090058585" target="_blank" v-if="type === 'wp'">
     <svg
       width="16"
       height="16"
@@ -120,7 +120,7 @@
     </svg>
   </a>
 
-  <a href="" target="_blank" v-if="type === 'tg'"
+  <a href="https://t.me/codeseven_team" target="_blank" v-if="type === 'tg'"
     ><svg
       width="16"
       height="16"
