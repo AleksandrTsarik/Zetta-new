@@ -2,7 +2,7 @@
   <section class="section">
     <MainBanner />
   </section>
-  <section class="section">
+  <section class="section" id="turn">
     <TurnCard
       :turnInfo="turnDescription"
       title="Наши направления"

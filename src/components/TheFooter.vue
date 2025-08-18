@@ -169,7 +169,7 @@
             </div>
             <div class="footer-card__footer">
               <a
-                href=""
+                href="https://wa.me/89090058585"
                 class="footer-card__network btn btn-primary"
                 target="_blank"
                 ><svg
@@ -189,7 +189,7 @@
                 Написать в Whats App</a
               >
               <a
-                href=""
+                href="https://t.me/codeseven_team"
                 class="footer-card__network btn btn-primary"
                 target="_blank"
                 ><svg

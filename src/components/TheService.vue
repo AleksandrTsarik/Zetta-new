@@ -33,7 +33,10 @@
                 Code7 Страхование — это часть IT-компании Code7, оказывающей
                 комплексные решения для бизнеса.
               </div>
-              <router-link to="/" class="service-info__more btn btn-primary"
+              <a
+                href="https://codeseven.ru"
+                target="_blank"
+                class="service-info__more btn btn-primary"
                 >Сайт Code7
                 <svg
                   width="20"
@@ -47,7 +50,7 @@
                     fill="#EEEEEE"
                   />
                 </svg>
-              </router-link>
+              </a>
             </div>
             <div class="service-info__item">
               <div class="service-info-small">

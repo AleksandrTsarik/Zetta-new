@@ -19,8 +19,10 @@
             оформление страховых полисов.
           </div>
           <div class="m-banner__btns">
-            <a href="" class="btn btn-primary">Оформить онлайн</a>
-            <a href="" class="btn btn-light">Задать вопрос</a>
+            <a href="/#turn" class="btn btn-primary">Оформить онлайн</a>
+            <a href="mailto:info@codeseven.ru" class="btn btn-light"
+              >Задать вопрос</a
+            >
           </div>
         </div>
         <div class="m-banner__offer m-banner-offer">
