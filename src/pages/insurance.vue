@@ -7,6 +7,9 @@
       subtitle="Выбирая Code7 Страхование, вы получаете надежного партнера, который делает процесс оформления страховых полисов максимально простым и удобным."
     />
   </section>
+  <section class="section">
+    <DqscriptionQ :descriptionQuestion="descriptionQuestion" />
+  </section>
   <section class="section" id="turn">
     <TurnCard
       :turnInfo="turnDescription"
@@ -18,6 +21,8 @@
   <section class="section">
     <Order :orderInfo="orderDescription" title="Как оформить?" />
   </section>
+
+  <section class="section" id="policy">asdasdas</section>
 </template>
 
 <script>
@@ -25,12 +30,14 @@ import Banner from "../components/TheBanner.vue";
 import Choice from "../components/TheChoice.vue";
 import TurnCard from "../components/TheTurnCard.vue";
 import Order from "../components/TheOrder.vue";
+import DqscriptionQ from "../components/TheQuestion.vue";
 export default {
   components: {
     Banner,
     Choice,
     TurnCard,
     Order,
+    DqscriptionQ,
   },
   data() {
     return {
@@ -135,6 +142,13 @@ export default {
           text: "После подписания и оплаты полис будет отправлен на указанный Вами Email в течение 2-4 часов.",
         },
       ],
+      descriptionQuestion: {
+        title: "Что такое полис страхования имущества?",
+        text: "<p>Страхование имущества защищает бизнес от финансовых потерь, вызванных повреждением или уничтожением активов.</p>",
+        warning:
+          "Полис покрывает ущерб, связанный с авариями, пожарами, кражами и другими рисками.",
+        anhor: "#policy",
+      },
     };
   },
 };

@@ -151,6 +151,14 @@ section.section {
   }
 }
 
+.contant-inner {
+  p {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+}
+
 //---для теста! потом удалить!!!
 .color-primary2 {
   color: rgb(var(--primary2)) !important;

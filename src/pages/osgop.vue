@@ -9,8 +9,9 @@
       subtitle="Выбирая Code7 Страхование, вы получаете надежного партнера, который делает процесс оформления страховых полисов максимально простым и удобным."
     />
   </section>
+
   <section class="section">
-    <Osgop />
+    <DqscriptionQ :descriptionQuestion="descriptionQuestion" />
   </section>
   <section class="section">
     <Pay />
@@ -30,18 +31,18 @@
 <script>
 import Banner from "../components/TheBanner.vue";
 import Choice from "../components/TheChoice.vue";
-import Osgop from "../components/TheOsgopDescription.vue";
 import Pay from "../components/ThePay.vue";
 import Order from "../components/TheOrder.vue";
 import Tab from "../components/TheExtra.vue";
+import DqscriptionQ from "../components/TheQuestion.vue";
 export default {
   components: {
     Banner,
     Choice,
-    Osgop,
     Pay,
     Order,
     Tab,
+    DqscriptionQ,
   },
   data() {
     return {
@@ -107,6 +108,14 @@ export default {
           text: "После подтверждения и оплаты полис будет отправлен на указанный Вами Email в течение 2-4 часов.",
         },
       ],
+      descriptionQuestion: {
+        title: "Что такое ОСГОП такси?",
+        text: "<p>Договор ОСГОП такси защищает имущественные интересы перевозчика в случае причинения вреда жизни, здоровью или имуществу пассажиров.</p><p>Размер выплаты зависит от характера травм и установлен Законодательством.</p>",
+        atention:
+          "Договор ОСГОП такси заключается, если есть разрешение на перевозчика. Наличие разрешения можно проверить на сайте <a href='https://sicmt.ru/fgis-taksi' target='_blank'> ФГИС «Такси»</a> в разделе «Перевозчики»",
+        warning: "",
+        anhor: "",
+      },
     };
   },
 };
