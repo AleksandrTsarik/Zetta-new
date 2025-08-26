@@ -22,7 +22,9 @@
     <Order :orderInfo="orderDescription" title="Как оформить?" />
   </section>
 
-  <section class="section" id="policy">asdasdas</section>
+  <section class="section" id="policy">
+    <Quiz />
+  </section>
 </template>
 
 <script>
@@ -31,6 +33,7 @@ import Choice from "../components/TheChoice.vue";
 import TurnCard from "../components/TheTurnCard.vue";
 import Order from "../components/TheOrder.vue";
 import DqscriptionQ from "../components/TheQuestion.vue";
+import Quiz from "../components/TheQuizInsurance.vue";
 export default {
   components: {
     Banner,
@@ -38,6 +41,7 @@ export default {
     TurnCard,
     Order,
     DqscriptionQ,
+    Quiz,
   },
   data() {
     return {

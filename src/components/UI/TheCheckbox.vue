@@ -1,38 +1,49 @@
 <template>
-  <label class="default-checkbox">
-    <input v-model="isCheck" type="checkbox" class="default-checkbox__input" ref="checkbox">
-    <span class="default-checkbox__container"></span>
-    <span v-if="!hiddenLabel" class="default-checkbox__text" v-html="label"></span>
+  <label class="default-checkbox" @click="toggle">
+    <input
+      type="checkbox"
+      :checked="modelValue"
+      class="default-checkbox__input"
+      @change="$emit('update:modelValue', $event.target.checked)"
+      :ref="name"
+    />
+    <span class="default-checkbox__checked"></span>
+    <span
+      v-if="!hiddenLabel"
+      class="default-checkbox__text"
+      v-html="label"
+    ></span>
   </label>
 </template>
 
 <script>
 export default {
+  name: "TheCheckbox",
   props: {
+    modelValue: {
+      type: Boolean,
+      default: false,
+    },
     label: {
       type: String,
-      default: ''
+      default: "",
     },
     hiddenLabel: {
       type: Boolean,
       default: false,
     },
-    size: {
+    name: {
       type: String,
-      default: '',
+      default: "",
     },
   },
-  data() {
-    return {
-      isCheck: true,
-    }
+  emits: ["update:modelValue"],
+  methods: {
+    toggle() {
+      this.$emit("update:modelValue", !this.modelValue);
+    },
   },
-  watch: {
-    isCheck(val) {
-      this.$emit('input', val)
-    }
-  }
-}
+};
 </script>
 
 <style lang="scss">
@@ -44,38 +55,30 @@ export default {
     opacity: 0;
     appearance: none;
     position: absolute;
-    &:checked ~ .default-checkbox__container {
-      border-color: #3C3A3A;
-      background-color: transparent;
-      &::before {
-        opacity: 1;
-      }
+  }
+  &__checked {
+    flex: 0 0 24px;
+    height: 24px;
+    width: 24px;
+    border: solid 1px rgb(var(--primary));
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    &::before {
+      content: "";
+      display: block;
+      background-image: url("img/check.svg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 1em;
+      height: 1em;
     }
   }
-  &__container {
-    position: relative;
-    display: inline-block;
-    width: 15px;
-    height: 15px;
-    border: 1px solid #C9C9C9;
-    border-radius: 3px;
-    flex: 0 0 15px;
-    transition: background-color 0.3s;
-    margin-top: 0px;
-    &:before {
-      content: '';
-      position: absolute;
-      display: block;
-      top: 45%;
-      left: 50%;
-      width: 4px;
-      height: 7px;
-      border-right: solid 1px #2E2D2D;
-      border-bottom: solid 1px #2E2D2D;
-      transform: translate(-50%, -50%) rotate(45deg); 
-      opacity: 0;
-      transition: 0.3s;
-    }
+  &__input:checked ~ .default-checkbox__checked {
+    background-color: rgb(var(--primary));
   }
 }
 </style>
