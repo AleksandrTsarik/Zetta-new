@@ -1,14 +1,17 @@
 <template>
   <div class="quiz">
     <div class="quiz__container">
-      <div class="quiz__header">
+      <!-- Шапка -->
+      <header class="quiz__header">
         <span class="logo logo_color_primary">Полис Zetta</span>
         <h1 class="quiz__title">Оформить полис</h1>
-      </div>
+      </header>
 
-      <div class="quiz__main">
+      <!-- Основной контент -->
+      <main class="quiz__main">
         <!-- Левая колонка -->
         <div class="quiz__left">
+          <h4>Полис страхования имущества</h4>
           <div class="step-title">
             <span class="step-title__number"
               >{{ currentStep === 1 ? "1" : "2" }} шаг.</span
@@ -31,16 +34,21 @@
 
           <!-- Шаг 1: Расчёт -->
           <div v-if="currentStep === 1" class="quiz__step">
-            <h2 class="quiz__subtitle">Полис страхования имущества</h2>
-            <Checkbox
-              v-for="item in checkboxItems"
-              :key="item.value"
-              :label="item.label"
-              :modelValue="selectedItems.includes(item.value)"
-              @update:modelValue="toggleCheckbox(item.value)"
-              class="checkbox__item"
-            />
+            <h2 class="quiz__subtitle">
+              Выберите, какое имущество необходимо застраховать
+            </h2>
+            <div class="checkbox">
+              <TheCheckbox
+                v-for="item in checkboxItems"
+                :key="item.value"
+                :label="item.label"
+                :modelValue="selectedItems.includes(item.value)"
+                @update:modelValue="toggleCheckbox(item.value)"
+                class="checkbox__item"
+              />
+            </div>
 
+            <!-- Кастомный слайдер -->
             <div class="slider">
               <div class="slider__label">Введите страховую сумму полиса</div>
               <div class="slider__input">
@@ -57,25 +65,38 @@
                     </svg>
                   </button>
                 </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="30000000"
-                  step="1000"
-                  v-model.number="insuranceSum"
-                  @input="updateDisplay"
-                />
+
+                <!-- Контейнер слайдера -->
+                <div
+                  class="slider__track"
+                  @click="onTrackClick"
+                  @mousedown="onDragStart"
+                  @touchstart="onDragStart"
+                >
+                  <!-- Прогресс (заполненная часть) -->
+                  <div
+                    class="slider__progress"
+                    :style="{ width: `${(insuranceSum / max) * 100}%` }"
+                  ></div>
+
+                  <!-- Ползунок -->
+                  <div
+                    class="slider__thumb"
+                    :style="{ left: `${(insuranceSum / max) * 100}%` }"
+                  ></div>
+                </div>
+
+                <!-- Мин/макс подпись -->
+                <div class="slider__min">0 ₽</div>
+                <div class="slider__max">30 000 000 ₽</div>
               </div>
             </div>
 
             <div class="quiz__buttons">
-              <button
-                class="button button_theme_back"
-                :disabled="currentStep === 1"
-              >
+              <button class="btn btn-light" :disabled="currentStep === 1">
                 ← Назад
               </button>
-              <button class="button button_theme_next" @click="goNext">
+              <button class="btn btn-primary" @click="goNext">
                 Продолжить →
               </button>
             </div>
@@ -101,17 +122,16 @@
                 />
               </div>
               <div class="form__group">
-                <checkbox
-                  label="Даю согласие на обработку персональный данных в соответствии с <a href='https://codeseven.ru/pdf/opd.pdf' target='_blank'>Политикой конфиденциальности</a>"
+                <TheCheckbox
+                  v-model="formData.agree"
+                  label="Даю согласие на обработку персональных данных в соответствии с <a href='https://codeseven.ru/pdf/opd.pdf' target='_blank'>Политикой конфиденциальности</a>"
                 />
               </div>
             </form>
 
             <div class="quiz__buttons">
-              <button class="button button_theme_back" @click="goBack">
-                ← Назад
-              </button>
-              <button class="button button_theme_submit" @click="submitForm">
+              <button class="btn btn-light" @click="goBack">← Назад</button>
+              <button class="btn btn-primary" @click="submitForm">
                 Оформить полис
               </button>
             </div>
@@ -182,18 +202,18 @@
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   </div>
 </template>
 
 <script>
-import Checkbox from "./UI/TheCheckbox.vue";
+import TheCheckbox from "./UI/TheCheckbox.vue";
 import TheInput from "./UI/TheInput.vue";
 
 export default {
   components: {
-    Checkbox,
+    TheCheckbox,
     TheInput,
   },
   name: "TheQuizInsurance",
@@ -202,6 +222,10 @@ export default {
       currentStep: 1,
       selectedItems: ["construction"],
       insuranceSum: 115000,
+      min: 0,
+      max: 30000000,
+      isDragging: false,
+      trackRect: null,
       formData: {
         companyName: "",
         inn: "",
@@ -276,16 +300,56 @@ export default {
     editSum() {
       const newValue = prompt("Введите новую сумму:", this.insuranceSum);
       if (newValue && !isNaN(newValue)) {
-        this.insuranceSum = parseInt(newValue);
+        const num = parseInt(newValue);
+        this.insuranceSum = Math.max(this.min, Math.min(this.max, num));
       }
     },
-    updateDisplay() {
-      this.$nextTick(() => {
-        const display = this.$el.querySelector(".slider__value");
-        if (display) {
-          display.textContent = this.formatCurrency(this.insuranceSum);
-        }
-      });
+    onTrackClick(event) {
+      const track = this.$el.querySelector(".slider__track");
+      const rect = track.getBoundingClientRect();
+      const percent = (event.clientX - rect.left) / rect.width;
+      this.insuranceSum = Math.round(
+        this.min + percent * (this.max - this.min)
+      );
+      this.insuranceSum = Math.max(
+        this.min,
+        Math.min(this.max, this.insuranceSum)
+      );
+    },
+    onDragStart(event) {
+      event.preventDefault();
+      this.isDragging = true;
+      const track = this.$el.querySelector(".slider__track");
+      this.trackRect = track.getBoundingClientRect();
+
+      document.addEventListener("mousemove", this.onDragMove);
+      document.addEventListener("mouseup", this.onDragEnd);
+      document.addEventListener("touchmove", this.onDragMove);
+      document.addEventListener("touchend", this.onDragEnd);
+
+      const clientX =
+        event.type === "touchstart" ? event.touches[0].clientX : event.clientX;
+      this.onDragMove({ clientX });
+    },
+    onDragMove(event) {
+      if (!this.isDragging) return;
+      const clientX =
+        event.type === "touchmove" ? event.touches[0].clientX : event.clientX;
+      const { left, width } = this.trackRect;
+      const percent = (clientX - left) / width;
+      let value = Math.round(this.min + percent * (this.max - this.min));
+      value = Math.max(this.min, Math.min(this.max, value));
+      this.insuranceSum = value;
+    },
+    onDragEnd() {
+      if (!this.isDragging) return;
+      this.isDragging = false;
+      this.trackRect = null;
+
+      document.removeEventListener("mousemove", this.onDragMove);
+      document.removeEventListener("mouseup", this.onDragEnd);
+      document.removeEventListener("touchmove", this.onDragMove);
+      document.removeEventListener("touchend", this.onDragEnd);
     },
     submitForm() {
       alert("Форма отправлена!");
@@ -304,53 +368,44 @@ export default {
       );
     },
   },
-  mounted() {
-    this.updateDisplay();
-  },
 };
 </script>
 
 <style lang="scss" scoped>
-$color-primary: #8d7fff;
-$color-primary-dark: #7a6bde;
-$color-gray-light: #e0e0e0;
-$color-gray-border: #eee;
-$color-text-secondary: #666;
-
 .quiz {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
   margin: 0 auto;
   max-width: 1200px;
   padding: 20px;
-}
-
-.quiz__container {
-}
-
-.quiz__header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.logo {
-  color: $color-primary;
-  font-size: 14px;
-  margin-bottom: 5px;
-
-  &_color_primary {
-    color: $color-primary;
+  &__header {
+    text-align: center;
+    margin-bottom: 30px;
   }
-}
-
-.quiz__title {
-  font-size: 24px;
-  margin: 0;
-}
-
-.quiz__main {
-  display: flex;
-  gap: 30px;
+  &__title {
+    font-size: 24px;
+    margin: 0;
+  }
+  &__main {
+    display: flex;
+    gap: 30px;
+  }
+  &__left {
+    background: white;
+    padding: 20px;
+  }
+  &__right {
+    background: #f8f9fa;
+    padding: 20px;
+  }
+  &__subtitle {
+    font-size: 18px;
+    margin: 0 0 20px 0;
+  }
+  &__buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
 }
 
 .quiz__left,
@@ -360,14 +415,14 @@ $color-text-secondary: #666;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.quiz__left {
-  background: white;
-  padding: 20px;
-}
+.logo {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 5px;
 
-.quiz__right {
-  background: #f8f9fa;
-  padding: 20px;
+  &_color_primary {
+    color: red;
+  }
 }
 
 .step-title {
@@ -377,13 +432,13 @@ $color-text-secondary: #666;
   margin-bottom: 20px;
 
   &__number {
-    font-weight: bold;
-    color: $color-primary;
+    color: rgba(var(--text), 0.6);
+    font-size: 14px;
   }
 
   &__name {
     font-size: 14px;
-    color: $color-text-secondary;
+    color: rgba(var(--text), 0.6);
   }
 }
 
@@ -399,7 +454,7 @@ $color-text-secondary: #666;
     position: relative;
     width: 100%;
     height: 100%;
-    background: $color-gray-light;
+    background: rgba(var(--text), 0.1);
     border-radius: 3px;
   }
 
@@ -416,76 +471,34 @@ $color-text-secondary: #666;
 
   &__fill {
     height: 100%;
-    background: $color-primary;
+    background: rgb(var(--primary));
     border-radius: 3px;
     transition: width 0.3s ease;
   }
 }
 
-.quiz__subtitle {
-  font-size: 18px;
-  margin: 0 0 20px 0;
-}
-
 .checkbox {
   margin-bottom: 20px;
-
   &__item {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 10px;
     cursor: pointer;
-
-    input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-    }
   }
 }
 
 .slider {
   margin-bottom: 30px;
-
   &__label {
     font-size: 14px;
     margin-bottom: 10px;
-    color: $color-text-secondary;
+    color: #dedede;
   }
 
   &__input {
     position: relative;
     width: 100%;
-  }
-
-  &__input input[type="range"] {
-    width: 100%;
-    height: 8px;
-    -webkit-appearance: none;
-    background: $color-gray-light;
-    border-radius: 4px;
-    outline: none;
-  }
-
-  &__input input[type="range"]::-webkit-slider-thumb {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    background: $color-primary;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid white;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  }
-
-  &__input input[type="range"]::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    background: $color-primary;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid white;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   }
 
   &__value-wrapper {
@@ -498,8 +511,9 @@ $color-text-secondary: #666;
   }
 
   &__value {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 500;
+    color: rgb(var(--primary));
   }
 
   &__edit-btn {
@@ -507,67 +521,86 @@ $color-text-secondary: #666;
     border: none;
     cursor: pointer;
     font-size: 14px;
-    color: $color-primary;
+    color: rgb(var(--primary));
   }
-}
 
-.quiz__buttons {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
+  &__track {
+    position: relative;
+    width: 100%;
+    height: 4px;
+    background: rgba(var(--text), 0.1);
+    border-radius: 4px;
+    cursor: pointer;
+  }
 
-.button {
-  padding: 10px 20px;
-  border-radius: 50px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s;
-  border: none;
+  &__progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 4px;
+    width: 0;
+    background: rgb(var(--primary));
+    border-radius: 4px;
+    transition: width 0.1s ease;
+  }
 
-  &_theme_back {
-    border: 1px solid #ddd;
+  &__thumb {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    width: 20px;
+    height: 20px;
     background: white;
-    color: $color-text-secondary;
-
-    &:hover {
-      background: #f0f0f0;
-    }
-
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+    border: 1px solid rgb(var(--primary));
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:after {
+      content: "";
+      display: block;
+      width: 0.7em;
+      height: 0.7em;
+      background-color: rgb(var(--primary));
+      border-radius: 50%;
     }
   }
 
-  &_theme_next,
-  &_theme_submit {
-    background: $color-primary;
-    color: white;
+  &__min,
+  &__max {
+    position: absolute;
+    bottom: -20px;
+    font-size: 14px;
+    margin-top: 20px;
+    color: rgba(var(--text), 0.6);
+  }
 
-    &:hover {
-      background: $color-primary-dark;
-    }
+  &__min {
+    left: 0;
+  }
+
+  &__max {
+    right: 0;
   }
 }
 
 .form {
-}
-
-.form__group {
-  margin-bottom: 16px;
-}
-
-.form__label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: $color-text-secondary;
-}
-
-.form__link {
-  color: $color-primary;
-  text-decoration: underline;
+  &__group {
+    margin-bottom: 16px;
+  }
+  &__label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #dedede;
+  }
+  &__link {
+    color: red;
+    text-decoration: underline;
+  }
 }
 
 .summary {
@@ -581,10 +614,10 @@ $color-text-secondary: #666;
 
   &.active {
     background: #f0f0ff;
-    border: 1px solid $color-primary;
+    border: 1px solid red;
 
     .summary__header {
-      color: $color-primary;
+      color: red;
     }
   }
 
@@ -594,7 +627,7 @@ $color-text-secondary: #666;
     align-items: center;
     font-weight: 500;
     font-size: 14px;
-    color: $color-text-secondary;
+    color: #dedede;
   }
 
   &__arrow_rotate {
@@ -604,7 +637,7 @@ $color-text-secondary: #666;
   &__details {
     margin-top: 8px;
     padding-top: 8px;
-    border-top: 1px solid $color-gray-border;
+    border-top: 1px solid rgb(var(--border));
   }
 
   &__item {
@@ -620,7 +653,7 @@ $color-text-secondary: #666;
     font-weight: bold;
     margin-top: 16px;
     padding-top: 16px;
-    border-top: 1px solid $color-gray-border;
+    border-top: 1px solid rgb(var(--border));
   }
 }
 
