@@ -37,7 +37,7 @@ export default {
           "Защита интересов компаний и их клиентов при оказании охранных услуг.",
         url: "#order-policy",
         btn: "Рассчитать стоимость",
-        target: true,
+        target: false,
         list: [
           {
             title: "Защита",
