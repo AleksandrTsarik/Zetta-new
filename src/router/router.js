@@ -24,7 +24,6 @@ const router = createRouter({
   routes,
 })
 
-// Add a navigation guard to scroll to top on route changes
 router.afterEach(() => {
   window.scrollTo(0, 0);
 })
