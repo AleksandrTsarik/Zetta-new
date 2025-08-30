@@ -1,5 +1,6 @@
 <template>
   <section class="section"><Banner :descr="bannerDescription" /></section>
+
   <section class="section">
     <Choice
       :choiceInfo="choiceDescription"
@@ -7,9 +8,11 @@
       subtitle="Выбирая Code7 Страхование, вы получаете надежного партнера, который делает процесс оформления страховых полисов максимально простым и удобным."
     />
   </section>
+
   <section class="section">
     <DqscriptionQ :descriptionQuestion="descriptionQuestion" />
   </section>
+
   <section class="section" id="turn">
     <TurnCard
       :turnInfo="turnDescription"
@@ -18,6 +21,7 @@
       :bodyClass="'fourth'"
     />
   </section>
+
   <section class="section">
     <Order :orderInfo="orderDescription" title="Как оформить?" />
   </section>
@@ -53,6 +57,8 @@ export default {
         subtitle:
           "Рассчитайте стоимость страхования имущества и оформите заявку на полис за пару минут.",
         url: "#anhkor",
+        btn: "Рассчитать стоимость",
+        target: false,
         list: [
           {
             title: "до 10 дней",

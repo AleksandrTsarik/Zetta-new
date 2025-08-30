@@ -32,12 +32,15 @@
             ></h2>
             <div class="banner__subtitle" v-if="descr.subtitle">
               {{ descr.subtitle }}
-              asdasd
             </div>
             <div class="banner__more">
-              <a :href="descr.url" target="_blank" class="btn btn-primary"
-                >Оформить онлайн</a
+              <a
+                :href="descr.url"
+                :target="descr.target ? '_blank' : undefined"
+                class="btn btn-primary"
               >
+                {{ descr.btn }}
+              </a>
             </div>
           </div>
           <div class="banner__item-botoom">

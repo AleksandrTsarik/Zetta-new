@@ -2,6 +2,7 @@
   <section class="section">
     <Banner :descr="bannerDescription" />
   </section>
+
   <section class="section">
     <Choice
       :choiceInfo="choiceDescription"
@@ -13,9 +14,11 @@
   <section class="section">
     <DqscriptionQ :descriptionQuestion="descriptionQuestion" />
   </section>
+
   <section class="section">
     <Pay />
   </section>
+
   <section class="section">
     <Order
       :orderInfo="orderDescription"
@@ -23,6 +26,7 @@
       orderLink="https://zettains.ru/calculators/osgop/?utm_source=2512541&utm_medium=9519741456&utm_campaign=9510823705"
     />
   </section>
+
   <section class="section section-bg">
     <Tab />
   </section>
@@ -54,6 +58,8 @@ export default {
         subtitle:
           "Оформите обязательное страхование гражданской ответственности перевозчика онлайн за пару минут. ",
         url: "https://zettains.ru/calculators/osgop/?utm_source=2512541&utm_medium=9519741456&utm_campaign=9510823705",
+        btn: "Оформить онлайн",
+        target: true,
         //--данный url тлько для ОСГОП!!!!!
         list: [
           {
