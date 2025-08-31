@@ -2,13 +2,13 @@
   <div class="quiz">
     <div class="quiz__container">
       <!-- Шапка -->
-      <header class="quiz__header">
+      <div class="quiz__header">
         <span class="logo logo_color_primary">Полис Zetta</span>
         <h1 class="quiz__title">Оформить полис</h1>
-      </header>
+      </div>
 
       <!-- Основной контент -->
-      <main class="quiz__main">
+      <div class="quiz__main">
         <!-- Левая колонка -->
         <div class="quiz__left">
           <h4>Полис страхования имущества</h4>
@@ -202,7 +202,7 @@
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   </div>
 </template>

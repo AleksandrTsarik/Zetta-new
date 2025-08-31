@@ -81,42 +81,28 @@
             <div class="tab-content__head">
               Что считается страховым случаем?
             </div>
+
             <div class="tab-content__body">
-              <a
-                href="https://zettains.ru/strahovanie-fizicheskih-lic/avtostrahovanie/strahovoy-sluchay/"
-                target="_blank"
-                class="tab-content-card"
-              >
+              <div class="tab-content-card">
                 <div class="tab-content-card__img">
-                  <img src="/img/tabs/item1.webp" alt="picture" />
+                  <img src="/img/tabs/item3.webp" alt="picture" />
                 </div>
-                <div class="tab-content-card__text">
-                  Дорожно-транспортное происшествие
-                </div>
-                <div class="tab-content-card__more">
-                  <div>
-                    Инструкция действий
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M21.2704 10.1026L17.4487 6L16.2703 7.26495L19.8221 11.0786L2 11.1054V12.8946L19.8721 12.8677L16.2695 16.7351L17.4478 18L21.2704 13.8974C21.7377 13.3933 22 12.7111 22 12C22 11.2889 21.7377 10.6067 21.2704 10.1026Z"
-                        fill="#7D51FE"
-                      />
-                    </svg>
+                <div class="tab-content-card__info">
+                  <div class="tab-content-card__title">
+                    Гражданская ответственность
+                  </div>
+                  <div class="tab-content-card__list">
+                    <div class="tab-content-card__list-name">
+                      Требования третьих лиц о возмещении вреда, причинённого:
+                    </div>
+                    <ul>
+                      <li>жизни и здоровью и/или имуществу.</li>
+                    </ul>
                   </div>
                 </div>
-              </a>
+              </div>
 
-              <a
-                href="https://zettains.ru/strahovanie-fizicheskih-lic/information/insuranced-accident/accident-approach/"
-                target="_blank"
-                class="tab-content-card"
-              >
+              <div class="tab-content-card">
                 <div class="tab-content-card__img">
                   <img src="/img/tabs/item2.webp" alt="picture" />
                 </div>
@@ -140,7 +126,7 @@
                     </svg>
                   </div>
                 </div>
-              </a>
+              </div>
             </div>
           </div>
 
@@ -161,14 +147,9 @@
                       fill="#7D51FE"
                     />
                   </svg>
-                  Правила страхования
+                  Основные условия страхования
                 </p>
-                <a
-                  href="https://zettains.ru/upload/rules/%D0%9F%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0%20%D0%9E%D0%A1%D0%93%D0%9E%D0%9F%20%D0%BD%D0%B0%20%D1%81%D0%B0%D0%B9%D1%82.pdf"
-                  class="btn btn-light"
-                  target="_blank"
-                  >Смотреть</a
-                >
+                <a href="#" class="btn btn-light" target="_blank">Смотреть</a>
               </div>
 
               <div class="tab-link__item">
@@ -185,34 +166,10 @@
                       fill="#7D51FE"
                     />
                   </svg>
-                  Осуществление Страховщиком страховой деятельности
+                  Правила страхования лиц, осуществляющих охранную деятельность
                 </p>
                 <a
-                  href="https://zettains.ru/vss_info/#_ga=2.234079454.1387420564.1736426837-270621958.1735288439"
-                  class="btn btn-light"
-                  target="_blank"
-                  >Смотреть</a
-                >
-              </div>
-
-              <div class="tab-link__item">
-                <p>
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M7.25 12H15.75V13.6667H7.25V12ZM7.25 17H13.2V15.3333H7.25V17ZM20 8.32167V22H3V4.5C3 3.83696 3.26866 3.20107 3.74688 2.73223C4.2251 2.26339 4.8737 2 5.55 2H13.5519L20 8.32167ZM14.05 7.83333H17.0981L14.05 4.845V7.83333ZM18.3 20.3333V9.5H12.35V3.66667H5.55C5.32457 3.66667 5.10837 3.75446 4.94896 3.91074C4.78955 4.06702 4.7 4.27899 4.7 4.5V20.3333H18.3Z"
-                      fill="#7D51FE"
-                    />
-                  </svg>
-                  Образец договора страхования
-                </p>
-                <a
-                  href="https://zettains.ru/local/modules/zetta.calc/lib/Pdf/osgop/files/obrazec_osgop.pdf"
+                  href="https://zettains.ru/upload/rules/%D0%BF%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0%20%D0%BE%D1%82%D0%B2%20%D1%87%D0%BE%D0%BF%20%D0%BD%D0%B0%20%D1%81%D0%B0%D0%B9%D1%82.pdf?t=1755491459778"
                   class="btn btn-light"
                   target="_blank"
                   >Смотреть</a
@@ -315,7 +272,7 @@ export default {
   }
   &__body {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 24px;
   }
 }
@@ -326,20 +283,6 @@ export default {
   flex-direction: column;
   background-color: rgb(var(--bg));
   transition: 0.3s;
-  &:hover {
-    @media (any-hover: hover) {
-      .tab-content-card__img img {
-        transform: scale(1.2);
-      }
-      .tab-content-card__more div {
-        background-color: rgba(var(--primary), 1);
-        color: rgb(var(--white));
-        svg path {
-          fill: rgb(var(--white));
-        }
-      }
-    }
-  }
   &__img {
     margin-bottom: 24px;
     transition: 0.3s;
@@ -347,25 +290,34 @@ export default {
     border-radius: var(--radius);
     img {
       transition: 0.3s;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
-  &__text {
+  &__info {
+  }
+  &__title {
     font-size: 20px;
     font-weight: 500;
-    margin-bottom: 24px;
-    color: rgb(var(--text));
+    margin-bottom: 16px;
   }
-  &__more {
-    div {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      color: rgb(var(--primary));
-      background-color: rgba(var(--primary), 0.1);
-      padding: 12px 24px;
-      border-radius: 50px;
-      transition: 0.3s;
+  &__text {
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 16px;
+    color: rgba(var(--text), 0.6);
+  }
+  &__list {
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 16px;
+    color: rgba(var(--text), 0.6);
+    ul {
     }
+  }
+  &__list-name {
+    margin-bottom: 16px;
   }
 }
 .tab-link {

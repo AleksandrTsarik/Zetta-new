@@ -14,16 +14,38 @@
       <div class="quiz__left">
         <!-- Прогресс-бар (шаги) -->
         <div class="quiz__steps">
-          <div
-            v-for="(step, index) in steps"
-            :key="index"
-            class="quiz__step"
-            :class="{
-              quiz__step_passed: index + 1 < currentStep,
-              quiz__step_active: index + 1 === currentStep,
-            }"
-          >
-            {{ step.title }}
+          <div class="progress-bar">
+            <div class="progress-bar__track">
+              <div class="progress-bar__divider"></div>
+              <div class="progress-bar__divider"></div>
+              <div class="progress-bar__divider"></div>
+              <div
+                class="progress-bar__fill"
+                :style="{ width: `${getProgressWidth()}%` }"
+              ></div>
+            </div>
+            <div class="progress-bar__labels">
+              <span
+                class="progress-bar__label"
+                :class="{ active: currentStep >= 1 }"
+                >1 шаг: Расчёт</span
+              >
+              <span
+                class="progress-bar__label"
+                :class="{ active: currentStep >= 2 }"
+                >2 шаг: Дополнительно</span
+              >
+              <span
+                class="progress-bar__label"
+                :class="{ active: currentStep >= 3 }"
+                >3 шаг: Заявление</span
+              >
+              <span
+                class="progress-bar__label"
+                :class="{ active: currentStep >= 4 }"
+                >4 шаг: Оформление</span
+              >
+            </div>
           </div>
         </div>
 
@@ -358,8 +380,8 @@
 </template>
 
 <script>
-import TheCheckbox from "../components/UI/TheCheckbox.vue";
-import TheInput from "../components/UI/TheInput.vue";
+import TheCheckbox from "./UI/TheCheckbox.vue";
+import TheInput from "./UI/TheInput.vue";
 
 export default {
   components: {
@@ -425,13 +447,6 @@ export default {
             "Исключение из договора страхования финансовых рисков (судебных издержек)",
         },
       ],
-
-      steps: [
-        { title: "1 шаг: Расчёт" },
-        { title: "2 шаг: Дополнительно" },
-        { title: "3 шаг: Заявление" },
-        { title: "4 шаг: Оформление" },
-      ],
     };
   },
 
@@ -467,6 +482,10 @@ export default {
   },
 
   methods: {
+    getProgressWidth() {
+      return (this.currentStep - 1) * 25;
+    },
+
     goBack() {
       if (this.currentStep > 1) this.currentStep--;
     },
@@ -661,38 +680,73 @@ export default {
   flex: 1;
 }
 
-// Прогресс-бар шагов
+// Прогресс-бар (шаги)
 .quiz__steps {
-  display: flex;
   margin-bottom: 24px;
-  overflow: hidden;
-  border-radius: 6px;
-  height: 32px;
-  background: #f0f0f0;
-  font-size: 12px;
-  font-weight: 500;
-  color: #999;
+  position: relative;
 }
 
-.quiz__step {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f0f0f0;
-  transition: background 0.3s ease;
-  text-align: center;
-  color: #999;
+.progress-bar {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background: transparent;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
 
-  &_passed {
-    background: #8d7fff;
-    color: white;
+  &__track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: rgba(var(--text), 0.1);
+    border-radius: 3px;
   }
 
-  &_active {
-    background: #e0e0ff;
-    color: #8d7fff;
-    font-weight: 600;
+  &__divider {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: white;
+    z-index: 1;
+    border-radius: 2px;
+
+    &:nth-child(1) {
+      left: 25%;
+    }
+    &:nth-child(2) {
+      left: 50%;
+    }
+    &:nth-child(3) {
+      left: 75%;
+    }
+  }
+
+  &__fill {
+    height: 100%;
+    background: rgb(var(--primary));
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+
+  &__labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #999;
+    margin-top: 8px;
+  }
+
+  &__label {
+    cursor: default;
+    padding: 4px 0;
+    transition: color 0.3s ease;
+
+    &.active {
+      color: rgb(var(--primary));
+      font-weight: 500;
+    }
   }
 }
 
@@ -727,6 +781,11 @@ export default {
   color: #8d7fff;
 }
 
+.slider-value__amount {
+  font-size: 16px;
+  font-weight: 500;
+}
+
 .slider-value__edit {
   background: none;
   border: none;
@@ -742,6 +801,12 @@ export default {
   border-radius: 2px;
   overflow: hidden;
   cursor: pointer;
+}
+
+.slider-track {
+  width: 100%;
+  height: 100%;
+  background: #e0e0e0;
 }
 
 .slider-progress {
@@ -785,6 +850,14 @@ export default {
   font-size: 12px;
   color: #999;
   margin-top: 8px;
+}
+
+.slider-min {
+  left: 0;
+}
+
+.slider-max {
+  right: 0;
 }
 
 // Радио-группы
@@ -836,34 +909,6 @@ export default {
   margin-top: 12px;
 }
 
-.file-preview {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-  padding: 8px;
-  background: #f0f0ff;
-  border-radius: 6px;
-  font-size: 12px;
-  color: #333;
-}
-
-.btn-close {
-  background: none;
-  border: none;
-  font-size: 14px;
-  cursor: pointer;
-  color: #999;
-}
-
-// Кнопки
-.quiz__buttons {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 24px;
-}
-
 .btn {
   padding: 10px 20px;
   border-radius: 8px;
@@ -894,6 +939,34 @@ export default {
     opacity: 0.6;
     cursor: not-allowed;
   }
+}
+
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px;
+  background: #f0f0ff;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #333;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  color: #999;
+}
+
+// Кнопки
+.quiz__buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 24px;
 }
 
 // Сводка
