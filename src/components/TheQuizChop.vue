@@ -1,9 +1,9 @@
 <template>
   <div class="quiz">
-    <div class="quiz__logo-wrapper">
-      <span class="logo">Полис Zettaтзь </span>
+    <div class="quiz__head">
+      <span class="span-primary">Полис Zettaтзь </span>
+      <h2 class="quiz__title title">Оформить полис</h2>
     </div>
-    <h1 class="quiz__title">Оформить полис</h1>
 
     <!-- Основной контейнер -->
     <div class="quiz__container">
@@ -645,6 +645,17 @@ export default {
 
 <style lang="scss" scoped>
 .quiz {
+  &__head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 30px;
+    span {
+      position: relative;
+    }
+  }
   &__left {
     h3 {
       margin-bottom: 24px;
@@ -657,12 +668,7 @@ export default {
     grid-template-columns: 1fr 0.8fr;
     gap: 24px;
   }
-  &__title {
-    text-align: center;
-    font-size: 28px;
-    margin: 0 0 20px 0;
-    font-weight: 600;
-  }
+
   &__left,
   &__right {
     border-radius: 12px;
