@@ -2,7 +2,7 @@
   <div class="quiz">
     <!-- Логотип -->
     <div class="quiz__logo-wrapper">
-      <span class="logo logo_color_primary">Полис Zetta</span>
+      <span class="logo logo_color_primary">Полис Zettaтзь </span>
     </div>
 
     <!-- Заголовок -->
@@ -15,37 +15,28 @@
         <!-- Прогресс-бар (шаги) -->
         <div class="quiz__steps">
           <div class="progress-bar">
-            <div class="progress-bar__track">
-              <div class="progress-bar__divider"></div>
-              <div class="progress-bar__divider"></div>
-              <div class="progress-bar__divider"></div>
+            <div class="progress-bar__steps">
               <div
-                class="progress-bar__fill"
-                :style="{ width: `${getProgressWidth()}%` }"
-              ></div>
+                v-for="(step, idx) in steps"
+                :key="idx"
+                class="progress-bar__step"
+              >
+                <span
+                  class="progress-bar__label"
+                  :class="{
+                    'progress-bar__label_active': currentStep >= idx + 1,
+                  }"
+                >
+                  {{ step.title }}
+                </span>
+                <div class="progress-bar__line"></div>
+              </div>
             </div>
-            <div class="progress-bar__labels">
-              <span
-                class="progress-bar__label"
-                :class="{ active: currentStep >= 1 }"
-                >1 шаг: Расчёт</span
-              >
-              <span
-                class="progress-bar__label"
-                :class="{ active: currentStep >= 2 }"
-                >2 шаг: Дополнительно</span
-              >
-              <span
-                class="progress-bar__label"
-                :class="{ active: currentStep >= 3 }"
-                >3 шаг: Заявление</span
-              >
-              <span
-                class="progress-bar__label"
-                :class="{ active: currentStep >= 4 }"
-                >4 шаг: Оформление</span
-              >
-            </div>
+            <!-- Прогресс-заполнение -->
+            <div
+              class="progress-bar__fill"
+              :style="{ width: `${getProgressWidth()}%` }"
+            ></div>
           </div>
         </div>
 
@@ -413,6 +404,13 @@ export default {
       showCost: true,
       showSuccess: false,
 
+      steps: [
+        { title: "1 шаг. Расчёт" },
+        { title: "2 шаг. Дополнительно" },
+        { title: "3 шаг. Заявление" },
+        { title: "4 шаг. Оформление" },
+      ],
+
       experienceOptions: [
         { label: "от 1 года, но не более 3 лет" },
         { label: "от 4 лет, но не более 7 лет" },
@@ -683,70 +681,62 @@ export default {
 // Прогресс-бар (шаги)
 .quiz__steps {
   margin-bottom: 24px;
-  position: relative;
 }
 
 .progress-bar {
   position: relative;
-  width: 100%;
-  height: 6px;
-  background: transparent;
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: 8px;
+  height: 40px;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 0;
 
-  &__track {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background: rgba(var(--text), 0.1);
-    border-radius: 3px;
-  }
-
-  &__divider {
-    position: absolute;
-    top: 0;
-    width: 2px;
-    height: 100%;
-    background: white;
-    z-index: 1;
-    border-radius: 2px;
-
-    &:nth-child(1) {
-      left: 25%;
-    }
-    &:nth-child(2) {
-      left: 50%;
-    }
-    &:nth-child(3) {
-      left: 75%;
-    }
-  }
-
-  &__fill {
-    height: 100%;
-    background: rgb(var(--primary));
-    border-radius: 3px;
-    transition: width 0.3s ease;
-  }
-
-  &__labels {
+  &__steps {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     font-size: 12px;
     color: #999;
-    margin-top: 8px;
+  }
+
+  &__step {
+    position: relative;
+    text-align: center;
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   &__label {
+    margin-bottom: 4px;
     cursor: default;
-    padding: 4px 0;
     transition: color 0.3s ease;
 
-    &.active {
-      color: rgb(var(--primary));
+    &_active {
+      color: #8d7fff;
       font-weight: 500;
     }
+  }
+
+  &__line {
+    width: 100%;
+    height: 2px;
+    background: rgba(var(--text), 0.2);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+  &__fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: #8d7fff;
+    border-radius: 2px;
+    z-index: 0;
+    transition: width 0.3s ease;
   }
 }
 
