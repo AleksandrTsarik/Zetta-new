@@ -8,21 +8,27 @@
   <section class="section">
     <Possible />
   </section>
+
   <section class="section">
     <DqscriptionQ :descriptionQuestion="descriptionQuestion2" />
   </section>
-  <section class="section" id="order-policy">asdassd</section>
+
+  <section class="section" id="order-policy">
+    <Quiz />
+  </section>
 </template>
 
 <script>
 import Banner from "../components/TheBanner.vue";
 import DqscriptionQ from "../components/TheQuestion.vue";
 import Possible from "../components/ThePossibleChop.vue";
+import Quiz from "../components/TheQuizChop.vue";
 export default {
   components: {
     Banner,
     DqscriptionQ,
     Possible,
+    Quiz,
   },
   data() {
     return {

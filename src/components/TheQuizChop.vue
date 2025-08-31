@@ -1,42 +1,44 @@
 <template>
   <div class="quiz">
-    <!-- Логотип -->
     <div class="quiz__logo-wrapper">
-      <span class="logo logo_color_primary">Полис Zettaтзь </span>
+      <span class="logo">Полис Zettaтзь </span>
     </div>
-
-    <!-- Заголовок -->
     <h1 class="quiz__title">Оформить полис</h1>
 
     <!-- Основной контейнер -->
     <div class="quiz__container">
       <!-- Левая колонка: форма -->
       <div class="quiz__left">
+        <h3>Полис страхования ЧОП</h3>
         <!-- Прогресс-бар (шаги) -->
         <div class="quiz__steps">
           <div class="progress-bar">
-            <div class="progress-bar__steps">
-              <div
+            <!-- Названия шагов -->
+            <div class="progress-bar__labels">
+              <span
                 v-for="(step, idx) in steps"
                 :key="idx"
-                class="progress-bar__step"
+                class="progress-bar__label"
+                :class="{
+                  'progress-bar__label_active': currentStep >= idx + 1,
+                }"
               >
-                <span
-                  class="progress-bar__label"
-                  :class="{
-                    'progress-bar__label_active': currentStep >= idx + 1,
-                  }"
-                >
-                  {{ step.title }}
-                </span>
-                <div class="progress-bar__line"></div>
-              </div>
+                {{ step.title }}
+              </span>
             </div>
-            <!-- Прогресс-заполнение -->
-            <div
-              class="progress-bar__fill"
-              :style="{ width: `${getProgressWidth()}%` }"
-            ></div>
+
+            <div class="progress-bar__track">
+              <!-- Разделители -->
+              <div class="progress-bar__divider" style="left: 25%"></div>
+              <div class="progress-bar__divider" style="left: 50%"></div>
+              <div class="progress-bar__divider" style="left: 75%"></div>
+
+              <!-- Заполнение -->
+              <div
+                class="progress-bar__fill"
+                :style="{ width: `${getProgressWidth()}%` }"
+              ></div>
+            </div>
           </div>
         </div>
 
@@ -95,9 +97,10 @@
                 <input
                   type="radio"
                   :checked="selectedExperience === idx"
-                  class="radio-input"
+                  class="radio-item__input"
                 />
-                <span class="radio-label">{{ option.label }}</span>
+                <span class="radio-item__checked"></span>
+                <span class="radio-item__name">{{ option.label }}</span>
               </label>
             </div>
           </div>
@@ -114,9 +117,10 @@
                 <input
                   type="radio"
                   :checked="selectedObjects === idx"
-                  class="radio-input"
+                  class="radio-item__input"
                 />
-                <span class="radio-label">{{ option.label }}</span>
+                <span class="radio-item__checked"></span>
+                <span class="radio-item__name">{{ option.label }}</span>
               </label>
             </div>
           </div>
@@ -145,9 +149,10 @@
                 <input
                   type="radio"
                   :checked="selectedLiability === idx"
-                  class="radio-input"
+                  class="radio-item__input"
                 />
-                <span class="radio-label">{{ option.label }}</span>
+                <span class="radio-item__checked"></span>
+                <span class="radio-item__name">{{ option.label }}</span>
               </label>
             </div>
           </div>
@@ -164,9 +169,10 @@
                 <input
                   type="radio"
                   :checked="selectedFranchise === idx"
-                  class="radio-input"
+                  class="radio-item__input"
                 />
-                <span class="radio-label">{{ option.label }}</span>
+                <span class="radio-item__checked"></span>
+                <span class="radio-item__name">{{ option.label }}</span>
               </label>
             </div>
           </div>
@@ -183,9 +189,10 @@
                 <input
                   type="radio"
                   :checked="selectedFinancialRisk === idx"
-                  class="radio-input"
+                  class="radio-item__input"
                 />
-                <span class="radio-label">{{ option.label }}</span>
+                <span class="radio-item__checked"></span>
+                <span class="radio-item__name">{{ option.label }}</span>
               </label>
             </div>
           </div>
@@ -638,105 +645,85 @@ export default {
 
 <style lang="scss" scoped>
 .quiz {
-  color: #333;
-  margin: 0 auto;
-  max-width: 1200px;
-  padding: 20px;
-  font-family: "Inter", sans-serif;
-}
-
-.quiz__logo-wrapper {
-  text-align: center;
-  margin-bottom: 16px;
-}
-
-.logo {
-  font-size: 14px;
-  color: #8d7fff;
-  font-weight: 500;
-}
-
-.quiz__title {
-  text-align: center;
-  font-size: 28px;
-  margin: 0 0 20px 0;
-  font-weight: 600;
-}
-
-.quiz__container {
-  display: flex;
-  gap: 24px;
-  margin-top: 20px;
-}
-
-.quiz__left,
-.quiz__right {
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  background: white;
-  padding: 24px;
-  flex: 1;
-}
-
-// Прогресс-бар (шаги)
-.quiz__steps {
-  margin-bottom: 24px;
-}
-
-.progress-bar {
-  position: relative;
-  height: 40px;
-  border-top: 1px solid #e0e0e0;
-  border-bottom: 1px solid #e0e0e0;
-  padding: 12px 0;
-
-  &__steps {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-    color: #999;
-  }
-
-  &__step {
-    position: relative;
-    text-align: center;
-    width: 25%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  &__label {
-    margin-bottom: 4px;
-    cursor: default;
-    transition: color 0.3s ease;
-
-    &_active {
-      color: #8d7fff;
+  &__left {
+    h3 {
+      margin-bottom: 24px;
+      font-size: 28px;
       font-weight: 500;
     }
   }
+  &__container {
+    display: grid;
+    grid-template-columns: 1fr 0.8fr;
+    gap: 24px;
+  }
+  &__title {
+    text-align: center;
+    font-size: 28px;
+    margin: 0 0 20px 0;
+    font-weight: 600;
+  }
+  &__left,
+  &__right {
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: white;
+    padding: 24px;
+    flex: 1;
+  }
+  &__steps {
+    margin-bottom: 20px;
+  }
+}
 
-  &__line {
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: transparent;
+  border-radius: 3px;
+  position: relative;
+
+  &__track {
+    position: relative;
     width: 100%;
-    height: 2px;
-    background: rgba(var(--text), 0.2);
+    height: 100%;
+    background: rgba(var(--text), 0.1);
+    border-radius: 3px;
+  }
+
+  &__divider {
     position: absolute;
-    bottom: 0;
-    left: 0;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: rgb(var(--white));
     z-index: 1;
+    border-radius: 2px;
   }
 
   &__fill {
-    position: absolute;
-    top: 0;
-    left: 0;
     height: 100%;
-    background: #8d7fff;
-    border-radius: 2px;
-    z-index: 0;
+    background: rgb(var(--primary));
+    border-radius: 3px;
     transition: width 0.3s ease;
+  }
+
+  &__labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: rgba(var(--text), 0.6);
+  }
+
+  &__label {
+    text-align: left;
+    flex: 1;
+    transition: color 0.3s ease;
+    font-size: 10px;
+    margin-bottom: 5px;
+    &_active {
+      font-weight: 500;
+    }
   }
 }
 
@@ -856,35 +843,46 @@ export default {
 }
 
 .radio-item {
+  cursor: pointer;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 0;
-  cursor: pointer;
-}
+  gap: 10px;
+  margin-bottom: 16px;
 
-.radio-input {
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  border: 2px solid #ccc;
-  border-radius: 50%;
-  cursor: pointer;
-
-  &:checked {
-    background: #8d7fff;
-    border-color: #8d7fff;
-
-    &:after {
+  &:last-child {
+    margin-bottom: 0;
+  }
+  &__input {
+    opacity: 0;
+    position: absolute;
+    width: 0;
+    pointer-events: none;
+  }
+  &__checked {
+    width: 24px;
+    flex: 0 0 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: solid 1px rgb(var(--primary));
+    margin-top: -0.2em;
+    transition: 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &::after {
       content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 6px;
-      height: 6px;
-      background: white;
+      width: 0.8em;
+      height: 0.8em;
+      flex: 0 0 0.8em;
+      background-color: rgb(var(--primary));
       border-radius: 50%;
+      transition: 0.3s ease;
+      opacity: 0;
+    }
+  }
+  &__input:checked + &__checked {
+    &::after {
+      opacity: 1;
     }
   }
 }
@@ -897,38 +895,6 @@ export default {
 // Файл
 .file-upload {
   margin-top: 12px;
-}
-
-.btn {
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s ease;
-
-  &.btn-light {
-    background: #f5f5f5;
-    color: #333;
-    border: 1px solid #ddd;
-  }
-
-  &.btn-primary {
-    background: #8d7fff;
-    color: white;
-  }
-
-  &.btn-outline {
-    background: transparent;
-    color: #8d7fff;
-    border: 1px solid #8d7fff;
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
 }
 
 .file-preview {
