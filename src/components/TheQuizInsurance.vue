@@ -3,7 +3,7 @@
     <div class="quiz__container">
       <!-- Шапка -->
       <div class="quiz__header">
-        <span class="logo logo_color_primary">Полис Zetta</span>
+        <span class="span-primary">Полис Zetta</span>
         <h1 class="quiz__title">Оформить полис</h1>
       </div>
 
@@ -56,14 +56,14 @@
                   <span class="slider__value">{{
                     formatCurrency(insuranceSum)
                   }}</span>
-                  <button @click="editSum" class="slider__edit-btn">
+                  <!-- <button @click="editSum" class="slider__edit-btn">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path
                         d="M13.897 3.915C14.25 4.268 14.25 4.852 13.897 5.205L11.52 7.582L13.897 9.959C14.25 10.312 14.25 10.896 13.897 11.249C13.544 11.602 12.96 11.602 12.607 11.249L10.23 8.872L7.853 11.249C7.499 11.602 6.915 11.602 6.562 11.249C6.209 10.896 6.209 10.312 6.562 9.959L8.939 7.582L6.562 5.205C6.209 4.852 6.209 4.268 6.562 3.915C6.915 3.562 7.499 3.562 7.853 3.915L10.23 6.292L12.607 3.915C12.96 3.562 13.544 3.562 13.897 3.915Z"
                         fill="#8D7FFF"
                       />
                     </svg>
-                  </button>
+                  </button> -->
                 </div>
 
                 <div
@@ -121,7 +121,6 @@
                   v-if="key === 'inn'"
                   v-model="inn"
                   :type="field.type"
-                  :name="field.name"
                   :placeholder="field.label"
                   :invalid="innError"
                 />
@@ -130,7 +129,6 @@
                   v-else-if="key === 'phone'"
                   v-model="phone"
                   :type="field.type"
-                  :name="field.name"
                   :placeholder="field.label"
                   :invalid="phoneError"
                   @focus="onPhoneFocus"
@@ -141,7 +139,6 @@
                   v-else
                   v-model="formData[key]"
                   :type="field.type"
-                  :name="field.name"
                   :placeholder="field.label"
                   :invalid="false"
                 />
@@ -179,12 +176,16 @@
               <span>Наполнение полиса</span>
               <svg
                 :class="{ summary__arrow_rotate: isDetailsOpen }"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
+                width="14"
+                height="8"
+                viewBox="0 0 14 8"
                 fill="none"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <path d="M6 3L9 6L6 9L3 6L6 3Z" fill="currentColor" />
+                <path
+                  d="M6.99997 7.50003C6.73736 7.50049 6.47725 7.44904 6.23459 7.34865C5.99192 7.24825 5.7715 7.10089 5.58597 6.91503L0.292969 1.62103L1.70697 0.207031L6.99997 5.50003L12.293 0.207031L13.707 1.62103L8.41397 6.91403C8.22852 7.10007 8.00813 7.24762 7.76547 7.34819C7.5228 7.44875 7.26265 7.50036 6.99997 7.50003Z"
+                  fill="#141517"
+                />
               </svg>
             </div>
             <div v-show="isDetailsOpen" class="summary__details">
@@ -210,12 +211,16 @@
               <span>Детали</span>
               <svg
                 :class="{ summary__arrow_rotate: detailsOpen }"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
+                width="14"
+                height="8"
+                viewBox="0 0 14 8"
                 fill="none"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <path d="M6 3L9 6L6 9L3 6L6 3Z" fill="currentColor" />
+                <path
+                  d="M6.99997 7.50003C6.73736 7.50049 6.47725 7.44904 6.23459 7.34865C5.99192 7.24825 5.7715 7.10089 5.58597 6.91503L0.292969 1.62103L1.70697 0.207031L6.99997 5.50003L12.293 0.207031L13.707 1.62103L8.41397 6.91403C8.22852 7.10007 8.00813 7.24762 7.76547 7.34819C7.5228 7.44875 7.26265 7.50036 6.99997 7.50003Z"
+                  fill="#141517"
+                />
               </svg>
             </div>
             <div v-show="detailsOpen" class="summary__details">
@@ -304,7 +309,7 @@ export default {
         },
         email: {
           label: "Электронная почта",
-          name: "mail", // ← важно: в PHP используется $_POST['mail']
+          name: "mail",
           type: "email",
           required: true,
         },
@@ -385,7 +390,6 @@ export default {
   methods: {
     calculateInsuranceSubmit($event) {
       const formData = new FormData($event.target);
-      console.group("✅ Отправляем данные:");
       for (let [key, value] of formData.entries()) {
         console.log(key, "=", value);
       }
@@ -394,14 +398,45 @@ export default {
       fetch("/api/mailer.php", { method: "POST", body: formData })
         .then((res) => res.json())
         .then((data) => {
-          console.log("✅ Успешно отправлено:", data);
-          alert("Заявка отправлена!");
+          this.resetForm(); //Очистка формы
         })
         .catch((err) => {
-          console.error("❌ Ошибка отправки:", err);
-          alert("Ошибка отправки. Попробуйте позже.");
+          // console.error("Ошибка отправки:", err);
         });
     },
+
+    // ✅ Сброс формы
+    resetForm() {
+      // Сбрасываем шаг
+      this.currentStep = 1;
+
+      // Очищаем основные поля
+      this.formData = {
+        companyName: "",
+        inn: "",
+        phone: "",
+        email: "",
+        agree: false,
+      };
+
+      // Сбрасываем маски телефона
+      this.phoneInput = "";
+      this.phoneRaw = "";
+      this.showPhoneRaw = false;
+
+      // Можно сбросить сумму, если нужно
+      // this.insuranceSum = 115000;
+
+      // Сбрасываем чекбоксы (кроме первого по умолчанию)
+      this.selectedItems = [
+        "Конструктивные элементы и инженерное оборудование",
+      ];
+
+      // Закрываем детали
+      this.isDetailsOpen = true;
+      this.detailsOpen = true;
+    },
+
     toggleCheckbox(value) {
       const index = this.selectedItems.indexOf(value);
       if (index === -1) {
@@ -501,7 +536,7 @@ export default {
     },
     onPhoneBlur() {
       this.showPhoneRaw = false;
-      // ❌ Убрали: this.phone = this.phoneRaw — чтобы не было лишнего обновления
+      // Не вызываем this.phone = this.phoneRaw
     },
   },
 };
@@ -517,6 +552,10 @@ export default {
   &__header {
     text-align: center;
     margin-bottom: 30px;
+    span {
+      position: relative;
+      margin-bottom: 20px;
+    }
   }
   &__title {
     font-size: 24px;
@@ -626,16 +665,19 @@ export default {
 }
 
 .slider {
-  margin-bottom: 30px;
+  margin-bottom: 60px;
   &__label {
-    font-size: 14px;
+    font-size: 16px;
     margin-bottom: 10px;
-    color: #dedede;
+    color: rgb(var(--text));
   }
 
   &__input {
     position: relative;
     width: 100%;
+  }
+  &__track {
+    margin: 10px auto;
   }
 
   &__value-wrapper {
@@ -709,7 +751,7 @@ export default {
   &__min,
   &__max {
     position: absolute;
-    bottom: -20px;
+    bottom: -30px;
     font-size: 14px;
     color: rgba(var(--text), 0.6);
   }
@@ -727,12 +769,7 @@ export default {
   &__group {
     margin-bottom: 16px;
   }
-  &__label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    color: #dedede;
-  }
+
   &__link {
     color: red;
     text-decoration: underline;
@@ -740,20 +777,19 @@ export default {
 }
 
 .summary {
-  background: white;
+  background: rgb(var(--white));
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px rgba(var(--text), 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
 
   &.active {
-    background: #f0f0ff;
-    border: 1px solid red;
+    border: 1px solid rgba(var(--text), 0.2);
 
     .summary__header {
-      color: red;
+      color: rgb(var(--text));
     }
   }
 
@@ -761,9 +797,9 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-weight: 500;
-    font-size: 14px;
-    color: #dedede;
+    font-weight: 600;
+    font-size: 16px;
+    //color: rgba(var(--text), 0.6);
   }
 
   &__arrow_rotate {
@@ -774,6 +810,7 @@ export default {
     margin-top: 8px;
     padding-top: 8px;
     border-top: 1px solid rgb(var(--border));
+    transition: 0.3s;
   }
 
   &__item {

@@ -215,18 +215,19 @@ export default {
 .block-input input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid rgba(var(--text), 0.2);
   border-radius: 8px;
   font-size: 14px;
   box-sizing: border-box;
   transition: border-color 0.3s ease;
   background: white;
+  height: 50px;
 }
 
 .block-input input:focus {
   outline: none;
-  border-color: #8d7fff;
-  box-shadow: 0 0 0 2px rgba(141, 127, 255, 0.2);
+  border-color: rgb(var(--primary));
+  box-shadow: 0 0 0 1px rgba(var(--primary), 0.2);
 }
 
 .block-input__label {
