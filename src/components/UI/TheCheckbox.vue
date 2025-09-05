@@ -1,11 +1,10 @@
 <template>
-  <label class="default-checkbox" @click="toggle">
+  <label class="default-checkbox">
     <input
       type="checkbox"
       :checked="modelValue"
       class="default-checkbox__input"
       @change="$emit('update:modelValue', $event.target.checked)"
-      :ref="name"
     />
     <span class="default-checkbox__checked"></span>
     <span
@@ -32,17 +31,8 @@ export default {
       type: Boolean,
       default: false,
     },
-    name: {
-      type: String,
-      default: "",
-    },
   },
   emits: ["update:modelValue"],
-  methods: {
-    toggle() {
-      this.$emit("update:modelValue", !this.modelValue);
-    },
-  },
 };
 </script>
 

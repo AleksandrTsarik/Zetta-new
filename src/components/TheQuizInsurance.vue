@@ -42,13 +42,13 @@
                 v-for="item in checkboxItems"
                 :key="item.value"
                 :label="item.label"
-                :modelValue="selectedItems.includes(item.value)"
-                @update:modelValue="toggleCheckbox(item.value)"
+                :modelValue="selectedItems.includes(item.label)"
+                @update:modelValue="toggleCheckbox(item.label)"
                 class="checkbox__item"
               />
             </div>
 
-            <!-- Кастомный слайдер -->
+            <!-- Слайдер -->
             <div class="slider">
               <div class="slider__label">Введите страховую сумму полиса</div>
               <div class="slider__input">
@@ -66,36 +66,28 @@
                   </button>
                 </div>
 
-                <!-- Контейнер слайдера -->
                 <div
                   class="slider__track"
                   @click="onTrackClick"
                   @mousedown="onDragStart"
                   @touchstart="onDragStart"
                 >
-                  <!-- Прогресс (заполненная часть) -->
                   <div
                     class="slider__progress"
                     :style="{ width: `${(insuranceSum / max) * 100}%` }"
                   ></div>
-
-                  <!-- Ползунок -->
                   <div
                     class="slider__thumb"
                     :style="{ left: `${(insuranceSum / max) * 100}%` }"
                   ></div>
                 </div>
-
-                <!-- Мин/макс подпись -->
                 <div class="slider__min">0 ₽</div>
                 <div class="slider__max">30 000 000 ₽</div>
               </div>
             </div>
 
             <div class="quiz__buttons">
-              <button class="btn btn-light" :disabled="currentStep === 1">
-                ← Назад
-              </button>
+              <button class="btn btn-light" disabled>← Назад</button>
               <button class="btn btn-primary" @click="goNext">
                 Продолжить →
               </button>
@@ -107,40 +99,77 @@
             <h2 class="quiz__subtitle">
               Заполните данные для оформления полиса
             </h2>
-            <form class="form">
+            <form
+              class="form"
+              method="post"
+              @submit.prevent="calculateInsuranceSubmit"
+            >
+              <input type="hidden" name="material[]" :value="selectedItems" />
+              <input
+                type="hidden"
+                name="price"
+                :value="formatCurrency(totalCost)"
+              />
+
               <div
                 class="form__group"
                 v-for="(field, key) in formFields"
                 :key="key"
               >
+                <!-- ИНН -->
                 <TheInput
+                  v-if="key === 'inn'"
+                  v-model="inn"
+                  :type="field.type"
+                  :name="field.name"
+                  :placeholder="field.label"
+                  :invalid="innError"
+                />
+                <!-- Телефон -->
+                <TheInput
+                  v-else-if="key === 'phone'"
+                  v-model="phone"
+                  :type="field.type"
+                  :name="field.name"
+                  :placeholder="field.label"
+                  :invalid="phoneError"
+                  @focus="onPhoneFocus"
+                  @blur="onPhoneBlur"
+                />
+                <!-- Остальные поля -->
+                <TheInput
+                  v-else
                   v-model="formData[key]"
                   :type="field.type"
-                  :name="field.label"
+                  :name="field.name"
                   :placeholder="field.label"
                   :invalid="false"
                 />
               </div>
+
               <div class="form__group">
                 <TheCheckbox
                   v-model="formData.agree"
                   label="Даю согласие на обработку персональных данных в соответствии с <a href='https://codeseven.ru/pdf/opd.pdf' target='_blank'>Политикой конфиденциальности</a>"
                 />
               </div>
-            </form>
 
-            <div class="quiz__buttons">
-              <button class="btn btn-light" @click="goBack">← Назад</button>
-              <button class="btn btn-primary" @click="submitForm">
-                Оформить полис
-              </button>
-            </div>
+              <div class="quiz__buttons">
+                <button class="btn btn-light" @click="goBack">← Назад</button>
+                <button
+                  class="btn btn-primary"
+                  :disabled="!isFormValid"
+                  :class="{ 'btn-disabled': !isFormValid }"
+                >
+                  Оформить полис
+                </button>
+              </div>
+            </form>
           </div>
         </div>
 
         <!-- Правая колонка -->
         <div class="quiz__right">
-          <!-- Блок "Наполнение полиса" -->
           <div
             class="summary"
             :class="{ active: isDetailsOpen }"
@@ -172,7 +201,6 @@
             </div>
           </div>
 
-          <!-- Блок "Детали" -->
           <div
             class="summary"
             :class="{ active: detailsOpen }"
@@ -220,7 +248,7 @@ export default {
   data() {
     return {
       currentStep: 1,
-      selectedItems: ["construction"],
+      selectedItems: ["Конструктивные элементы и инженерное оборудование"],
       insuranceSum: 115000,
       min: 0,
       max: 30000000,
@@ -233,6 +261,9 @@ export default {
         email: "",
         agree: false,
       },
+      phoneInput: "", // форматированный ввод
+      phoneRaw: "", // только цифры
+      showPhoneRaw: false,
       isDetailsOpen: true,
       detailsOpen: true,
       checkboxItems: [
@@ -255,12 +286,28 @@ export default {
       formFields: {
         companyName: {
           label: "Наименование юр. лица",
+          name: "companyName",
           type: "text",
           required: true,
         },
-        inn: { label: "ИНН", type: "text", required: true },
-        phone: { label: "Контактный номер", type: "tel", required: true },
-        email: { label: "Электронная почта", type: "email", required: true },
+        inn: {
+          label: "ИНН",
+          name: "inn",
+          type: "text",
+          required: true,
+        },
+        phone: {
+          label: "Контактный номер",
+          name: "phone",
+          type: "tel",
+          required: true,
+        },
+        email: {
+          label: "Электронная почта",
+          name: "mail", // ← важно: в PHP используется $_POST['mail']
+          type: "email",
+          required: true,
+        },
       },
     };
   },
@@ -270,8 +317,91 @@ export default {
       const multiplier = this.selectedItems.length > 1 ? 0.05 : 0;
       return Math.round(base * (1 + multiplier));
     },
+    phoneError() {
+      return this.formData.phone.length !== 11;
+    },
+    innError() {
+      return this.formData.inn.length !== 10 && this.formData.inn.length !== 12;
+    },
+    phone: {
+      get() {
+        if (this.showPhoneRaw) {
+          return this.phoneRaw;
+        }
+        return this.phoneInput;
+      },
+      set(value) {
+        let digits = value.replace(/\D/g, "");
+        if (digits.length === 0) {
+          digits = "";
+        } else if (digits[0] !== "7") {
+          digits = "7" + digits.replace(/^7*/, "");
+        } else {
+          digits = digits.slice(0, 1) + digits.slice(1).replace(/^7*/, "");
+        }
+        digits = digits.slice(0, 11);
+
+        this.phoneRaw = digits;
+
+        if (!this.showPhoneRaw) {
+          let formatted = "";
+          if (digits) {
+            formatted = "+7";
+            if (digits.length > 1) formatted += " (" + digits.slice(1, 4);
+            if (digits.length >= 4) formatted += ") " + digits.slice(4, 7);
+            if (digits.length >= 7) formatted += "-" + digits.slice(7, 9);
+            if (digits.length >= 9) formatted += "-" + digits.slice(9, 11);
+          }
+          this.phoneInput = formatted;
+        }
+
+        this.formData.phone = digits;
+      },
+    },
+    inn: {
+      get() {
+        return this.formData.inn;
+      },
+      set(value) {
+        const digits = value.replace(/\D/g, "").slice(0, 12);
+        this.formData.inn = digits;
+      },
+    },
+    isFormValid() {
+      const { companyName, inn, phone, email, agree } = this.formData;
+      const emailRegex = /^\S+@\S+\.\S+$/;
+      const validInn = inn.length === 10 || inn.length === 12;
+      const validPhone = phone.length === 11;
+
+      return (
+        companyName.trim() !== "" &&
+        validInn &&
+        validPhone &&
+        emailRegex.test(email) &&
+        agree
+      );
+    },
   },
   methods: {
+    calculateInsuranceSubmit($event) {
+      const formData = new FormData($event.target);
+      console.group("✅ Отправляем данные:");
+      for (let [key, value] of formData.entries()) {
+        console.log(key, "=", value);
+      }
+      console.groupEnd();
+
+      fetch("/api/mailer.php", { method: "POST", body: formData })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("✅ Успешно отправлено:", data);
+          alert("Заявка отправлена!");
+        })
+        .catch((err) => {
+          console.error("❌ Ошибка отправки:", err);
+          alert("Ошибка отправки. Попробуйте позже.");
+        });
+    },
     toggleCheckbox(value) {
       const index = this.selectedItems.indexOf(value);
       if (index === -1) {
@@ -351,10 +481,6 @@ export default {
       document.removeEventListener("touchmove", this.onDragMove);
       document.removeEventListener("touchend", this.onDragEnd);
     },
-    submitForm() {
-      alert("Форма отправлена!");
-      console.log("Данные:", this.formData);
-    },
     formatCurrency(value) {
       return new Intl.NumberFormat("ru-RU", {
         style: "currency",
@@ -367,11 +493,22 @@ export default {
         this.checkboxItems.find((item) => item.value === key)?.label || key
       );
     },
+    onPhoneFocus() {
+      this.showPhoneRaw = true;
+      this.$nextTick(() => {
+        this.phoneInput = this.phoneRaw;
+      });
+    },
+    onPhoneBlur() {
+      this.showPhoneRaw = false;
+      // ❌ Убрали: this.phone = this.phoneRaw — чтобы не было лишнего обновления
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+/* Без изменений */
 .quiz {
   color: #333;
   margin: 0 auto;
@@ -574,7 +711,6 @@ export default {
     position: absolute;
     bottom: -20px;
     font-size: 14px;
-    margin-top: 20px;
     color: rgba(var(--text), 0.6);
   }
 
@@ -655,6 +791,12 @@ export default {
     padding-top: 16px;
     border-top: 1px solid rgb(var(--border));
   }
+}
+
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 @media (max-width: 900px) {

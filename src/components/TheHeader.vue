@@ -3,6 +3,7 @@
     <div class="header__wrap">
       <div class="header__item">
         <TheNetwork type="logo" />
+        <p @click="test">click me</p>
         <nav class="header-nav desktop-item">
           <ul>
             <li v-for="(item, i) in nav" :key="i">
@@ -93,6 +94,9 @@ export default {
     };
   },
   methods: {
+    test() {
+      fetch("/api/test.php").then((res) => console.log(res));
+    },
     menuOpen() {
       if (!this.isOpenMenu) document.body.classList.add("lock");
       else document.body.classList.remove("lock");
