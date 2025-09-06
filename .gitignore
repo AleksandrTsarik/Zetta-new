@@ -13,6 +13,9 @@ dist
 dist-ssr
 coverage
 *.local
+SMTP.php
+PHPMailer.php
+Exception.php
 
 /cypress/videos/
 /cypress/screenshots/

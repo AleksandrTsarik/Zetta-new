@@ -1,9 +1,10 @@
+<!-- TheQuizInsurance.vue -->
 <template>
   <div class="quiz">
     <div class="quiz__container">
       <!-- Шапка -->
       <div class="quiz__header">
-        <span class="logo logo_color_primary">Полис Zetta</span>
+        <span class="span-primary">Полис Zetta</span>
         <h1 class="quiz__title">Оформить полис</h1>
       </div>
 
@@ -42,13 +43,13 @@
                 v-for="item in checkboxItems"
                 :key="item.value"
                 :label="item.label"
-                :modelValue="selectedItems.includes(item.value)"
-                @update:modelValue="toggleCheckbox(item.value)"
+                :modelValue="selectedItems.includes(item.label)"
+                @update:modelValue="toggleCheckbox(item.label)"
                 class="checkbox__item"
               />
             </div>
 
-            <!-- Кастомный слайдер -->
+            <!-- Слайдер -->
             <div class="slider">
               <div class="slider__label">Введите страховую сумму полиса</div>
               <div class="slider__input">
@@ -56,46 +57,29 @@
                   <span class="slider__value">{{
                     formatCurrency(insuranceSum)
                   }}</span>
-                  <button @click="editSum" class="slider__edit-btn">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path
-                        d="M13.897 3.915C14.25 4.268 14.25 4.852 13.897 5.205L11.52 7.582L13.897 9.959C14.25 10.312 14.25 10.896 13.897 11.249C13.544 11.602 12.96 11.602 12.607 11.249L10.23 8.872L7.853 11.249C7.499 11.602 6.915 11.602 6.562 11.249C6.209 10.896 6.209 10.312 6.562 9.959L8.939 7.582L6.562 5.205C6.209 4.852 6.209 4.268 6.562 3.915C6.915 3.562 7.499 3.562 7.853 3.915L10.23 6.292L12.607 3.915C12.96 3.562 13.544 3.562 13.897 3.915Z"
-                        fill="#8D7FFF"
-                      />
-                    </svg>
-                  </button>
                 </div>
-
-                <!-- Контейнер слайдера -->
                 <div
                   class="slider__track"
                   @click="onTrackClick"
                   @mousedown="onDragStart"
                   @touchstart="onDragStart"
                 >
-                  <!-- Прогресс (заполненная часть) -->
                   <div
                     class="slider__progress"
                     :style="{ width: `${(insuranceSum / max) * 100}%` }"
                   ></div>
-
-                  <!-- Ползунок -->
                   <div
                     class="slider__thumb"
                     :style="{ left: `${(insuranceSum / max) * 100}%` }"
                   ></div>
                 </div>
-
-                <!-- Мин/макс подпись -->
                 <div class="slider__min">0 ₽</div>
                 <div class="slider__max">30 000 000 ₽</div>
               </div>
             </div>
 
             <div class="quiz__buttons">
-              <button class="btn btn-light" :disabled="currentStep === 1">
-                ← Назад
-              </button>
+              <button class="btn btn-light" disabled>← Назад</button>
               <button class="btn btn-primary" @click="goNext">
                 Продолжить →
               </button>
@@ -107,40 +91,72 @@
             <h2 class="quiz__subtitle">
               Заполните данные для оформления полиса
             </h2>
-            <form class="form">
+            <form class="form" @submit.prevent="calculateInsuranceSubmit">
+              <input type="hidden" name="material[]" :value="selectedItems" />
+              <input
+                type="hidden"
+                name="price"
+                :value="formatCurrency(totalCost)"
+              />
+
               <div
                 class="form__group"
                 v-for="(field, key) in formFields"
                 :key="key"
               >
+                <!-- ИНН -->
                 <TheInput
+                  v-if="key === 'inn'"
+                  v-model="formData.inn"
+                  :type="field.type"
+                  :placeholder="field.label"
+                  :invalid="innError"
+                  :name="key"
+                />
+                <!-- Телефон с маской -->
+                <TheInput
+                  v-else-if="key === 'phone'"
+                  v-model="formData.phone"
+                  v-mask="'+7 (###) ###-##-##'"
+                  :type="field.type"
+                  :placeholder="field.label"
+                  :invalid="phoneError"
+                  :name="key"
+                />
+                <!-- Остальные поля -->
+                <TheInput
+                  v-else
                   v-model="formData[key]"
                   :type="field.type"
-                  :name="field.label"
                   :placeholder="field.label"
                   :invalid="false"
+                  :name="key"
                 />
               </div>
+
               <div class="form__group">
                 <TheCheckbox
                   v-model="formData.agree"
                   label="Даю согласие на обработку персональных данных в соответствии с <a href='https://codeseven.ru/pdf/opd.pdf' target='_blank'>Политикой конфиденциальности</a>"
                 />
               </div>
-            </form>
 
-            <div class="quiz__buttons">
-              <button class="btn btn-light" @click="goBack">← Назад</button>
-              <button class="btn btn-primary" @click="submitForm">
-                Оформить полис
-              </button>
-            </div>
+              <div class="quiz__buttons">
+                <button class="btn btn-light" @click="goBack">← Назад</button>
+                <button
+                  class="btn btn-primary"
+                  :disabled="!isFormValid"
+                  :class="{ 'btn-disabled': !isFormValid }"
+                >
+                  Оформить полис
+                </button>
+              </div>
+            </form>
           </div>
         </div>
 
         <!-- Правая колонка -->
         <div class="quiz__right">
-          <!-- Блок "Наполнение полиса" -->
           <div
             class="summary"
             :class="{ active: isDetailsOpen }"
@@ -150,12 +166,14 @@
               <span>Наполнение полиса</span>
               <svg
                 :class="{ summary__arrow_rotate: isDetailsOpen }"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
+                width="14"
+                height="8"
+                viewBox="0 0 14 8"
               >
-                <path d="M6 3L9 6L6 9L3 6L6 3Z" fill="currentColor" />
+                <path
+                  d="M6.99997 7.50003C6.73736 7.50049 6.47725 7.44904 6.23459 7.34865C5.99192 7.24825 5.7715 7.10089 5.58597 6.91503L0.292969 1.62103L1.70697 0.207031L6.99997 5.50003L12.293 0.207031L13.707 1.62103L8.41397 6.91403C8.22852 7.10007 8.00813 7.24762 7.76547 7.34819C7.5228 7.44875 7.26265 7.50036 6.99997 7.50003Z"
+                  fill="#141517"
+                />
               </svg>
             </div>
             <div v-show="isDetailsOpen" class="summary__details">
@@ -172,7 +190,6 @@
             </div>
           </div>
 
-          <!-- Блок "Детали" -->
           <div
             class="summary"
             :class="{ active: detailsOpen }"
@@ -182,12 +199,14 @@
               <span>Детали</span>
               <svg
                 :class="{ summary__arrow_rotate: detailsOpen }"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
+                width="14"
+                height="8"
+                viewBox="0 0 14 8"
               >
-                <path d="M6 3L9 6L6 9L3 6L6 3Z" fill="currentColor" />
+                <path
+                  d="M6.99997 7.50003C6.73736 7.50049 6.47725 7.44904 6.23459 7.34865C5.99192 7.24825 5.7715 7.10089 5.58597 6.91503L0.292969 1.62103L1.70697 0.207031L6.99997 5.50003L12.293 0.207031L13.707 1.62103L8.41397 6.91403C8.22852 7.10007 8.00813 7.24762 7.76547 7.34819C7.5228 7.44875 7.26265 7.50036 6.99997 7.50003Z"
+                  fill="#141517"
+                />
               </svg>
             </div>
             <div v-show="detailsOpen" class="summary__details">
@@ -212,15 +231,12 @@ import TheCheckbox from "./UI/TheCheckbox.vue";
 import TheInput from "./UI/TheInput.vue";
 
 export default {
-  components: {
-    TheCheckbox,
-    TheInput,
-  },
+  components: { TheCheckbox, TheInput },
   name: "TheQuizInsurance",
   data() {
     return {
       currentStep: 1,
-      selectedItems: ["construction"],
+      selectedItems: ["Конструктивные элементы и инженерное оборудование"],
       insuranceSum: 115000,
       min: 0,
       max: 30000000,
@@ -270,90 +286,120 @@ export default {
       const multiplier = this.selectedItems.length > 1 ? 0.05 : 0;
       return Math.round(base * (1 + multiplier));
     },
+    phoneError() {
+      return this.formData.phone.length !== 11;
+    },
+    innError() {
+      return this.formData.inn.length !== 10 && this.formData.inn.length !== 12;
+    },
+    isFormValid() {
+      const { companyName, inn, phone, email, agree } = this.formData;
+      const emailRegex = /^\S+@\S+\.\S+$/;
+      return (
+        companyName.trim() !== "" &&
+        (inn.length === 10 || inn.length === 12) &&
+        phone.length === 11 &&
+        emailRegex.test(email) &&
+        agree
+      );
+    },
   },
   methods: {
+    calculateInsuranceSubmit($event) {
+      const formData = new FormData($event.target);
+      // formData.set("material", this.selectedItems.join(", "));
+      formData.append("material", JSON.stringify(this.selectedItems));
+      formData.set("price", this.formatCurrency(this.totalCost));
+      fetch("/api/mailer.php", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error(`Ошибка: ${response.status}`);
+          return response.text();
+        })
+        .then((text) => {
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (e) {
+            return;
+          }
+
+          if (data.success) {
+            this.resetForm();
+          } else {
+          }
+        })
+        .catch((error) => {});
+    },
+    resetForm() {
+      this.currentStep = 1;
+      this.formData = {
+        companyName: "",
+        inn: "",
+        phone: "",
+        email: "",
+        agree: false,
+      };
+      this.selectedItems = [
+        "Конструктивные элементы и инженерное оборудование",
+      ];
+      this.isDetailsOpen = true;
+      this.detailsOpen = true;
+    },
     toggleCheckbox(value) {
-      const index = this.selectedItems.indexOf(value);
-      if (index === -1) {
-        this.selectedItems.push(value);
-      } else {
-        this.selectedItems.splice(index, 1);
-      }
+      const i = this.selectedItems.indexOf(value);
+      i === -1
+        ? this.selectedItems.push(value)
+        : this.selectedItems.splice(i, 1);
     },
     toggleDetails(type) {
-      if (type === "details") {
-        this.detailsOpen = !this.detailsOpen;
-      } else {
-        this.isDetailsOpen = !this.isDetailsOpen;
-      }
+      if (type === "details") this.detailsOpen = !this.detailsOpen;
+      else this.isDetailsOpen = !this.isDetailsOpen;
     },
     goBack() {
-      if (this.currentStep > 1) {
-        this.currentStep--;
-      }
+      if (this.currentStep > 1) this.currentStep--;
     },
     goNext() {
-      if (this.currentStep < 2) {
-        this.currentStep++;
-      }
+      if (this.currentStep < 2) this.currentStep++;
     },
-    editSum() {
-      const newValue = prompt("Введите новую сумму:", this.insuranceSum);
-      if (newValue && !isNaN(newValue)) {
-        const num = parseInt(newValue);
-        this.insuranceSum = Math.max(this.min, Math.min(this.max, num));
-      }
-    },
-    onTrackClick(event) {
+    onTrackClick(e) {
       const track = this.$el.querySelector(".slider__track");
       const rect = track.getBoundingClientRect();
-      const percent = (event.clientX - rect.left) / rect.width;
+      const percent = (e.clientX - rect.left) / rect.width;
       this.insuranceSum = Math.round(
         this.min + percent * (this.max - this.min)
       );
-      this.insuranceSum = Math.max(
-        this.min,
-        Math.min(this.max, this.insuranceSum)
-      );
     },
-    onDragStart(event) {
-      event.preventDefault();
+    onDragStart(e) {
+      e.preventDefault();
       this.isDragging = true;
-      const track = this.$el.querySelector(".slider__track");
-      this.trackRect = track.getBoundingClientRect();
-
-      document.addEventListener("mousemove", this.onDragMove);
-      document.addEventListener("mouseup", this.onDragEnd);
-      document.addEventListener("touchmove", this.onDragMove);
-      document.addEventListener("touchend", this.onDragEnd);
-
-      const clientX =
-        event.type === "touchstart" ? event.touches[0].clientX : event.clientX;
-      this.onDragMove({ clientX });
-    },
-    onDragMove(event) {
-      if (!this.isDragging) return;
-      const clientX =
-        event.type === "touchmove" ? event.touches[0].clientX : event.clientX;
-      const { left, width } = this.trackRect;
-      const percent = (clientX - left) / width;
-      let value = Math.round(this.min + percent * (this.max - this.min));
-      value = Math.max(this.min, Math.min(this.max, value));
-      this.insuranceSum = value;
-    },
-    onDragEnd() {
-      if (!this.isDragging) return;
-      this.isDragging = false;
-      this.trackRect = null;
-
-      document.removeEventListener("mousemove", this.onDragMove);
-      document.removeEventListener("mouseup", this.onDragEnd);
-      document.removeEventListener("touchmove", this.onDragMove);
-      document.removeEventListener("touchend", this.onDragEnd);
-    },
-    submitForm() {
-      alert("Форма отправлена!");
-      console.log("Данные:", this.formData);
+      this.trackRect = this.$el
+        .querySelector(".slider__track")
+        .getBoundingClientRect();
+      const move = (e) => {
+        const clientX = e.touches?.[0]?.clientX || e.clientX;
+        const percent = (clientX - this.trackRect.left) / this.trackRect.width;
+        this.insuranceSum = Math.max(
+          this.min,
+          Math.min(
+            this.max,
+            Math.round(this.min + percent * (this.max - this.min))
+          )
+        );
+      };
+      const up = () => {
+        this.isDragging = false;
+        document.removeEventListener("mousemove", move);
+        document.removeEventListener("mouseup", up);
+        document.removeEventListener("touchmove", move);
+        document.removeEventListener("touchend", up);
+      };
+      document.addEventListener("mousemove", move);
+      document.addEventListener("mouseup", up);
+      document.addEventListener("touchmove", move, { passive: true });
+      document.addEventListener("touchend", up);
     },
     formatCurrency(value) {
       return new Intl.NumberFormat("ru-RU", {
@@ -363,15 +409,14 @@ export default {
       }).format(value);
     },
     getLabel(key) {
-      return (
-        this.checkboxItems.find((item) => item.value === key)?.label || key
-      );
+      return this.checkboxItems.find((i) => i.value === key)?.label || key;
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+/* Без изменений */
 .quiz {
   color: #333;
   margin: 0 auto;
@@ -380,6 +425,10 @@ export default {
   &__header {
     text-align: center;
     margin-bottom: 30px;
+    span {
+      position: relative;
+      margin-bottom: 20px;
+    }
   }
   &__title {
     font-size: 24px;
@@ -489,16 +538,19 @@ export default {
 }
 
 .slider {
-  margin-bottom: 30px;
+  margin-bottom: 60px;
   &__label {
-    font-size: 14px;
+    font-size: 16px;
     margin-bottom: 10px;
-    color: #dedede;
+    color: rgb(var(--text));
   }
 
   &__input {
     position: relative;
     width: 100%;
+  }
+  &__track {
+    margin: 10px auto;
   }
 
   &__value-wrapper {
@@ -572,9 +624,8 @@ export default {
   &__min,
   &__max {
     position: absolute;
-    bottom: -20px;
+    bottom: -30px;
     font-size: 14px;
-    margin-top: 20px;
     color: rgba(var(--text), 0.6);
   }
 
@@ -591,12 +642,7 @@ export default {
   &__group {
     margin-bottom: 16px;
   }
-  &__label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    color: #dedede;
-  }
+
   &__link {
     color: red;
     text-decoration: underline;
@@ -604,20 +650,19 @@ export default {
 }
 
 .summary {
-  background: white;
+  background: rgb(var(--white));
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px rgba(var(--text), 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
 
   &.active {
-    background: #f0f0ff;
-    border: 1px solid red;
+    border: 1px solid rgba(var(--text), 0.2);
 
     .summary__header {
-      color: red;
+      color: rgb(var(--text));
     }
   }
 
@@ -625,9 +670,8 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-weight: 500;
-    font-size: 14px;
-    color: #dedede;
+    font-weight: 600;
+    font-size: 16px;
   }
 
   &__arrow_rotate {
@@ -638,6 +682,7 @@ export default {
     margin-top: 8px;
     padding-top: 8px;
     border-top: 1px solid rgb(var(--border));
+    transition: 0.3s;
   }
 
   &__item {
@@ -655,6 +700,12 @@ export default {
     padding-top: 16px;
     border-top: 1px solid rgb(var(--border));
   }
+}
+
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 @media (max-width: 900px) {

@@ -1,7 +1,9 @@
+<!-- TheQuizChop.vue -->
+
 <template>
   <div class="quiz">
     <div class="quiz__head">
-      <span class="span-primary">Полис Zettaтзь </span>
+      <span class="span-primary">Полис Zetta</span>
       <h2 class="quiz__title title">Оформить полис</h2>
     </div>
 
@@ -44,8 +46,10 @@
 
         <!-- Шаг 1: Расчёт -->
         <div v-if="currentStep === 1" class="quiz__step-content">
-          <div class="form-group">
-            <label class="form-label">Страховая сумма полиса</label>
+          <div class="form-group form-group-slider">
+            <label class="form-label slider-label"
+              >Страховая сумма полиса</label
+            >
             <div class="slider-wrapper">
               <div class="slider-value">
                 <span class="slider-value__amount">{{
@@ -247,35 +251,77 @@
             <label class="form-label"
               >Заполните данные для оформления полиса</label
             >
-            <div class="form-fields">
+            <form class="form-fields" @submit.prevent="submitForm">
+              <!-- Скрытые поля -->
+              <input
+                type="hidden"
+                name="companyName"
+                :value="formData.companyName"
+              />
+              <input type="hidden" name="inn" :value="formData.inn" />
+              <input type="hidden" name="phone" :value="formData.phone" />
+              <input type="hidden" name="email" :value="formData.email" />
+              <input
+                type="hidden"
+                name="price"
+                :value="formatCurrency(totalCost)"
+              />
+              <input
+                type="hidden"
+                name="data"
+                :value="JSON.stringify(payload)"
+              />
+
+              <!-- Видимые поля -->
               <TheInput
                 v-model="formData.companyName"
+                type="text"
                 placeholder="Наименование юр. лица"
+                required
               />
-              <TheInput v-model="formData.inn" placeholder="ИНН" />
               <TheInput
-                v-model="formData.phone"
+                v-model="formData.inn"
+                type="text"
+                placeholder="ИНН"
+                v-mask="'##########'"
+                @input="formatInn"
+                :invalid="innError"
+                required
+              />
+              <TheInput
+                v-model="phoneDisplay"
+                type="tel"
                 placeholder="Контактный номер"
+                v-mask="'+7 (###) ###-##-##'"
+                @input="formatPhone"
+                :invalid="phoneError"
+                required
               />
               <TheInput
                 v-model="formData.email"
+                type="email"
                 placeholder="Электронная почта"
+                required
               />
-            </div>
-          </div>
 
-          <div class="form-group">
-            <TheCheckbox
-              v-model="formData.agree"
-              label="Даю согласие на обработку персональных данных в соответствии с <a href='https://codeseven.ru/pdf/opd.pdf' target='_blank'>Политикой конфиденциальности</a>"
-            />
-          </div>
+              <div class="form-group">
+                <TheCheckbox
+                  v-model="formData.agree"
+                  label="Даю согласие на обработку персональных данных в соответствии с <a href='https://codeseven.ru/pdf/opd.pdf' target='_blank'>Политикой конфиденциальности</a>"
+                />
+              </div>
 
-          <div class="quiz__buttons">
-            <button class="btn btn-light" @click="goBack">← Назад</button>
-            <button class="btn btn-primary" @click="submitForm">
-              Оформить полис
-            </button>
+              <div class="quiz__buttons">
+                <button class="btn btn-light" @click="goBack">← Назад</button>
+                <button
+                  class="btn btn-primary"
+                  type="submit"
+                  :disabled="!isFormValid"
+                >
+                  Оформить полис
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -388,6 +434,7 @@ export default {
   },
   data() {
     return {
+      phoneDisplay: "",
       currentStep: 1,
       insuranceSum: 115000,
       min: 0,
@@ -417,7 +464,6 @@ export default {
         { title: "3 шаг. Заявление" },
         { title: "4 шаг. Оформление" },
       ],
-
       experienceOptions: [
         { label: "от 1 года, но не более 3 лет" },
         { label: "от 4 лет, но не более 7 лет" },
@@ -484,20 +530,92 @@ export default {
 
       return Math.round(base * (1 + multiplier));
     },
+    phoneError() {
+      return this.formData.phone.length !== 11;
+    },
+    innError() {
+      return this.formData.inn.length !== 10 && this.formData.inn.length !== 12;
+    },
+    isFormValid() {
+      const { companyName, inn, phone, email, agree } = this.formData;
+      const emailRegex = /^\S+@\S+\.\S+$/;
+      return (
+        companyName.trim() !== "" &&
+        (inn.length === 10 || inn.length === 12) &&
+        phone.length === 11 &&
+        emailRegex.test(email) &&
+        agree
+      );
+    },
+    payload() {
+      return {
+        experience: this.getExperienceLabel(this.selectedExperience),
+        objects: this.getObjectsLabel(this.selectedObjects),
+        liability: this.getLiabilityLabel(this.selectedLiability),
+        franchise: this.getFranchiseLabel(this.selectedFranchise),
+        financialRisk: this.getFinancialRiskLabel(this.selectedFinancialRisk),
+      };
+    },
   },
 
   methods: {
+    formatPhone(event) {
+      const value = event.target.value;
+      if (!value) return;
+      const digits = value.replace(/\D/g, "");
+      const cleaned = digits[0] !== "7" ? "7" + digits : digits.slice(0, 11);
+      this.formData.phone = cleaned;
+    },
+    formatInn(event) {
+      const value = event.target.value;
+      if (!value) return;
+      const digits = value.replace(/\D/g, "").slice(0, 12);
+      this.formData.inn = digits;
+    },
+    submitForm(event) {
+      if (!this.isFormValid) {
+        alert("Пожалуйста, заполните все поля корректно.");
+        return;
+      }
+
+      const formData = new FormData(event.target);
+
+      if (this.uploadedFile) {
+        formData.append("file", this.uploadedFile);
+      }
+
+      fetch("/api/mailer-chop.php", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error(`Ошибка: ${response.status}`);
+          return response.text();
+        })
+        .then((text) => {
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (e) {
+            return;
+          }
+
+          if (data.success) {
+            this.showSuccess = true;
+          } else {
+          }
+        })
+        .catch((error) => {});
+    },
     getProgressWidth() {
       return (this.currentStep - 1) * 25;
     },
-
     goBack() {
       if (this.currentStep > 1) this.currentStep--;
     },
     goNext() {
       if (this.currentStep < 4) this.currentStep++;
     },
-
     editSum() {
       const newValue = prompt("Введите новую сумму:", this.insuranceSum);
       if (newValue && !isNaN(newValue)) {
@@ -505,7 +623,6 @@ export default {
         this.insuranceSum = Math.max(this.min, Math.min(this.max, num));
       }
     },
-
     onTrackClick(event) {
       const rect = this.$el
         .querySelector(".slider-container")
@@ -519,7 +636,6 @@ export default {
         Math.min(this.max, this.insuranceSum)
       );
     },
-
     startDrag(event) {
       event.preventDefault();
       this.isDragging = true;
@@ -537,7 +653,6 @@ export default {
         event.type === "touchstart" ? event.touches[0].clientX : event.clientX;
       this.onDragMove({ clientX });
     },
-
     onDragMove(event) {
       if (!this.isDragging) return;
       const clientX =
@@ -547,7 +662,6 @@ export default {
       const value = Math.round(this.min + percent * (this.max - this.min));
       this.insuranceSum = Math.max(this.min, Math.min(this.max, value));
     },
-
     onDragEnd() {
       if (!this.isDragging) return;
       this.isDragging = false;
@@ -558,7 +672,6 @@ export default {
       document.removeEventListener("touchmove", this.onDragMove);
       document.removeEventListener("touchend", this.onDragEnd);
     },
-
     selectExperience(idx) {
       this.selectedExperience = idx;
     },
@@ -574,12 +687,10 @@ export default {
     selectFinancialRisk(idx) {
       this.selectedFinancialRisk = idx;
     },
-
     toggleDetails(type) {
       if (type === "details") this.showDetails = !this.showDetails;
       else this.showCost = !this.showCost;
     },
-
     triggerFileInput() {
       this.$refs.fileInput.click();
     },
@@ -590,21 +701,11 @@ export default {
     removeFile() {
       this.uploadedFile = null;
     },
-
-    submitForm() {
-      if (!this.formData.agree) {
-        alert("Вы должны дать согласие на обработку данных.");
-        return;
-      }
-      this.showSuccess = true;
-    },
-
     closeSuccess() {
       this.showSuccess = false;
       this.currentStep = 1;
       this.resetForm();
     },
-
     resetForm() {
       this.formData = {
         companyName: "",
@@ -613,9 +714,9 @@ export default {
         email: "",
         agree: false,
       };
+      this.phoneDisplay = "";
       this.uploadedFile = null;
     },
-
     formatCurrency(value) {
       return new Intl.NumberFormat("ru-RU", {
         style: "currency",
@@ -623,7 +724,6 @@ export default {
         minimumFractionDigits: 0,
       }).format(value);
     },
-
     getExperienceLabel(idx) {
       return this.experienceOptions[idx]?.label || "";
     },
@@ -735,6 +835,9 @@ export default {
 
 .form-group {
   margin-bottom: 24px;
+  &:first-child {
+    margin-top: 24px;
+  }
 }
 
 .form-label {
@@ -750,6 +853,15 @@ export default {
 }
 
 // Слайдер
+.form-group-slider {
+  margin-top: 24px;
+}
+.slider-label {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 24px 0 30px;
+  display: block;
+}
 .slider-wrapper {
   margin-bottom: 16px;
 }
@@ -758,10 +870,10 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
-  font-size: 16px;
+  margin-bottom: 12px;
+  font-size: 20px;
   font-weight: 500;
-  color: #8d7fff;
+  color: rgb(var(--primary));
 }
 
 .slider-value__amount {
@@ -773,23 +885,20 @@ export default {
   background: none;
   border: none;
   cursor: pointer;
-  color: #8d7fff;
-  font-size: 12px;
 }
 
 .slider-container {
   position: relative;
   height: 4px;
-  background: #e0e0e0;
+  // background: red;
   border-radius: 2px;
-  overflow: hidden;
   cursor: pointer;
 }
 
 .slider-track {
   width: 100%;
   height: 100%;
-  background: #e0e0e0;
+  background: rgba(var(--text), 0.1);
 }
 
 .slider-progress {
