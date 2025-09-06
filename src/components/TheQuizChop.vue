@@ -636,7 +636,6 @@ export default {
         Math.min(this.max, this.insuranceSum)
       );
     },
-
     startDrag(event) {
       event.preventDefault();
       this.isDragging = true;
