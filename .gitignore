@@ -15,8 +15,6 @@ coverage
 *.local
 SMTP.php
 PHPMailer.php
-mailer.php
-mailer-chop.php
 Exception.php
 
 /cypress/videos/
