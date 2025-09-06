@@ -12,7 +12,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $clmail = $_POST['email'] ?? '';
     $companyName = $_POST['companyName'] ?? '';
     //$material = implode(', ', $_POST['material']) ?? '';
+
     $material = $_POST['material'] ?? '';
+    $items = explode(',', $material);
+    $materialFormatted = implode(',<br>', array_map('trim', $items));
+    
     $price = $_POST['price'] ?? '';
     $mail = new PHPMailer(true);
     try {
@@ -41,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p><strong>ИНН:</strong> {$inn}</p>
             <p><strong>Телефон:</strong> {$phone}</p>
             <p><strong>E-mail:</strong> {$clmail}</p>
-            <p><strong>Застрахованное имущество:</strong> {$material}</p>
+            <p><strong>Застрахованное имущество:</strong><br>{$materialFormatted}</p>
             <p><strong>Стоимость:</strong> {$price}</p>
         ";
 
