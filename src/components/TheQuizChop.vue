@@ -597,20 +597,15 @@ export default {
           try {
             data = JSON.parse(text);
           } catch (e) {
-            alert("Сервер вернул не JSON: " + text);
             return;
           }
 
           if (data.success) {
             this.showSuccess = true;
           } else {
-            alert("Ошибка: " + data.message);
           }
         })
-        .catch((error) => {
-          console.error("Ошибка отправки:", error);
-          alert("Не удалось отправить заявку.");
-        });
+        .catch((error) => {});
     },
     getProgressWidth() {
       return (this.currentStep - 1) * 25;
