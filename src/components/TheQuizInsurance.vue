@@ -1,3 +1,4 @@
+<!-- TheQuizInsurance.vue -->
 <template>
   <div class="quiz">
     <div class="quiz__container">

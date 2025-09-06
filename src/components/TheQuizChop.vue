@@ -1,7 +1,9 @@
+<!-- TheQuizChop.vue -->
+
 <template>
   <div class="quiz">
     <div class="quiz__head">
-      <span class="span-primary">Полис Zettaтзь </span>
+      <span class="span-primary">Полис Zetta</span>
       <h2 class="quiz__title title">Оформить полис</h2>
     </div>
 
@@ -44,8 +46,10 @@
 
         <!-- Шаг 1: Расчёт -->
         <div v-if="currentStep === 1" class="quiz__step-content">
-          <div class="form-group">
-            <label class="form-label">Страховая сумма полиса</label>
+          <div class="form-group form-group-slider">
+            <label class="form-label slider-label"
+              >Страховая сумма полиса</label
+            >
             <div class="slider-wrapper">
               <div class="slider-value">
                 <span class="slider-value__amount">{{
@@ -250,15 +254,18 @@
             <div class="form-fields">
               <TheInput
                 v-model="formData.companyName"
+                type="text"
                 placeholder="Наименование юр. лица"
               />
-              <TheInput v-model="formData.inn" placeholder="ИНН" />
+              <TheInput v-model="formData.inn" type="text" placeholder="ИНН" />
               <TheInput
                 v-model="formData.phone"
+                type="tel"
                 placeholder="Контактный номер"
               />
               <TheInput
                 v-model="formData.email"
+                type="email"
                 placeholder="Электронная почта"
               />
             </div>
@@ -273,7 +280,11 @@
 
           <div class="quiz__buttons">
             <button class="btn btn-light" @click="goBack">← Назад</button>
-            <button class="btn btn-primary" @click="submitForm">
+            <button
+              class="btn btn-primary"
+              @click="submitForm"
+              :disabled="!isFormValid"
+            >
               Оформить полис
             </button>
           </div>
@@ -411,13 +422,13 @@ export default {
       showCost: true,
       showSuccess: false,
 
+      // ✅ Все опции и шаги в data()
       steps: [
         { title: "1 шаг. Расчёт" },
         { title: "2 шаг. Дополнительно" },
         { title: "3 шаг. Заявление" },
         { title: "4 шаг. Оформление" },
       ],
-
       experienceOptions: [
         { label: "от 1 года, но не более 3 лет" },
         { label: "от 4 лет, но не более 7 лет" },
@@ -483,6 +494,17 @@ export default {
       if (this.selectedFinancialRisk === 0) multiplier += 0.02;
 
       return Math.round(base * (1 + multiplier));
+    },
+    isFormValid() {
+      const { companyName, inn, phone, email, agree } = this.formData;
+      const emailRegex = /^\S+@\S+\.\S+$/;
+      return (
+        companyName.trim() !== "" &&
+        phone.length === 11 &&
+        (inn.length === 10 || inn.length === 12) &&
+        emailRegex.test(email) &&
+        agree
+      );
     },
   },
 
@@ -591,12 +613,58 @@ export default {
       this.uploadedFile = null;
     },
 
-    submitForm() {
-      if (!this.formData.agree) {
-        alert("Вы должны дать согласие на обработку данных.");
+    async submitForm() {
+      if (!this.isFormValid) {
+        alert("Пожалуйста, заполните все поля корректно.");
         return;
       }
-      this.showSuccess = true;
+
+      const formData = new FormData();
+      formData.append("companyName", this.formData.companyName);
+      formData.append("inn", this.formData.inn);
+      formData.append("phone", this.formData.phone);
+      formData.append("email", this.formData.email);
+      formData.append("price", this.formatCurrency(this.totalCost));
+
+      const payload = {
+        experience: this.getExperienceLabel(this.selectedExperience),
+        objects: this.getObjectsLabel(this.selectedObjects),
+        liability: this.getLiabilityLabel(this.selectedLiability),
+        franchise: this.getFranchiseLabel(this.selectedFranchise),
+        financialRisk: this.getFinancialRiskLabel(this.selectedFinancialRisk),
+      };
+      formData.append("data", JSON.stringify(payload));
+
+      if (this.uploadedFile) {
+        formData.append("file", this.uploadedFile);
+      }
+
+      try {
+        const response = await fetch("/api/mailer-chop.php", {
+          method: "POST",
+          body: formData,
+        });
+
+        const text = await response.text();
+        console.log("Сырой ответ:", text);
+
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          alert("Ошибка: сервер вернул не JSON");
+          return;
+        }
+
+        if (data.success) {
+          this.showSuccess = true;
+        } else {
+          alert("Ошибка: " + data.message);
+        }
+      } catch (error) {
+        console.error("Ошибка отправки:", error);
+        alert("Не удалось отправить заявку.");
+      }
     },
 
     closeSuccess() {
@@ -735,6 +803,9 @@ export default {
 
 .form-group {
   margin-bottom: 24px;
+  &:first-child {
+    margin-top: 24px;
+  }
 }
 
 .form-label {
@@ -750,6 +821,15 @@ export default {
 }
 
 // Слайдер
+.form-group-slider {
+  margin-top: 24px;
+}
+.slider-label {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 24px 0 30px;
+  display: block;
+}
 .slider-wrapper {
   margin-bottom: 16px;
 }
@@ -758,10 +838,10 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
-  font-size: 16px;
+  margin-bottom: 12px;
+  font-size: 20px;
   font-weight: 500;
-  color: #8d7fff;
+  color: rgb(var(--primary));
 }
 
 .slider-value__amount {
@@ -773,23 +853,20 @@ export default {
   background: none;
   border: none;
   cursor: pointer;
-  color: #8d7fff;
-  font-size: 12px;
 }
 
 .slider-container {
   position: relative;
   height: 4px;
-  background: #e0e0e0;
+  // background: red;
   border-radius: 2px;
-  overflow: hidden;
   cursor: pointer;
 }
 
 .slider-track {
   width: 100%;
   height: 100%;
-  background: #e0e0e0;
+  background: rgba(var(--text), 0.1);
 }
 
 .slider-progress {
