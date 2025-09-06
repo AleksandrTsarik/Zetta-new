@@ -263,7 +263,7 @@ export default {
         },
         {
           value: "windows",
-          label: "Оконные стекла, Bитрины, Внутреннее остекление",
+          label: "Оконные стекла, витрины, внутреннее остекление",
         },
         { value: "civil", label: "Гражданское имущество" },
       ],
@@ -306,7 +306,8 @@ export default {
   methods: {
     calculateInsuranceSubmit($event) {
       const formData = new FormData($event.target);
-      formData.set("material", this.selectedItems.join(", "));
+      // formData.set("material", this.selectedItems.join(", "));
+      formData.append("material", JSON.stringify(this.selectedItems));
       formData.set("price", this.formatCurrency(this.totalCost));
       fetch("/api/mailer.php", {
         method: "POST",

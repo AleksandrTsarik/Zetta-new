@@ -13,9 +13,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $companyName = $_POST['companyName'] ?? '';
     //$material = implode(', ', $_POST['material']) ?? '';
 
-    $material = $_POST['material'] ?? '';
-    $items = explode(',', $material);
-    $materialFormatted = implode(',<br>', array_map('trim', $items));
+    // $material = $_POST['material'] ?? '';
+    // $items = explode(',', $material);
+    // $materialFormatted = implode(',<br>', array_map('trim', $items));
+
+        // Получаем material как JSON
+    $materialJson = $_POST['material'] ?? '';
+    $materialArray = json_decode($materialJson, true) ?: [];
+    $materialFormatted = implode('<br>', array_map('trim', $materialArray));
     
     $price = $_POST['price'] ?? '';
     $mail = new PHPMailer(true);
@@ -31,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->Port = 465;
 
 
-        $mail->setFrom('info@codeseven.ru', 'Contact Form');
+        $mail->setFrom('info@codeseven.ru', 'Zetta - страхование имущества');
         //mail->addAddress('info@codeseven.ru');
         $mail->addAddress('ascwork86@gmail.com');
 
