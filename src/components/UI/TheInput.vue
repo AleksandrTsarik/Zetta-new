@@ -1,7 +1,7 @@
 <template>
-  <!-- Текстовое поле -->
-  <div v-if="type === 'text'" class="block-input">
-    <label>
+  <div class="block-input">
+    <!-- Текстовое поле -->
+    <label v-if="type === 'text' || type === 'tel' || type === 'email'">
       <input
         :type="type"
         :class="inputClass"
@@ -9,9 +9,11 @@
         :placeholder="placeholder"
         :name="name"
         :required="required"
-        @input="$emit('update:modelValue', $event.target.value)"
+        @input="onInput"
         @blur="$emit('blur', $event.target.value)"
         @focus="$emit('focus', $event.target.value)"
+        v-bind="$attrs"
+        :inputmode="inputMode"
       />
       <span v-if="name" class="block-input__label">{{ name }}</span>
       <span v-if="img" class="block-input__img">
@@ -33,55 +35,12 @@
         </slot>
       </span>
     </label>
-  </div>
 
-  <!-- Телефон -->
-  <div v-else-if="type === 'tel'" class="block-input">
-    <label>
-      <input
-        :type="type"
-        :class="inputClass"
-        :value="modelValue"
-        :placeholder="placeholder"
-        :name="name"
-        :required="required"
-        @input="$emit('update:modelValue', $event.target.value)"
-        @blur="$emit('blur', $event.target.value)"
-        @focus="$emit('focus', $event.target.value)"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        autocomplete="tel"
-      />
-      <span v-if="name" class="block-input__label">{{ name }}</span>
-    </label>
-  </div>
-
-  <!-- Email -->
-  <div v-else-if="type === 'email'" class="block-input">
-    <label>
-      <input
-        :type="type"
-        :class="inputClass"
-        :value="modelValue"
-        :placeholder="placeholder"
-        :name="name"
-        :required="required"
-        @input="$emit('update:modelValue', $event.target.value)"
-        @blur="$emit('blur', $event.target.value)"
-        @focus="$emit('focus', $event.target.value)"
-        autocomplete="email"
-      />
-      <span v-if="name" class="block-input__label">{{ name }}</span>
-    </label>
-  </div>
-
-  <!-- Файл -->
-  <div v-else-if="type === 'file'" class="block-input__file">
-    <label>
+    <!-- Файл -->
+    <label v-else-if="type === 'file'" class="block-input__file">
       <input
         type="file"
         :class="{ 'field-error': invalid }"
-        :placeholder="fileName"
         @change="uploadFile($event.target.files)"
         :multiple="multiple"
         :accept="accept"
@@ -106,11 +65,10 @@
         </svg>
       </span>
     </label>
-  </div>
 
-  <!-- Textarea -->
-  <div v-else-if="type === 'textarea'" class="block-textarea">
+    <!-- Textarea -->
     <textarea
+      v-else-if="type === 'textarea'"
       :class="inputClass"
       :placeholder="placeholder"
       :value="modelValue"
@@ -126,105 +84,78 @@
 
 <script>
 export default {
+  inheritAttrs: false,
   name: "TheInput",
   emits: ["update:modelValue", "selectFile", "blur", "focus"],
   props: {
-    modelValue: {
-      type: [String, Number],
-      default: "",
-    },
-    label: {
-      type: String,
-      default: "",
-    },
-    img: {
-      type: Boolean,
-      default: false,
-    },
-    name: {
-      type: String,
-      default: "",
-    },
+    modelValue: [String, Number],
+    label: String,
+    img: Boolean,
+    name: String,
     type: {
       type: String,
       required: true,
-      validator(value) {
-        return ["text", "tel", "email", "file", "textarea"].includes(value);
-      },
+      validator: (v) =>
+        ["text", "tel", "email", "file", "textarea"].includes(v),
     },
-    placeholder: {
-      type: String,
-      required: true,
-    },
-    invalid: {
-      type: Boolean,
-      default: false,
-    },
-    required: {
-      type: Boolean,
-      default: false,
-    },
-    multiple: {
-      type: Boolean,
-      default: false,
-    },
-    accept: {
-      type: String,
-      default: "",
-    },
-    rows: {
-      type: Number,
-      default: 4,
-    },
+    placeholder: { type: String, required: true },
+    invalid: Boolean,
+    required: Boolean,
+    multiple: Boolean,
+    accept: String,
+    rows: { type: Number, default: 4 },
   },
   computed: {
     inputClass() {
-      return {
-        "field-error": this.invalid,
-      };
+      return { "field-error": this.invalid };
     },
     fileName() {
       return this.modelValue || this.name || "Файл не выбран";
     },
+    inputMode() {
+      return this.type === "tel" ? "numeric" : "text";
+    },
   },
   methods: {
+    onInput(e) {
+      let value = e.target.value;
+
+      if (this.name === "inn" || this.placeholder.includes("ИНН")) {
+        value = value.replace(/\D/g, "").slice(0, 12);
+      }
+
+      if (this.type === "tel") {
+        value = value.replace(/\D/g, "").slice(0, 11);
+      }
+
+      this.$emit("update:modelValue", value);
+    },
     uploadFile(files) {
-      files = Array.from(files);
-      const names = files.length
-        ? files.map((f) => f.name).join(", ")
-        : this.name || "Файл не выбран";
-      this.$emit("selectFile", files);
-      // Если вы хотите передавать имена файлов через v-model — раскомментируйте:
-      // this.$emit("update:modelValue", names);
+      this.$emit("selectFile", Array.from(files));
     },
   },
 };
 </script>
 
 <style scoped>
-.block-input {
-  margin-bottom: 16px;
-  position: relative;
-}
-
-.block-input label {
-  display: block;
-  position: relative;
-}
-
-.block-input input {
+.block-input input,
+.block-input textarea {
   width: 100%;
   padding: 10px;
   border: 1px solid rgba(var(--text), 0.2);
   border-radius: 8px;
   font-size: 14px;
   box-sizing: border-box;
-  transition: border-color 0.3s ease;
   background: white;
+  transition: border-color 0.3s ease;
+}
+
+.block-input input {
   height: 50px;
 }
 
-.block-input input:focus {
+.block-input input:focus,
+.block-input textarea:focus {
   outline: none;
   border-color: rgb(var(--primary));
   box-shadow: 0 0 0 1px rgba(var(--primary), 0.2);
@@ -250,18 +181,12 @@ export default {
   pointer-events: none;
 }
 
-/* ✅ Исправлено: field-erorr → field-error */
 .field-error {
   border-color: #dc3545 !important;
 }
 
 /* Файл */
 .block-input__file {
-  margin-bottom: 16px;
-}
-
-.block-input__file label {
-  display: block;
   position: relative;
   cursor: pointer;
 }
@@ -270,11 +195,10 @@ export default {
   position: absolute;
   inset: 0;
   opacity: 0;
-  cursor: pointer;
   z-index: 1;
+  cursor: pointer;
 }
 
-.block-input__file input + span,
 .block-input__file span {
   display: block;
   padding: 10px;
@@ -302,24 +226,5 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   padding-right: 30px;
-}
-
-/* Textarea */
-.block-textarea textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  resize: vertical;
-  min-height: 100px;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease;
-}
-
-.block-textarea textarea:focus {
-  outline: none;
-  border-color: #8d7fff;
-  box-shadow: 0 0 0 2px rgba(141, 127, 255, 0.2);
 }
 </style>

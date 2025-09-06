@@ -9,9 +9,10 @@ require 'SMTP.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $inn = $_POST['inn'] ?? '';
     $phone = $_POST['phone'] ?? '';
-    $clmail = $_POST['mail'] ?? '';
+    $clmail = $_POST['email'] ?? '';
     $companyName = $_POST['companyName'] ?? '';
-    $material = implode(', ', $_POST['material']) ?? '';
+    //$material = implode(', ', $_POST['material']) ?? '';
+    $material = $_POST['material'] ?? '';
     $price = $_POST['price'] ?? '';
     $mail = new PHPMailer(true);
     try {
