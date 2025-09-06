@@ -1,13 +1,10 @@
 <?php
-header('Access-Control-Allow-Origin: http://localhost:5173');
-header('Access-Control-Allow-Methods: POST');
-header('Access-Control-Allow-Headers: Content-Type');
-header('Content-Type: application/json; charset=utf-8');
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
-}
+require 'Exception.php';
+require 'PHPMailer.php';
+require 'SMTP.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $companyName = $_POST['companyName'] ?? '';
@@ -16,19 +13,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'] ?? '';
     $price = $_POST['price'] ?? '';
 
-    // Данные из JSON
+    // Получаем data как JSON
     $dataJson = $_POST['data'] ?? '';
-    $data = json_decode($dataJson, true) ?: [];
+    $dataArray = json_decode($dataJson, true) ?: [];
 
-    use PHPMailer\PHPMailer\PHPMailer;
-    use PHPMailer\PHPMailer\Exception;
-
-    require 'Exception.php';
-    require 'PHPMailer.php';
-    require 'SMTP.php';
+    // Форматируем для письма
+    $experience = $dataArray['experience'] ?? '';
+    $objects = $dataArray['objects'] ?? '';
+    $liability = $dataArray['liability'] ?? '';
+    $franchise = $dataArray['franchise'] ?? '';
+    $financialRisk = $dataArray['financialRisk'] ?? '';
 
     $mail = new PHPMailer(true);
-
     try {
         $mail->isSMTP();
         $mail->Host = 'smtp.timeweb.ru';
@@ -37,13 +33,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->Password = 'm9fsz83kk9';
         $mail->SMTPSecure = 'ssl';
         $mail->Port = 465;
-        $mail->CharSet = 'UTF-8';
 
-        $mail->setFrom('info@codeseven.ru', 'Заявка ЧОП');
+        $mail->setFrom('info@codeseven.ru', 'Zetta - Заявка ЧОП');
+        //mail->addAddress('info@codeseven.ru');
         $mail->addAddress('ascwork86@gmail.com');
 
         $mail->isHTML(true);
-        $mail->Subject = 'Новая заявка — Страхование ЧОП';
+        $mail->CharSet = 'UTF-8';
+        $mail->Subject = 'Новая заявка с сайта';
 
         $emailBody = "
             <h2>Новая заявка на страхование ЧОП</h2>
@@ -52,26 +49,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p><strong>Телефон:</strong> {$phone}</p>
             <p><strong>Email:</strong> {$email}</p>
             <p><strong>Страховая сумма:</strong> {$price}</p>
-            <p><strong>Стаж:</strong><br>{$data['experience']}</p>
-            <p><strong>Количество объектов:</strong><br>{$data['objects']}</p>
-            <p><strong>Лимит ответственности:</strong><br>{$data['liability']}</p>
-            <p><strong>Франшиза:</strong><br>{$data['franchise']}</p>
-            <p><strong>Финансовые риски:</strong><br>{$data['financialRisk']}</p>
+            <p><strong>Стаж:</strong><br>{$experience}</p>
+            <p><strong>Количество объектов:</strong><br>{$objects}</p>
+            <p><strong>Лимит ответственности:</strong><br>{$liability}</p>
+            <p><strong>Франшиза:</strong><br>{$franchise}</p>
+            <p><strong>Финансовые риски:</strong><br>{$financialRisk}</p>
         ";
 
         $mail->Body = $emailBody;
-        $mail->AltBody = strip_tags("Заявка на страхование ЧОП\n\n" .
-            "Юр. лицо: {$companyName}\n" .
-            "ИНН: {$inn}\n" .
-            "Телефон: {$phone}\n" .
-            "Email: {$email}\n" .
-            "Сумма: {$price}\n" .
-            "Стаж: {$data['experience']}\n" .
-            "Объекты: {$data['objects']}\n" .
-            "Лимит: {$data['liability']}\n" .
-            "Франшиза: {$data['franchise']}\n" .
-            "Фин. риски: {$data['financialRisk']}"
-        );
+        $mail->AltBody = strip_tags($emailBody);
 
         // Прикрепляем файл, если есть
         if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
@@ -81,10 +67,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->send();
         echo json_encode(['success' => true, 'message' => 'Сообщение успешно отправлено']);
     } catch (Exception $e) {
-        error_log("Mailer Error: " . $mail->ErrorInfo);
-        echo json_encode(['success' => false, 'message' => 'Ошибка отправки: ' . $mail->ErrorInfo]);
+        echo json_encode(['success' => false, 'message' => "Ошибка отправки: {$mail->ErrorInfo}"]);
     }
 } else {
-    echo json_encode(['success' => false, 'message' => 'Метод не поддерживается']);
+    echo json_encode(['success' => false, 'message' => 'Неверный метод запроса']);
 }
 ?>

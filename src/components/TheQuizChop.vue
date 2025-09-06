@@ -251,42 +251,77 @@
             <label class="form-label"
               >Заполните данные для оформления полиса</label
             >
-            <div class="form-fields">
+            <form class="form-fields" @submit.prevent="submitForm">
+              <!-- Скрытые поля -->
+              <input
+                type="hidden"
+                name="companyName"
+                :value="formData.companyName"
+              />
+              <input type="hidden" name="inn" :value="formData.inn" />
+              <input type="hidden" name="phone" :value="formData.phone" />
+              <input type="hidden" name="email" :value="formData.email" />
+              <input
+                type="hidden"
+                name="price"
+                :value="formatCurrency(totalCost)"
+              />
+              <input
+                type="hidden"
+                name="data"
+                :value="JSON.stringify(payload)"
+              />
+
+              <!-- Видимые поля -->
               <TheInput
                 v-model="formData.companyName"
                 type="text"
                 placeholder="Наименование юр. лица"
+                required
               />
-              <TheInput v-model="formData.inn" type="text" placeholder="ИНН" />
               <TheInput
-                v-model="formData.phone"
+                v-model="formData.inn"
+                type="text"
+                placeholder="ИНН"
+                v-mask="'##########'"
+                @input="formatInn"
+                :invalid="innError"
+                required
+              />
+              <TheInput
+                v-model="phoneDisplay"
                 type="tel"
                 placeholder="Контактный номер"
+                v-mask="'+7 (###) ###-##-##'"
+                @input="formatPhone"
+                :invalid="phoneError"
+                required
               />
               <TheInput
                 v-model="formData.email"
                 type="email"
                 placeholder="Электронная почта"
+                required
               />
-            </div>
-          </div>
 
-          <div class="form-group">
-            <TheCheckbox
-              v-model="formData.agree"
-              label="Даю согласие на обработку персональных данных в соответствии с <a href='https://codeseven.ru/pdf/opd.pdf' target='_blank'>Политикой конфиденциальности</a>"
-            />
-          </div>
+              <div class="form-group">
+                <TheCheckbox
+                  v-model="formData.agree"
+                  label="Даю согласие на обработку персональных данных в соответствии с <a href='https://codeseven.ru/pdf/opd.pdf' target='_blank'>Политикой конфиденциальности</a>"
+                />
+              </div>
 
-          <div class="quiz__buttons">
-            <button class="btn btn-light" @click="goBack">← Назад</button>
-            <button
-              class="btn btn-primary"
-              @click="submitForm"
-              :disabled="!isFormValid"
-            >
-              Оформить полис
-            </button>
+              <div class="quiz__buttons">
+                <button class="btn btn-light" @click="goBack">← Назад</button>
+                <button
+                  class="btn btn-primary"
+                  type="submit"
+                  :disabled="!isFormValid"
+                >
+                  Оформить полис
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -399,6 +434,7 @@ export default {
   },
   data() {
     return {
+      phoneDisplay: "",
       currentStep: 1,
       insuranceSum: 115000,
       min: 0,
@@ -422,7 +458,6 @@ export default {
       showCost: true,
       showSuccess: false,
 
-      // ✅ Все опции и шаги в data()
       steps: [
         { title: "1 шаг. Расчёт" },
         { title: "2 шаг. Дополнительно" },
@@ -495,31 +530,97 @@ export default {
 
       return Math.round(base * (1 + multiplier));
     },
+    phoneError() {
+      return this.formData.phone.length !== 11;
+    },
+    innError() {
+      return this.formData.inn.length !== 10 && this.formData.inn.length !== 12;
+    },
     isFormValid() {
       const { companyName, inn, phone, email, agree } = this.formData;
       const emailRegex = /^\S+@\S+\.\S+$/;
       return (
         companyName.trim() !== "" &&
-        phone.length === 11 &&
         (inn.length === 10 || inn.length === 12) &&
+        phone.length === 11 &&
         emailRegex.test(email) &&
         agree
       );
     },
+    payload() {
+      return {
+        experience: this.getExperienceLabel(this.selectedExperience),
+        objects: this.getObjectsLabel(this.selectedObjects),
+        liability: this.getLiabilityLabel(this.selectedLiability),
+        franchise: this.getFranchiseLabel(this.selectedFranchise),
+        financialRisk: this.getFinancialRiskLabel(this.selectedFinancialRisk),
+      };
+    },
   },
 
   methods: {
+    formatPhone(event) {
+      const value = event.target.value;
+      if (!value) return;
+      const digits = value.replace(/\D/g, "");
+      const cleaned = digits[0] !== "7" ? "7" + digits : digits.slice(0, 11);
+      this.formData.phone = cleaned;
+    },
+    formatInn(event) {
+      const value = event.target.value;
+      if (!value) return;
+      const digits = value.replace(/\D/g, "").slice(0, 12);
+      this.formData.inn = digits;
+    },
+    submitForm(event) {
+      if (!this.isFormValid) {
+        alert("Пожалуйста, заполните все поля корректно.");
+        return;
+      }
+
+      const formData = new FormData(event.target);
+
+      if (this.uploadedFile) {
+        formData.append("file", this.uploadedFile);
+      }
+
+      fetch("/api/mailer-chop.php", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error(`Ошибка: ${response.status}`);
+          return response.text();
+        })
+        .then((text) => {
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (e) {
+            alert("Сервер вернул не JSON: " + text);
+            return;
+          }
+
+          if (data.success) {
+            this.showSuccess = true;
+          } else {
+            alert("Ошибка: " + data.message);
+          }
+        })
+        .catch((error) => {
+          console.error("Ошибка отправки:", error);
+          alert("Не удалось отправить заявку.");
+        });
+    },
     getProgressWidth() {
       return (this.currentStep - 1) * 25;
     },
-
     goBack() {
       if (this.currentStep > 1) this.currentStep--;
     },
     goNext() {
       if (this.currentStep < 4) this.currentStep++;
     },
-
     editSum() {
       const newValue = prompt("Введите новую сумму:", this.insuranceSum);
       if (newValue && !isNaN(newValue)) {
@@ -527,7 +628,6 @@ export default {
         this.insuranceSum = Math.max(this.min, Math.min(this.max, num));
       }
     },
-
     onTrackClick(event) {
       const rect = this.$el
         .querySelector(".slider-container")
@@ -541,7 +641,6 @@ export default {
         Math.min(this.max, this.insuranceSum)
       );
     },
-
     startDrag(event) {
       event.preventDefault();
       this.isDragging = true;
@@ -559,7 +658,6 @@ export default {
         event.type === "touchstart" ? event.touches[0].clientX : event.clientX;
       this.onDragMove({ clientX });
     },
-
     onDragMove(event) {
       if (!this.isDragging) return;
       const clientX =
@@ -569,7 +667,6 @@ export default {
       const value = Math.round(this.min + percent * (this.max - this.min));
       this.insuranceSum = Math.max(this.min, Math.min(this.max, value));
     },
-
     onDragEnd() {
       if (!this.isDragging) return;
       this.isDragging = false;
@@ -580,7 +677,6 @@ export default {
       document.removeEventListener("touchmove", this.onDragMove);
       document.removeEventListener("touchend", this.onDragEnd);
     },
-
     selectExperience(idx) {
       this.selectedExperience = idx;
     },
@@ -596,12 +692,10 @@ export default {
     selectFinancialRisk(idx) {
       this.selectedFinancialRisk = idx;
     },
-
     toggleDetails(type) {
       if (type === "details") this.showDetails = !this.showDetails;
       else this.showCost = !this.showCost;
     },
-
     triggerFileInput() {
       this.$refs.fileInput.click();
     },
@@ -612,67 +706,11 @@ export default {
     removeFile() {
       this.uploadedFile = null;
     },
-
-    async submitForm() {
-      if (!this.isFormValid) {
-        alert("Пожалуйста, заполните все поля корректно.");
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("companyName", this.formData.companyName);
-      formData.append("inn", this.formData.inn);
-      formData.append("phone", this.formData.phone);
-      formData.append("email", this.formData.email);
-      formData.append("price", this.formatCurrency(this.totalCost));
-
-      const payload = {
-        experience: this.getExperienceLabel(this.selectedExperience),
-        objects: this.getObjectsLabel(this.selectedObjects),
-        liability: this.getLiabilityLabel(this.selectedLiability),
-        franchise: this.getFranchiseLabel(this.selectedFranchise),
-        financialRisk: this.getFinancialRiskLabel(this.selectedFinancialRisk),
-      };
-      formData.append("data", JSON.stringify(payload));
-
-      if (this.uploadedFile) {
-        formData.append("file", this.uploadedFile);
-      }
-
-      try {
-        const response = await fetch("/api/mailer-chop.php", {
-          method: "POST",
-          body: formData,
-        });
-
-        const text = await response.text();
-        console.log("Сырой ответ:", text);
-
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch (e) {
-          alert("Ошибка: сервер вернул не JSON");
-          return;
-        }
-
-        if (data.success) {
-          this.showSuccess = true;
-        } else {
-          alert("Ошибка: " + data.message);
-        }
-      } catch (error) {
-        console.error("Ошибка отправки:", error);
-        alert("Не удалось отправить заявку.");
-      }
-    },
-
     closeSuccess() {
       this.showSuccess = false;
       this.currentStep = 1;
       this.resetForm();
     },
-
     resetForm() {
       this.formData = {
         companyName: "",
@@ -681,9 +719,9 @@ export default {
         email: "",
         agree: false,
       };
+      this.phoneDisplay = "";
       this.uploadedFile = null;
     },
-
     formatCurrency(value) {
       return new Intl.NumberFormat("ru-RU", {
         style: "currency",
@@ -691,7 +729,6 @@ export default {
         minimumFractionDigits: 0,
       }).format(value);
     },
-
     getExperienceLabel(idx) {
       return this.experienceOptions[idx]?.label || "";
     },
