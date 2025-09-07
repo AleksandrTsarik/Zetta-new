@@ -50,39 +50,65 @@
             <label class="form-label slider-label"
               >Страховая сумма полиса</label
             >
-            <div class="slider-wrapper">
-              <div class="slider-value">
-                <span class="slider-value__amount">{{
-                  formatCurrency(insuranceSum)
-                }}</span>
-                <button @click="editSum" class="slider-value__edit">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path
-                      d="M13.897 3.915C14.25 4.268 14.25 4.852 13.897 5.205L11.52 7.582L13.897 9.959C14.25 10.312 14.25 10.896 13.897 11.249C13.544 11.602 12.96 11.602 12.607 11.249L10.23 8.872L7.853 11.249C7.499 11.602 6.915 11.602 6.562 11.249C6.209 10.896 6.209 10.312 6.562 9.959L8.939 7.582L6.562 5.205C6.209 4.852 6.209 4.268 6.562 3.915C6.915 3.562 7.499 3.562 7.853 3.915L10.23 6.292L12.607 3.915C12.96 3.562 13.544 3.562 13.897 3.915Z"
-                      fill="#8D7FFF"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div
-                class="slider-container"
-                @click="onTrackClick"
-                @mousedown="startDrag"
-                @touchstart="startDrag"
-              >
-                <div class="slider-track"></div>
+            <!-- Слайдер (копия из TheQuizInsurance.vue) -->
+            <div class="slider">
+              <div class="slider__label">Введите страховую сумму полиса</div>
+              <div class="slider__input">
+                <div class="slider__value-wrapper">
+                  <span
+                    v-if="!isEditingSum"
+                    class="slider__value"
+                    @click="startEditingSum"
+                    style="cursor: pointer; user-select: none"
+                  >
+                    {{ formatCurrency(insuranceSum) }}
+                    <span
+                      class="slider__edit-icon"
+                      style="margin-left: 6px; font-size: 12px; opacity: 0.7"
+                      ><svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M20.2052 3.79505C19.6954 3.28594 19.0043 3 18.2837 3C17.5632 3 16.8721 3.28594 16.3622 3.79505L3 17.157V21H6.84306L20.2052 7.63803C20.7142 7.12805 21 6.43701 21 5.71654C21 4.99607 20.7142 4.30503 20.2052 3.79505ZM6.22505 19.5H4.50002V17.775L14.4827 7.80003L16.2077 9.52503L6.22505 19.5ZM19.1447 6.57754L17.2645 8.45778L15.5432 6.73279L17.4227 4.85554C17.6515 4.62679 17.9617 4.49828 18.2852 4.49828C18.6087 4.49828 18.919 4.62679 19.1477 4.85554C19.3765 5.08429 19.505 5.39454 19.505 5.71804C19.505 6.04154 19.3765 6.35179 19.1477 6.58054L19.1447 6.57754Z"
+                          fill="#7D51FE"
+                        />
+                      </svg>
+                    </span>
+                  </span>
+
+                  <input
+                    v-else
+                    v-model.number="tempInsuranceSum"
+                    @keyup.enter="saveEditedSum"
+                    @blur="saveEditedSum"
+                    class="slider__input-edit"
+                    type="number"
+                    min="0"
+                    :max="max"
+                    autofocus
+                  />
+                </div>
                 <div
-                  class="slider-progress"
-                  :style="{ width: `${(insuranceSum / max) * 100}%` }"
-                ></div>
-                <div
-                  class="slider-thumb"
-                  :style="{ left: `${(insuranceSum / max) * 100}%` }"
-                ></div>
-              </div>
-              <div class="slider-minmax">
-                <span class="slider-min">0 ₽</span>
-                <span class="slider-max">15 000 000 ₽</span>
+                  class="slider__track"
+                  @click="onTrackClick"
+                  @mousedown="startDrag"
+                  @touchstart="startDrag"
+                >
+                  <div
+                    class="slider__progress"
+                    :style="{ width: `${(insuranceSum / max) * 100}%` }"
+                  ></div>
+                  <div
+                    class="slider__thumb"
+                    :style="{ left: `${(insuranceSum / max) * 100}%` }"
+                  ></div>
+                </div>
+                <div class="slider__min">0 ₽</div>
+                <div class="slider__max">15 000 000 ₽</div>
               </div>
             </div>
           </div>
@@ -434,6 +460,8 @@ export default {
   },
   data() {
     return {
+      tempInsuranceSum: 0,
+      isEditingSum: false,
       phoneDisplay: "",
       currentStep: 1,
       insuranceSum: 115000,
@@ -559,6 +587,22 @@ export default {
   },
 
   methods: {
+    startEditingSum() {
+      this.tempInsuranceSum = this.insuranceSum;
+      this.isEditingSum = true;
+      this.$nextTick(() => {
+        // Фокус на input в следующем тике, когда он появится
+        const input = this.$el.querySelector(".slider__input-edit");
+        if (input) input.focus();
+      });
+    },
+
+    saveEditedSum() {
+      // Ограничиваем значение
+      let value = Math.max(this.min, Math.min(this.max, this.tempInsuranceSum));
+      this.insuranceSum = Math.round(value); // Округляем, если нужно
+      this.isEditingSum = false;
+    },
     formatPhone(event) {
       const value = event.target.value;
       if (!value) return;
@@ -636,11 +680,28 @@ export default {
         Math.min(this.max, this.insuranceSum)
       );
     },
+    // startDrag(event) {
+    //   event.preventDefault();
+    //   this.isDragging = true;
+    //   const rect = this.$el
+    //     .querySelector(".slider-container")
+    //     .getBoundingClientRect();
+    //   this.trackRect = rect;
+
+    //   document.addEventListener("mousemove", this.onDragMove);
+    //   document.addEventListener("mouseup", this.onDragEnd);
+    //   document.addEventListener("touchmove", this.onDragMove);
+    //   document.addEventListener("touchend", this.onDragEnd);
+
+    //   const clientX =
+    //     event.type === "touchstart" ? event.touches[0].clientX : event.clientX;
+    //   this.onDragMove({ clientX });
+    // },
     startDrag(event) {
       event.preventDefault();
       this.isDragging = true;
       const rect = this.$el
-        .querySelector(".slider-container")
+        .querySelector(".slider__track") // ✅ Исправлено под новую разметку
         .getBoundingClientRect();
       this.trackRect = rect;
 
@@ -765,8 +826,12 @@ export default {
   }
   &__container {
     display: grid;
-    grid-template-columns: 1fr 0.8fr;
+    grid-template-columns: 1fr 1fr;
     gap: 24px;
+    @media (max-width: 767px) {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
   }
 
   &__left,
