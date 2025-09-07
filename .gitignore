@@ -31,3 +31,4 @@ Exception.php
 *.sw?
 
 *.tsbuildinfo
+**/SMTP.php
