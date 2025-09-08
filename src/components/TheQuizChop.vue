@@ -241,7 +241,23 @@
             <label class="form-label">Заявление на страхование ЧОП</label>
             <p class="form-note">(Скачать шаблон заявления)</p>
             <div class="file-upload">
-              <button class="btn btn-outline" @click="triggerFileInput">
+              <button class="btn btn-border-primary" @click="triggerFileInput">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M20.3333 15.3333V19.5C20.3333 19.721 20.2455 19.933 20.0893 20.0893C19.933 20.2455 19.721 20.3333 19.5 20.3333H4.5C4.27899 20.3333 4.06702 20.2455 3.91074 20.0893C3.75446 19.933 3.66667 19.721 3.66667 19.5V15.3333H2V19.5C2 20.163 2.26339 20.7989 2.73223 21.2678C3.20107 21.7366 3.83696 22 4.5 22H19.5C20.163 22 20.7989 21.7366 21.2678 21.2678C21.7366 20.7989 22 20.163 22 19.5V15.3333H20.3333Z"
+                    fill="#7D51FE"
+                  />
+                  <path
+                    d="M11.9725 2.00001C11.6443 1.9991 11.3192 2.06297 11.0158 2.18796C10.7123 2.31294 10.4365 2.49657 10.2042 2.72834L6.93833 5.99417L8.11667 7.17251L11.145 4.14501L11.1667 17.8333H12.8333L12.8117 4.15668L15.8275 7.17251L17.0058 5.99417L13.74 2.72834C13.5078 2.4966 13.2322 2.31297 12.9289 2.18799C12.6255 2.063 12.3005 1.99912 11.9725 2.00001Z"
+                    fill="#7D51FE"
+                  />
+                </svg>
                 Выберите файл
               </button>
               <input
@@ -805,7 +821,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.form-fields {
+  margin: 20px 0 0;
+  .block-input {
+    margin-bottom: 20px;
+  }
+}
 .quiz {
+  .btn-border-primary {
+    display: flex;
+    align-content: center;
+    gap: 5px;
+    svg {
+      height: 1.2em;
+      margin-top: -2px;
+    }
+  }
   &__head {
     display: flex;
     flex-direction: column;
@@ -899,16 +930,17 @@ export default {
 }
 
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   &:first-child {
-    margin-top: 24px;
+    margin-top: 20px;
   }
 }
 
 .form-label {
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: rgb(var(--text));
+  margin: 10px 0 10px;
 }
 
 .form-note {

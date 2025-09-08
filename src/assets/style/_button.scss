@@ -33,6 +33,10 @@
       }
     }
   }
+  &.btn-border-primary {
+    border-color: rgb(var(--primary));
+    color: rgb(var(--primary));
+  }
   &.btn-disabled {
     color: #dedede;
     border-color: #dedede;

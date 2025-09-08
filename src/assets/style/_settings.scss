@@ -162,8 +162,10 @@ section.section {
 .slider {
   margin-bottom: 60px;
   &__label {
-    font-size: 16px;
+    font-size: 18px;
     margin-bottom: 10px;
+    margin-top: 10px;
+    font-weight: 600;
     color: rgb(var(--text));
   }
 
@@ -183,13 +185,26 @@ section.section {
     font-size: 16px;
     font-weight: 500;
   }
+  &__input-edit {
+    border: solid 1px;
+    font-size: 16px;
+    color: rgb(var(--primary));
+    margin-bottom: 5px;
+    padding: 5px;
+    border-radius: 4px;
+  }
 
   &__value {
     font-size: 20px;
     font-weight: 500;
     color: rgb(var(--primary));
+    display: flex;
+    align-items: center;
+    gap: 5px;
   }
-
+  &__edit-icon {
+    margin-bottom: -2px;
+  }
   &__edit-btn {
     background: none;
     border: none;
