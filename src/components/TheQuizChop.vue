@@ -370,17 +370,24 @@
 
       <!-- Правая колонка: детали и итого -->
       <div class="quiz__right">
-        <div class="summary-card">
-          <div class="summary-card__header" @click="toggleDetails('details')">
+        <div
+          class="summary-card"
+          @click="toggleDetails('details')"
+          :class="{ active: showDetails }"
+        >
+          <div class="summary-card__header">
             <span>Наполнение полиса</span>
             <svg
-              :class="{ 'summary-card__arrow_rotate': showDetails }"
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
               fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <path d="M6 3L9 6L6 9L3 6L6 3Z" fill="currentColor" />
+              <path
+                d="M17.293 15.2069L12 9.91388L6.70697 15.2069L5.29297 13.7929L10.586 8.49988C10.961 8.12494 11.4696 7.91431 12 7.91431C12.5303 7.91431 13.0389 8.12494 13.414 8.49988L18.707 13.7929L17.293 15.2069Z"
+                fill="#141517"
+              />
             </svg>
           </div>
           <div v-show="showDetails" class="summary-card__body">
@@ -407,17 +414,24 @@
           </div>
         </div>
 
-        <div class="summary-card">
-          <div class="summary-card__header" @click="toggleDetails('cost')">
+        <div
+          class="summary-card"
+          @click="toggleDetails('cost')"
+          :class="{ active: showCost }"
+        >
+          <div class="summary-card__header">
             <span>Детали</span>
             <svg
-              :class="{ 'summary-card__arrow_rotate': showCost }"
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
               fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <path d="M6 3L9 6L6 9L3 6L6 3Z" fill="currentColor" />
+              <path
+                d="M17.293 15.2069L12 9.91388L6.70697 15.2069L5.29297 13.7929L10.586 8.49988C10.961 8.12494 11.4696 7.91431 12 7.91431C12.5303 7.91431 13.0389 8.12494 13.414 8.49988L18.707 13.7929L17.293 15.2069Z"
+                fill="#141517"
+              />
             </svg>
           </div>
           <div v-show="showCost" class="summary-card__body">
@@ -849,6 +863,7 @@ export default {
     }
   }
   &__left {
+    background: white;
     h3 {
       margin-bottom: 24px;
       font-size: 28px;
@@ -869,9 +884,10 @@ export default {
   &__right {
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    background: white;
     padding: 24px;
     flex: 1;
+  }
+  &__right {
   }
   &__steps {
     margin-bottom: 20px;
@@ -949,107 +965,107 @@ export default {
   margin-bottom: 12px;
 }
 
-// Слайдер
-.form-group-slider {
-  margin-top: 24px;
-}
-.slider-label {
-  font-size: 20px;
-  font-weight: 500;
-  margin: 24px 0 30px;
-  display: block;
-}
-.slider-wrapper {
-  margin-bottom: 16px;
-}
+// // Слайдер
+// .form-group-slider {
+//   margin-top: 24px;
+// }
+// .slider-label {
+//   font-size: 20px;
+//   font-weight: 500;
+//   margin: 24px 0 30px;
+//   display: block;
+// }
+// .slider-wrapper {
+//   margin-bottom: 16px;
+// }
 
-.slider-value {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  font-size: 20px;
-  font-weight: 500;
-  color: rgb(var(--primary));
-}
+// .slider-value {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   margin-bottom: 12px;
+//   font-size: 20px;
+//   font-weight: 500;
+//   color: rgb(var(--primary));
+// }
 
-.slider-value__amount {
-  font-size: 16px;
-  font-weight: 500;
-}
+// .slider-value__amount {
+//   font-size: 16px;
+//   font-weight: 500;
+// }
 
-.slider-value__edit {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
+// .slider-value__edit {
+//   background: none;
+//   border: none;
+//   cursor: pointer;
+// }
 
-.slider-container {
-  position: relative;
-  height: 4px;
-  // background: red;
-  border-radius: 2px;
-  cursor: pointer;
-}
+// .slider-container {
+//   position: relative;
+//   height: 4px;
+//   // background: red;
+//   border-radius: 2px;
+//   cursor: pointer;
+// }
 
-.slider-track {
-  width: 100%;
-  height: 100%;
-  background: rgba(var(--text), 0.1);
-}
+// .slider-track {
+//   width: 100%;
+//   height: 100%;
+//   background: rgba(var(--text), 0.1);
+// }
 
-.slider-progress {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background: #8d7fff;
-  border-radius: 2px;
-  transition: width 0.1s ease;
-}
+// .slider-progress {
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   height: 100%;
+//   background: #8d7fff;
+//   border-radius: 2px;
+//   transition: width 0.1s ease;
+// }
 
-.slider-thumb {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 0;
-  width: 16px;
-  height: 16px;
-  background: white;
-  border: 2px solid #8d7fff;
-  border-radius: 50%;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+// .slider-thumb {
+//   position: absolute;
+//   top: 50%;
+//   transform: translateY(-50%);
+//   left: 0;
+//   width: 16px;
+//   height: 16px;
+//   background: white;
+//   border: 2px solid #8d7fff;
+//   border-radius: 50%;
+//   z-index: 2;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
 
-  &:after {
-    content: "";
-    display: block;
-    width: 6px;
-    height: 6px;
-    background-color: #8d7fff;
-    border-radius: 50%;
-  }
-}
+//   &:after {
+//     content: "";
+//     display: block;
+//     width: 6px;
+//     height: 6px;
+//     background-color: #8d7fff;
+//     border-radius: 50%;
+//   }
+// }
 
-.slider-minmax {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: #999;
-  margin-top: 8px;
-}
+// .slider-minmax {
+//   display: flex;
+//   justify-content: space-between;
+//   font-size: 12px;
+//   color: #999;
+//   margin-top: 8px;
+// }
 
-.slider-min {
-  left: 0;
-}
+// .slider-min {
+//   left: 0;
+// }
 
-.slider-max {
-  right: 0;
-}
+// .slider-max {
+//   right: 0;
+// }
 
-// Радио-группы
+// // Радио-группы
 .radio-group {
   margin-top: 8px;
 }
@@ -1129,7 +1145,6 @@ export default {
   color: #999;
 }
 
-// Кнопки
 .quiz__buttons {
   display: flex;
   justify-content: space-between;
@@ -1139,11 +1154,20 @@ export default {
 
 // Сводка
 .summary-card {
-  margin-bottom: 16px;
-  border: 1px solid #e0e0e0;
   border-radius: 8px;
   overflow: hidden;
+  background: rgb(var(--white));
 
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(var(--text), 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  &.active {
+    .summary-card__header svg {
+      transform: rotate(180deg);
+    }
+  }
   &__header {
     display: flex;
     justify-content: space-between;
@@ -1151,8 +1175,7 @@ export default {
     padding: 12px 16px;
     font-size: 14px;
     font-weight: 500;
-    background: #f8f9fa;
-    border-bottom: 1px solid #e0e0e0;
+    background: rgb(var(--white));
     cursor: pointer;
   }
 
