@@ -1,0 +1,44 @@
+.radio-item {
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+  &__input {
+    opacity: 0;
+    position: absolute;
+    width: 0;
+    pointer-events: none;
+  }
+  &__checked {
+    width: 24px;
+    flex: 0 0 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: solid 1px rgb(var(--primary));
+    margin-top: -0.2em;
+    transition: 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &::after {
+      content: "";
+      width: 0.8em;
+      height: 0.8em;
+      flex: 0 0 0.8em;
+      background-color: rgb(var(--primary));
+      border-radius: 50%;
+      transition: 0.3s ease;
+      opacity: 0;
+    }
+  }
+  &__input:checked + &__checked {
+    &::after {
+      opacity: 1;
+    }
+  }
+}

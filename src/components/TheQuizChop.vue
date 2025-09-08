@@ -1,21 +1,14 @@
-<!-- TheQuizChop.vue -->
-
 <template>
   <div class="quiz">
     <div class="quiz__head">
       <span class="span-primary">Полис Zetta</span>
       <h2 class="quiz__title title">Оформить полис</h2>
     </div>
-
-    <!-- Основной контейнер -->
     <div class="quiz__container">
-      <!-- Левая колонка: форма -->
       <div class="quiz__left">
         <h3>Полис страхования ЧОП</h3>
-        <!-- Прогресс-бар (шаги) -->
         <div class="quiz__steps">
           <div class="progress-bar">
-            <!-- Названия шагов -->
             <div class="progress-bar__labels">
               <span
                 v-for="(step, idx) in steps"
@@ -30,12 +23,10 @@
             </div>
 
             <div class="progress-bar__track">
-              <!-- Разделители -->
               <div class="progress-bar__divider" style="left: 25%"></div>
               <div class="progress-bar__divider" style="left: 50%"></div>
               <div class="progress-bar__divider" style="left: 75%"></div>
 
-              <!-- Заполнение -->
               <div
                 class="progress-bar__fill"
                 :style="{ width: `${getProgressWidth()}%` }"
@@ -44,15 +35,10 @@
           </div>
         </div>
 
-        <!-- Шаг 1: Расчёт -->
         <div v-if="currentStep === 1" class="quiz__step-content">
           <div class="form-group form-group-slider">
-            <label class="form-label slider-label"
-              >Страховая сумма полиса</label
-            >
-            <!-- Слайдер (копия из TheQuizInsurance.vue) -->
             <div class="slider">
-              <div class="slider__label">Введите страховую сумму полиса</div>
+              <div class="slider__label">Страховая сумма полиса</div>
               <div class="slider__input">
                 <div class="slider__value-wrapper">
                   <span
@@ -163,7 +149,6 @@
           </div>
         </div>
 
-        <!-- Шаг 2: Дополнительно -->
         <div v-else-if="currentStep === 2" class="quiz__step-content">
           <div class="form-group">
             <label class="form-label"
@@ -235,7 +220,6 @@
           </div>
         </div>
 
-        <!-- Шаг 3: Заявление -->
         <div v-else-if="currentStep === 3" class="quiz__step-content">
           <div class="form-group">
             <label class="form-label">Заявление на страхование ЧОП</label>
@@ -287,7 +271,6 @@
           </div>
         </div>
 
-        <!-- Шаг 4: Оформление -->
         <div v-else-if="currentStep === 4" class="quiz__step-content">
           <div class="form-group">
             <label class="form-label"
@@ -368,7 +351,6 @@
         </div>
       </div>
 
-      <!-- Правая колонка: детали и итого -->
       <div class="quiz__right">
         <div
           class="summary-card"
@@ -448,7 +430,6 @@
       </div>
     </div>
 
-    <!-- Уведомление о успехе -->
     <div v-if="showSuccess" class="success-modal">
       <div class="success-modal__content">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -892,6 +873,9 @@ export default {
   &__steps {
     margin-bottom: 20px;
   }
+  &__step-content {
+    margin-top: 40px;
+  }
 }
 
 .progress-bar {
@@ -965,154 +949,9 @@ export default {
   margin-bottom: 12px;
 }
 
-// // Слайдер
-// .form-group-slider {
-//   margin-top: 24px;
-// }
-// .slider-label {
-//   font-size: 20px;
-//   font-weight: 500;
-//   margin: 24px 0 30px;
-//   display: block;
-// }
-// .slider-wrapper {
-//   margin-bottom: 16px;
-// }
-
-// .slider-value {
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   margin-bottom: 12px;
-//   font-size: 20px;
-//   font-weight: 500;
-//   color: rgb(var(--primary));
-// }
-
-// .slider-value__amount {
-//   font-size: 16px;
-//   font-weight: 500;
-// }
-
-// .slider-value__edit {
-//   background: none;
-//   border: none;
-//   cursor: pointer;
-// }
-
-// .slider-container {
-//   position: relative;
-//   height: 4px;
-//   // background: red;
-//   border-radius: 2px;
-//   cursor: pointer;
-// }
-
-// .slider-track {
-//   width: 100%;
-//   height: 100%;
-//   background: rgba(var(--text), 0.1);
-// }
-
-// .slider-progress {
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   height: 100%;
-//   background: #8d7fff;
-//   border-radius: 2px;
-//   transition: width 0.1s ease;
-// }
-
-// .slider-thumb {
-//   position: absolute;
-//   top: 50%;
-//   transform: translateY(-50%);
-//   left: 0;
-//   width: 16px;
-//   height: 16px;
-//   background: white;
-//   border: 2px solid #8d7fff;
-//   border-radius: 50%;
-//   z-index: 2;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-
-//   &:after {
-//     content: "";
-//     display: block;
-//     width: 6px;
-//     height: 6px;
-//     background-color: #8d7fff;
-//     border-radius: 50%;
-//   }
-// }
-
-// .slider-minmax {
-//   display: flex;
-//   justify-content: space-between;
-//   font-size: 12px;
-//   color: #999;
-//   margin-top: 8px;
-// }
-
-// .slider-min {
-//   left: 0;
-// }
-
-// .slider-max {
-//   right: 0;
-// }
-
 // // Радио-группы
 .radio-group {
   margin-top: 8px;
-}
-
-.radio-item {
-  cursor: pointer;
-  display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-  &__input {
-    opacity: 0;
-    position: absolute;
-    width: 0;
-    pointer-events: none;
-  }
-  &__checked {
-    width: 24px;
-    flex: 0 0 24px;
-    height: 24px;
-    border-radius: 50%;
-    border: solid 1px rgb(var(--primary));
-    margin-top: -0.2em;
-    transition: 0.3s ease;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    &::after {
-      content: "";
-      width: 0.8em;
-      height: 0.8em;
-      flex: 0 0 0.8em;
-      background-color: rgb(var(--primary));
-      border-radius: 50%;
-      transition: 0.3s ease;
-      opacity: 0;
-    }
-  }
-  &__input:checked + &__checked {
-    &::after {
-      opacity: 1;
-    }
-  }
 }
 
 .radio-label {
@@ -1131,7 +970,7 @@ export default {
   gap: 8px;
   margin-top: 8px;
   padding: 8px;
-  background: #f0f0ff;
+
   border-radius: 6px;
   font-size: 12px;
   color: #333;
@@ -1142,7 +981,6 @@ export default {
   border: none;
   font-size: 14px;
   cursor: pointer;
-  color: #999;
 }
 
 .quiz__buttons {
@@ -1188,11 +1026,19 @@ export default {
   }
 
   &__item {
-    display: flex;
+    display: grid;
+    grid-template-columns: 40% auto;
     justify-content: space-between;
     margin-bottom: 8px;
+    gap: 10px;
     font-size: 14px;
-    color: #333;
+    color: rgb(var(--text));
+    span {
+      display: block;
+      &:last-child {
+        text-align: right;
+      }
+    }
   }
 
   &__total {
