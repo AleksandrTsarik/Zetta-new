@@ -9,6 +9,8 @@
     <Possible />
   </section>
 
+  <section class="section"><Tab /></section>
+
   <section class="section">
     <DqscriptionQ :descriptionQuestion="descriptionQuestion2" />
   </section>
@@ -23,12 +25,14 @@ import Banner from "../components/TheBanner.vue";
 import DqscriptionQ from "../components/TheQuestion.vue";
 import Possible from "../components/ThePossibleChop.vue";
 import Quiz from "../components/TheQuizChop.vue";
+import Tab from "../components/TheExtra2.vue";
 export default {
   components: {
     Banner,
     DqscriptionQ,
     Possible,
     Quiz,
+    Tab,
   },
   data() {
     return {

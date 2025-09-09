@@ -855,7 +855,7 @@ export default {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 24px;
-    @media (max-width: 767px) {
+    @media (max-width: 1023px) {
       grid-template-columns: 1fr;
       gap: 20px;
     }

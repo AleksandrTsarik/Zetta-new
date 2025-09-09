@@ -35,8 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->Port = 465;
 
         $mail->setFrom('info@codeseven.ru', 'Zetta - Заявка ЧОП');
-        //$mail->addAddress('info@codeseven.ru');
-        $mail->addAddress('ascwork86@gmail.com');
+        $mail->addAddress('info@codeseven.ru');
 
         $mail->isHTML(true);
         $mail->CharSet = 'UTF-8';
