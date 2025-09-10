@@ -223,6 +223,35 @@
         </div>
       </div>
     </div>
+
+    <!-- Уведомление о успехе -->
+    <div v-if="showSuccess" class="success-modal">
+      <div class="success-modal__content">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <circle
+            cx="20"
+            cy="20"
+            r="16"
+            stroke="#8D7FFF"
+            stroke-width="4"
+            fill="none"
+          />
+          <path
+            d="M14 20L18 24L26 16"
+            stroke="#8D7FFF"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <h3>Спасибо! Запрос отправлен</h3>
+        <p>
+          В ближайшее время мы свяжемся с вами для уточнения информации и
+          условий оплаты.
+        </p>
+        <button class="btn btn-primary" @click="closeSuccess">Хорошо</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -251,6 +280,7 @@ export default {
       },
       isDetailsOpen: true,
       detailsOpen: true,
+      showSuccess: false, // <-- Флаг для отображения модалки
       checkboxItems: [
         {
           value: "construction",
@@ -307,9 +337,9 @@ export default {
   methods: {
     calculateInsuranceSubmit($event) {
       const formData = new FormData($event.target);
-      // formData.set("material", this.selectedItems.join(", "));
       formData.append("material", JSON.stringify(this.selectedItems));
       formData.set("price", this.formatCurrency(this.totalCost));
+
       fetch("/api/mailer.php", {
         method: "POST",
         body: formData,
@@ -327,12 +357,16 @@ export default {
           }
 
           if (data.success) {
-            this.resetForm();
+            this.showSuccess = true; // Показываем модалку
           } else {
+            // Можно добавить уведомление об ошибке
           }
         })
-        .catch((error) => {});
+        .catch((error) => {
+          // Можно добавить уведомление об ошибке сети
+        });
     },
+
     resetForm() {
       this.currentStep = 1;
       this.formData = {
@@ -348,22 +382,32 @@ export default {
       this.isDetailsOpen = true;
       this.detailsOpen = true;
     },
+
+    closeSuccess() {
+      this.showSuccess = false;
+      this.resetForm();
+    },
+
     toggleCheckbox(value) {
       const i = this.selectedItems.indexOf(value);
       i === -1
         ? this.selectedItems.push(value)
         : this.selectedItems.splice(i, 1);
     },
+
     toggleDetails(type) {
       if (type === "details") this.detailsOpen = !this.detailsOpen;
       else this.isDetailsOpen = !this.isDetailsOpen;
     },
+
     goBack() {
       if (this.currentStep > 1) this.currentStep--;
     },
+
     goNext() {
       if (this.currentStep < 2) this.currentStep++;
     },
+
     onTrackClick(e) {
       const track = this.$el.querySelector(".slider__track");
       const rect = track.getBoundingClientRect();
@@ -372,6 +416,7 @@ export default {
         this.min + percent * (this.max - this.min)
       );
     },
+
     onDragStart(e) {
       e.preventDefault();
       this.isDragging = true;
@@ -401,6 +446,7 @@ export default {
       document.addEventListener("touchmove", move, { passive: true });
       document.addEventListener("touchend", up);
     },
+
     formatCurrency(value) {
       return new Intl.NumberFormat("ru-RU", {
         style: "currency",
@@ -408,6 +454,7 @@ export default {
         minimumFractionDigits: 0,
       }).format(value);
     },
+
     getLabel(key) {
       return this.checkboxItems.find((i) => i.value === key)?.label || key;
     },
@@ -708,6 +755,44 @@ export default {
   pointer-events: none;
 }
 
+// Успех
+.success-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.success-modal__content {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.success-modal__content svg {
+  margin-bottom: 16px;
+}
+
+.success-modal__content h3 {
+  font-size: 18px;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.success-modal__content p {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
 @media (max-width: 900px) {
   .quiz__main {
     flex-direction: column;
