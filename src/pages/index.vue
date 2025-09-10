@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <MainBanner />
+    <!-- <MainBanner /> -->
   </section>
   <section class="section" id="turn">
     <TurnCard
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-// import MainBanner from "../components/TheMainBanner.vue";
+// import MainBanner from "../components/";
 import TurnCard from "../components/TheTurnCard.vue";
 import Choice from "../components/TheChoice.vue";
 import Service from "../components/TheService.vue";
