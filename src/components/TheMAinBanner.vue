@@ -224,6 +224,7 @@ export default {
     }
   }
 }
+
 .m-banner-offer {
   &__list {
     margin-top: 40px;
@@ -237,6 +238,7 @@ export default {
       grid-template-columns: repeat(1, 1fr);
     }
   }
+
   &__item {
     padding: 0 15px;
   }
