@@ -712,7 +712,7 @@ export default {
       event.preventDefault();
       this.isDragging = true;
       const rect = this.$el
-        .querySelector(".slider__track") // ✅ Исправлено под новую разметку
+        .querySelector(".slider__track")
         .getBoundingClientRect();
       this.trackRect = rect;
 

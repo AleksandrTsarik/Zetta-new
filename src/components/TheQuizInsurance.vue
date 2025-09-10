@@ -256,6 +256,33 @@
         </div>
       </div>
     </div>
+    <div v-if="showSuccess" class="success-modal">
+      <div class="success-modal__content">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <circle
+            cx="20"
+            cy="20"
+            r="16"
+            stroke="#8D7FFF"
+            stroke-width="4"
+            fill="none"
+          />
+          <path
+            d="M14 20L18 24L26 16"
+            stroke="#8D7FFF"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <h3>Спасибо! Запрос отправлен</h3>
+        <p>
+          В ближайшее время мы свяжемся с вами для уточнения информации и
+          условий оплаты.
+        </p>
+        <button class="btn btn-primary" @click="closeSuccess">Хорошо</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -286,6 +313,7 @@ export default {
       },
       isDetailsOpen: true,
       detailsOpen: true,
+      showSuccess: false,
       checkboxItems: [
         {
           value: "construction",
@@ -340,6 +368,11 @@ export default {
     },
   },
   methods: {
+    closeSuccess() {
+      this.showSuccess = false;
+      this.currentStep = 1;
+      this.resetForm();
+    },
     startEditingSum() {
       this.tempInsuranceSum = this.insuranceSum;
       this.isEditingSum = true;
@@ -376,7 +409,8 @@ export default {
           }
 
           if (data.success) {
-            this.resetForm();
+            // this.resetForm();
+            this.showSuccess = true;
           } else {
           }
         })
@@ -660,7 +694,44 @@ export default {
   cursor: not-allowed;
   pointer-events: none;
 }
+// Успех
+.success-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
 
+.success-modal__content {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.success-modal__content svg {
+  margin-bottom: 16px;
+}
+
+.success-modal__content h3 {
+  font-size: 18px;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.success-modal__content p {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
 @media (max-width: 900px) {
   .quiz__main {
     flex-direction: column;
