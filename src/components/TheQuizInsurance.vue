@@ -256,6 +256,10 @@
         </div>
       </div>
     </div>
+    <<<<<<< HEAD =======
+
+    <!-- Уведомление о успехе -->
+    >>>>>>> 28a6632a4967a4aa2d19f3a8f90315f1a9e68cb7
     <div v-if="showSuccess" class="success-modal">
       <div class="success-modal__content">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -313,7 +317,11 @@ export default {
       },
       isDetailsOpen: true,
       detailsOpen: true,
+<<<<<<< HEAD
       showSuccess: false,
+=======
+      showSuccess: false, // <-- Флаг для отображения модалки
+>>>>>>> 28a6632a4967a4aa2d19f3a8f90315f1a9e68cb7
       checkboxItems: [
         {
           value: "construction",
@@ -389,9 +397,9 @@ export default {
     },
     calculateInsuranceSubmit($event) {
       const formData = new FormData($event.target);
-      // formData.set("material", this.selectedItems.join(", "));
       formData.append("material", JSON.stringify(this.selectedItems));
       formData.set("price", this.formatCurrency(this.totalCost));
+
       fetch("/api/mailer.php", {
         method: "POST",
         body: formData,
@@ -409,13 +417,21 @@ export default {
           }
 
           if (data.success) {
+<<<<<<< HEAD
             // this.resetForm();
             this.showSuccess = true;
+=======
+            this.showSuccess = true; // Показываем модалку
+>>>>>>> 28a6632a4967a4aa2d19f3a8f90315f1a9e68cb7
           } else {
+            // Можно добавить уведомление об ошибке
           }
         })
-        .catch((error) => {});
+        .catch((error) => {
+          // Можно добавить уведомление об ошибке сети
+        });
     },
+
     resetForm() {
       this.currentStep = 1;
       this.formData = {
@@ -431,22 +447,32 @@ export default {
       this.isDetailsOpen = true;
       this.detailsOpen = true;
     },
+
+    closeSuccess() {
+      this.showSuccess = false;
+      this.resetForm();
+    },
+
     toggleCheckbox(value) {
       const i = this.selectedItems.indexOf(value);
       i === -1
         ? this.selectedItems.push(value)
         : this.selectedItems.splice(i, 1);
     },
+
     toggleDetails(type) {
       if (type === "details") this.detailsOpen = !this.detailsOpen;
       else this.isDetailsOpen = !this.isDetailsOpen;
     },
+
     goBack() {
       if (this.currentStep > 1) this.currentStep--;
     },
+
     goNext() {
       if (this.currentStep < 2) this.currentStep++;
     },
+
     onTrackClick(e) {
       const track = this.$el.querySelector(".slider__track");
       const rect = track.getBoundingClientRect();
@@ -455,6 +481,7 @@ export default {
         this.min + percent * (this.max - this.min)
       );
     },
+
     onDragStart(e) {
       e.preventDefault();
       this.isDragging = true;
@@ -484,6 +511,7 @@ export default {
       document.addEventListener("touchmove", move, { passive: true });
       document.addEventListener("touchend", up);
     },
+
     formatCurrency(value) {
       return new Intl.NumberFormat("ru-RU", {
         style: "currency",
@@ -491,6 +519,7 @@ export default {
         minimumFractionDigits: 0,
       }).format(value);
     },
+
     getLabel(key) {
       return this.checkboxItems.find((i) => i.value === key)?.label || key;
     },
