@@ -256,10 +256,7 @@
         </div>
       </div>
     </div>
-    <<<<<<< HEAD =======
 
-    <!-- Уведомление о успехе -->
-    >>>>>>> 28a6632a4967a4aa2d19f3a8f90315f1a9e68cb7
     <div v-if="showSuccess" class="success-modal">
       <div class="success-modal__content">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -317,11 +314,7 @@ export default {
       },
       isDetailsOpen: true,
       detailsOpen: true,
-<<<<<<< HEAD
       showSuccess: false,
-=======
-      showSuccess: false, // <-- Флаг для отображения модалки
->>>>>>> 28a6632a4967a4aa2d19f3a8f90315f1a9e68cb7
       checkboxItems: [
         {
           value: "construction",
@@ -417,12 +410,8 @@ export default {
           }
 
           if (data.success) {
-<<<<<<< HEAD
             // this.resetForm();
             this.showSuccess = true;
-=======
-            this.showSuccess = true; // Показываем модалку
->>>>>>> 28a6632a4967a4aa2d19f3a8f90315f1a9e68cb7
           } else {
             // Можно добавить уведомление об ошибке
           }
