@@ -1,21 +1,14 @@
-<!-- TheQuizChop.vue -->
-
 <template>
   <div class="quiz">
     <div class="quiz__head">
       <span class="span-primary">Полис Zetta</span>
       <h2 class="quiz__title title">Оформить полис</h2>
     </div>
-
-    <!-- Основной контейнер -->
     <div class="quiz__container">
-      <!-- Левая колонка: форма -->
       <div class="quiz__left">
         <h3>Полис страхования ЧОП</h3>
-        <!-- Прогресс-бар (шаги) -->
         <div class="quiz__steps">
           <div class="progress-bar">
-            <!-- Названия шагов -->
             <div class="progress-bar__labels">
               <span
                 v-for="(step, idx) in steps"
@@ -30,12 +23,10 @@
             </div>
 
             <div class="progress-bar__track">
-              <!-- Разделители -->
               <div class="progress-bar__divider" style="left: 25%"></div>
               <div class="progress-bar__divider" style="left: 50%"></div>
               <div class="progress-bar__divider" style="left: 75%"></div>
 
-              <!-- Заполнение -->
               <div
                 class="progress-bar__fill"
                 :style="{ width: `${getProgressWidth()}%` }"
@@ -44,45 +35,66 @@
           </div>
         </div>
 
-        <!-- Шаг 1: Расчёт -->
         <div v-if="currentStep === 1" class="quiz__step-content">
           <div class="form-group form-group-slider">
-            <label class="form-label slider-label"
-              >Страховая сумма полиса</label
-            >
-            <div class="slider-wrapper">
-              <div class="slider-value">
-                <span class="slider-value__amount">{{
-                  formatCurrency(insuranceSum)
-                }}</span>
-                <button @click="editSum" class="slider-value__edit">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path
-                      d="M13.897 3.915C14.25 4.268 14.25 4.852 13.897 5.205L11.52 7.582L13.897 9.959C14.25 10.312 14.25 10.896 13.897 11.249C13.544 11.602 12.96 11.602 12.607 11.249L10.23 8.872L7.853 11.249C7.499 11.602 6.915 11.602 6.562 11.249C6.209 10.896 6.209 10.312 6.562 9.959L8.939 7.582L6.562 5.205C6.209 4.852 6.209 4.268 6.562 3.915C6.915 3.562 7.499 3.562 7.853 3.915L10.23 6.292L12.607 3.915C12.96 3.562 13.544 3.562 13.897 3.915Z"
-                      fill="#8D7FFF"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div
-                class="slider-container"
-                @click="onTrackClick"
-                @mousedown="startDrag"
-                @touchstart="startDrag"
-              >
-                <div class="slider-track"></div>
+            <div class="slider">
+              <div class="slider__label">Страховая сумма полиса</div>
+              <div class="slider__input">
+                <div class="slider__value-wrapper">
+                  <span
+                    v-if="!isEditingSum"
+                    class="slider__value"
+                    @click="startEditingSum"
+                    style="cursor: pointer; user-select: none"
+                  >
+                    {{ formatCurrency(insuranceSum) }}
+                    <span
+                      class="slider__edit-icon"
+                      style="margin-left: 6px; font-size: 12px; opacity: 0.7"
+                      ><svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M20.2052 3.79505C19.6954 3.28594 19.0043 3 18.2837 3C17.5632 3 16.8721 3.28594 16.3622 3.79505L3 17.157V21H6.84306L20.2052 7.63803C20.7142 7.12805 21 6.43701 21 5.71654C21 4.99607 20.7142 4.30503 20.2052 3.79505ZM6.22505 19.5H4.50002V17.775L14.4827 7.80003L16.2077 9.52503L6.22505 19.5ZM19.1447 6.57754L17.2645 8.45778L15.5432 6.73279L17.4227 4.85554C17.6515 4.62679 17.9617 4.49828 18.2852 4.49828C18.6087 4.49828 18.919 4.62679 19.1477 4.85554C19.3765 5.08429 19.505 5.39454 19.505 5.71804C19.505 6.04154 19.3765 6.35179 19.1477 6.58054L19.1447 6.57754Z"
+                          fill="#7D51FE"
+                        />
+                      </svg>
+                    </span>
+                  </span>
+
+                  <input
+                    v-else
+                    v-model.number="tempInsuranceSum"
+                    @keyup.enter="saveEditedSum"
+                    @blur="saveEditedSum"
+                    class="slider__input-edit"
+                    type="number"
+                    min="0"
+                    :max="max"
+                    autofocus
+                  />
+                </div>
                 <div
-                  class="slider-progress"
-                  :style="{ width: `${(insuranceSum / max) * 100}%` }"
-                ></div>
-                <div
-                  class="slider-thumb"
-                  :style="{ left: `${(insuranceSum / max) * 100}%` }"
-                ></div>
-              </div>
-              <div class="slider-minmax">
-                <span class="slider-min">0 ₽</span>
-                <span class="slider-max">15 000 000 ₽</span>
+                  class="slider__track"
+                  @click="onTrackClick"
+                  @mousedown="startDrag"
+                  @touchstart="startDrag"
+                >
+                  <div
+                    class="slider__progress"
+                    :style="{ width: `${(insuranceSum / max) * 100}%` }"
+                  ></div>
+                  <div
+                    class="slider__thumb"
+                    :style="{ left: `${(insuranceSum / max) * 100}%` }"
+                  ></div>
+                </div>
+                <div class="slider__min">0 ₽</div>
+                <div class="slider__max">15 000 000 ₽</div>
               </div>
             </div>
           </div>
@@ -137,7 +149,6 @@
           </div>
         </div>
 
-        <!-- Шаг 2: Дополнительно -->
         <div v-else-if="currentStep === 2" class="quiz__step-content">
           <div class="form-group">
             <label class="form-label"
@@ -209,13 +220,28 @@
           </div>
         </div>
 
-        <!-- Шаг 3: Заявление -->
         <div v-else-if="currentStep === 3" class="quiz__step-content">
           <div class="form-group">
             <label class="form-label">Заявление на страхование ЧОП</label>
             <p class="form-note">(Скачать шаблон заявления)</p>
             <div class="file-upload">
-              <button class="btn btn-outline" @click="triggerFileInput">
+              <button class="btn btn-border-primary" @click="triggerFileInput">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M20.3333 15.3333V19.5C20.3333 19.721 20.2455 19.933 20.0893 20.0893C19.933 20.2455 19.721 20.3333 19.5 20.3333H4.5C4.27899 20.3333 4.06702 20.2455 3.91074 20.0893C3.75446 19.933 3.66667 19.721 3.66667 19.5V15.3333H2V19.5C2 20.163 2.26339 20.7989 2.73223 21.2678C3.20107 21.7366 3.83696 22 4.5 22H19.5C20.163 22 20.7989 21.7366 21.2678 21.2678C21.7366 20.7989 22 20.163 22 19.5V15.3333H20.3333Z"
+                    fill="#7D51FE"
+                  />
+                  <path
+                    d="M11.9725 2.00001C11.6443 1.9991 11.3192 2.06297 11.0158 2.18796C10.7123 2.31294 10.4365 2.49657 10.2042 2.72834L6.93833 5.99417L8.11667 7.17251L11.145 4.14501L11.1667 17.8333H12.8333L12.8117 4.15668L15.8275 7.17251L17.0058 5.99417L13.74 2.72834C13.5078 2.4966 13.2322 2.31297 12.9289 2.18799C12.6255 2.063 12.3005 1.99912 11.9725 2.00001Z"
+                    fill="#7D51FE"
+                  />
+                </svg>
                 Выберите файл
               </button>
               <input
@@ -245,7 +271,6 @@
           </div>
         </div>
 
-        <!-- Шаг 4: Оформление -->
         <div v-else-if="currentStep === 4" class="quiz__step-content">
           <div class="form-group">
             <label class="form-label"
@@ -326,19 +351,25 @@
         </div>
       </div>
 
-      <!-- Правая колонка: детали и итого -->
       <div class="quiz__right">
-        <div class="summary-card">
-          <div class="summary-card__header" @click="toggleDetails('details')">
+        <div
+          class="summary-card"
+          @click="toggleDetails('details')"
+          :class="{ active: showDetails }"
+        >
+          <div class="summary-card__header">
             <span>Наполнение полиса</span>
             <svg
-              :class="{ 'summary-card__arrow_rotate': showDetails }"
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
               fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <path d="M6 3L9 6L6 9L3 6L6 3Z" fill="currentColor" />
+              <path
+                d="M17.293 15.2069L12 9.91388L6.70697 15.2069L5.29297 13.7929L10.586 8.49988C10.961 8.12494 11.4696 7.91431 12 7.91431C12.5303 7.91431 13.0389 8.12494 13.414 8.49988L18.707 13.7929L17.293 15.2069Z"
+                fill="#141517"
+              />
             </svg>
           </div>
           <div v-show="showDetails" class="summary-card__body">
@@ -365,17 +396,24 @@
           </div>
         </div>
 
-        <div class="summary-card">
-          <div class="summary-card__header" @click="toggleDetails('cost')">
+        <div
+          class="summary-card"
+          @click="toggleDetails('cost')"
+          :class="{ active: showCost }"
+        >
+          <div class="summary-card__header">
             <span>Детали</span>
             <svg
-              :class="{ 'summary-card__arrow_rotate': showCost }"
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
               fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <path d="M6 3L9 6L6 9L3 6L6 3Z" fill="currentColor" />
+              <path
+                d="M17.293 15.2069L12 9.91388L6.70697 15.2069L5.29297 13.7929L10.586 8.49988C10.961 8.12494 11.4696 7.91431 12 7.91431C12.5303 7.91431 13.0389 8.12494 13.414 8.49988L18.707 13.7929L17.293 15.2069Z"
+                fill="#141517"
+              />
             </svg>
           </div>
           <div v-show="showCost" class="summary-card__body">
@@ -392,7 +430,6 @@
       </div>
     </div>
 
-    <!-- Уведомление о успехе -->
     <div v-if="showSuccess" class="success-modal">
       <div class="success-modal__content">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -434,6 +471,8 @@ export default {
   },
   data() {
     return {
+      tempInsuranceSum: 0,
+      isEditingSum: false,
       phoneDisplay: "",
       currentStep: 1,
       insuranceSum: 115000,
@@ -559,6 +598,22 @@ export default {
   },
 
   methods: {
+    startEditingSum() {
+      this.tempInsuranceSum = this.insuranceSum;
+      this.isEditingSum = true;
+      this.$nextTick(() => {
+        // Фокус на input в следующем тике, когда он появится
+        const input = this.$el.querySelector(".slider__input-edit");
+        if (input) input.focus();
+      });
+    },
+
+    saveEditedSum() {
+      // Ограничиваем значение
+      let value = Math.max(this.min, Math.min(this.max, this.tempInsuranceSum));
+      this.insuranceSum = Math.round(value); // Округляем, если нужно
+      this.isEditingSum = false;
+    },
     formatPhone(event) {
       const value = event.target.value;
       if (!value) return;
@@ -636,11 +691,28 @@ export default {
         Math.min(this.max, this.insuranceSum)
       );
     },
+    // startDrag(event) {
+    //   event.preventDefault();
+    //   this.isDragging = true;
+    //   const rect = this.$el
+    //     .querySelector(".slider-container")
+    //     .getBoundingClientRect();
+    //   this.trackRect = rect;
+
+    //   document.addEventListener("mousemove", this.onDragMove);
+    //   document.addEventListener("mouseup", this.onDragEnd);
+    //   document.addEventListener("touchmove", this.onDragMove);
+    //   document.addEventListener("touchend", this.onDragEnd);
+
+    //   const clientX =
+    //     event.type === "touchstart" ? event.touches[0].clientX : event.clientX;
+    //   this.onDragMove({ clientX });
+    // },
     startDrag(event) {
       event.preventDefault();
       this.isDragging = true;
       const rect = this.$el
-        .querySelector(".slider-container")
+        .querySelector(".slider__track") // ✅ Исправлено под новую разметку
         .getBoundingClientRect();
       this.trackRect = rect;
 
@@ -744,7 +816,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.form-fields {
+  margin: 20px 0 0;
+  .block-input {
+    margin-bottom: 20px;
+  }
+}
 .quiz {
+  .btn-border-primary {
+    display: flex;
+    align-content: center;
+    gap: 5px;
+    svg {
+      height: 1.2em;
+      margin-top: -2px;
+    }
+  }
   &__head {
     display: flex;
     flex-direction: column;
@@ -757,6 +844,7 @@ export default {
     }
   }
   &__left {
+    background: white;
     h3 {
       margin-bottom: 24px;
       font-size: 28px;
@@ -765,20 +853,28 @@ export default {
   }
   &__container {
     display: grid;
-    grid-template-columns: 1fr 0.8fr;
+    grid-template-columns: 1fr 1fr;
     gap: 24px;
+    @media (max-width: 1023px) {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
   }
 
   &__left,
   &__right {
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    background: white;
     padding: 24px;
     flex: 1;
   }
+  &__right {
+  }
   &__steps {
     margin-bottom: 20px;
+  }
+  &__step-content {
+    margin-top: 40px;
   }
 }
 
@@ -834,16 +930,17 @@ export default {
 }
 
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   &:first-child {
-    margin-top: 24px;
+    margin-top: 20px;
   }
 }
 
 .form-label {
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: rgb(var(--text));
+  margin: 10px 0 10px;
 }
 
 .form-note {
@@ -852,154 +949,9 @@ export default {
   margin-bottom: 12px;
 }
 
-// Слайдер
-.form-group-slider {
-  margin-top: 24px;
-}
-.slider-label {
-  font-size: 20px;
-  font-weight: 500;
-  margin: 24px 0 30px;
-  display: block;
-}
-.slider-wrapper {
-  margin-bottom: 16px;
-}
-
-.slider-value {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  font-size: 20px;
-  font-weight: 500;
-  color: rgb(var(--primary));
-}
-
-.slider-value__amount {
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.slider-value__edit {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.slider-container {
-  position: relative;
-  height: 4px;
-  // background: red;
-  border-radius: 2px;
-  cursor: pointer;
-}
-
-.slider-track {
-  width: 100%;
-  height: 100%;
-  background: rgba(var(--text), 0.1);
-}
-
-.slider-progress {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background: #8d7fff;
-  border-radius: 2px;
-  transition: width 0.1s ease;
-}
-
-.slider-thumb {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 0;
-  width: 16px;
-  height: 16px;
-  background: white;
-  border: 2px solid #8d7fff;
-  border-radius: 50%;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:after {
-    content: "";
-    display: block;
-    width: 6px;
-    height: 6px;
-    background-color: #8d7fff;
-    border-radius: 50%;
-  }
-}
-
-.slider-minmax {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: #999;
-  margin-top: 8px;
-}
-
-.slider-min {
-  left: 0;
-}
-
-.slider-max {
-  right: 0;
-}
-
-// Радио-группы
+// // Радио-группы
 .radio-group {
   margin-top: 8px;
-}
-
-.radio-item {
-  cursor: pointer;
-  display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-  &__input {
-    opacity: 0;
-    position: absolute;
-    width: 0;
-    pointer-events: none;
-  }
-  &__checked {
-    width: 24px;
-    flex: 0 0 24px;
-    height: 24px;
-    border-radius: 50%;
-    border: solid 1px rgb(var(--primary));
-    margin-top: -0.2em;
-    transition: 0.3s ease;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    &::after {
-      content: "";
-      width: 0.8em;
-      height: 0.8em;
-      flex: 0 0 0.8em;
-      background-color: rgb(var(--primary));
-      border-radius: 50%;
-      transition: 0.3s ease;
-      opacity: 0;
-    }
-  }
-  &__input:checked + &__checked {
-    &::after {
-      opacity: 1;
-    }
-  }
 }
 
 .radio-label {
@@ -1018,7 +970,7 @@ export default {
   gap: 8px;
   margin-top: 8px;
   padding: 8px;
-  background: #f0f0ff;
+
   border-radius: 6px;
   font-size: 12px;
   color: #333;
@@ -1029,10 +981,8 @@ export default {
   border: none;
   font-size: 14px;
   cursor: pointer;
-  color: #999;
 }
 
-// Кнопки
 .quiz__buttons {
   display: flex;
   justify-content: space-between;
@@ -1042,11 +992,20 @@ export default {
 
 // Сводка
 .summary-card {
-  margin-bottom: 16px;
-  border: 1px solid #e0e0e0;
   border-radius: 8px;
   overflow: hidden;
+  background: rgb(var(--white));
 
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(var(--text), 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  &.active {
+    .summary-card__header svg {
+      transform: rotate(180deg);
+    }
+  }
   &__header {
     display: flex;
     justify-content: space-between;
@@ -1054,8 +1013,7 @@ export default {
     padding: 12px 16px;
     font-size: 14px;
     font-weight: 500;
-    background: #f8f9fa;
-    border-bottom: 1px solid #e0e0e0;
+    background: rgb(var(--white));
     cursor: pointer;
   }
 
@@ -1068,11 +1026,19 @@ export default {
   }
 
   &__item {
-    display: flex;
+    display: grid;
+    grid-template-columns: 40% auto;
     justify-content: space-between;
     margin-bottom: 8px;
+    gap: 10px;
     font-size: 14px;
-    color: #333;
+    color: rgb(var(--text));
+    span {
+      display: block;
+      &:last-child {
+        text-align: right;
+      }
+    }
   }
 
   &__total {

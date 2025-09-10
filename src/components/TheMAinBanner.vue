@@ -11,7 +11,7 @@
           <h1 class="title m-banner__title">
             Ваш&nbsp;надежный партнёр в&nbsp;
             <span class="color-primary">
-              {{ typedText }}<span class="cursor">|</span>
+              {{ fullText }}
             </span>
           </h1>
           <div class="m-banner__subtitle">

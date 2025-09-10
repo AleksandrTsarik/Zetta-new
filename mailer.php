@@ -38,7 +38,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $mail->setFrom('info@codeseven.ru', 'Zetta - страховани имущества');
         $mail->addAddress('info@codeseven.ru');
-        //$mail->addAddress('ascwork86@gmail.com');
 
         $mail->isHTML(true);
         $mail->CharSet = 'UTF-8';

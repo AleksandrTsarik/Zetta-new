@@ -159,6 +159,128 @@ section.section {
   }
 }
 
+.slider {
+  margin-bottom: 60px;
+  &__label {
+    font-size: 18px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    font-weight: 600;
+    color: rgb(var(--text));
+  }
+
+  &__input {
+    position: relative;
+    width: 100%;
+  }
+  &__track {
+    margin: 10px auto;
+  }
+
+  &__value-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  &__input-edit {
+    border: solid 1px;
+    font-size: 16px;
+    color: rgb(var(--primary));
+    margin-bottom: 5px;
+    padding: 5px;
+    border-radius: 4px;
+  }
+
+  &__value {
+    font-size: 20px;
+    font-weight: 500;
+    color: rgb(var(--primary));
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  &__edit-icon {
+    margin-bottom: -2px;
+  }
+  &__edit-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: rgb(var(--primary));
+  }
+
+  &__track {
+    position: relative;
+    width: 100%;
+    height: 4px;
+    background: rgba(var(--text), 0.1);
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  &__progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 4px;
+    width: 0;
+    background: rgb(var(--primary));
+    border-radius: 4px;
+    transition: width 0.1s ease;
+  }
+
+  &__thumb {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 1px solid rgb(var(--primary));
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 2;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+    &:after {
+      content: "";
+      display: block;
+      width: 0.7em;
+      height: 0.7em;
+      // width: 15px;
+      // height: 15px;
+      background-color: rgb(var(--primary));
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  &__min,
+  &__max {
+    position: absolute;
+    bottom: -30px;
+    font-size: 14px;
+    color: rgba(var(--text), 0.6);
+  }
+
+  &__min {
+    left: 0;
+  }
+
+  &__max {
+    right: 0;
+  }
+}
+
 //---для теста! потом удалить!!!
 .color-primary2 {
   color: rgb(var(--primary2)) !important;

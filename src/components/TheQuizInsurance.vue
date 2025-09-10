@@ -54,9 +54,42 @@
               <div class="slider__label">Введите страховую сумму полиса</div>
               <div class="slider__input">
                 <div class="slider__value-wrapper">
-                  <span class="slider__value">{{
-                    formatCurrency(insuranceSum)
-                  }}</span>
+                  <span
+                    v-if="!isEditingSum"
+                    class="slider__value"
+                    @click="startEditingSum"
+                    style="cursor: pointer; user-select: none"
+                  >
+                    {{ formatCurrency(insuranceSum) }}
+                    <span
+                      class="slider__edit-icon"
+                      style="margin-left: 6px; font-size: 12px; opacity: 0.7"
+                      ><svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M20.2052 3.79505C19.6954 3.28594 19.0043 3 18.2837 3C17.5632 3 16.8721 3.28594 16.3622 3.79505L3 17.157V21H6.84306L20.2052 7.63803C20.7142 7.12805 21 6.43701 21 5.71654C21 4.99607 20.7142 4.30503 20.2052 3.79505ZM6.22505 19.5H4.50002V17.775L14.4827 7.80003L16.2077 9.52503L6.22505 19.5ZM19.1447 6.57754L17.2645 8.45778L15.5432 6.73279L17.4227 4.85554C17.6515 4.62679 17.9617 4.49828 18.2852 4.49828C18.6087 4.49828 18.919 4.62679 19.1477 4.85554C19.3765 5.08429 19.505 5.39454 19.505 5.71804C19.505 6.04154 19.3765 6.35179 19.1477 6.58054L19.1447 6.57754Z"
+                          fill="#7D51FE"
+                        />
+                      </svg>
+                    </span>
+                  </span>
+
+                  <input
+                    v-else
+                    v-model.number="tempInsuranceSum"
+                    @keyup.enter="saveEditedSum"
+                    @blur="saveEditedSum"
+                    class="slider__input-edit"
+                    type="number"
+                    :min="min"
+                    :max="max"
+                    autofocus
+                  />
                 </div>
                 <div
                   class="slider__track"
@@ -264,6 +297,8 @@ export default {
   name: "TheQuizInsurance",
   data() {
     return {
+      isEditingSum: false,
+      tempInsuranceSum: 0,
       currentStep: 1,
       selectedItems: ["Конструктивные элементы и инженерное оборудование"],
       insuranceSum: 115000,
@@ -335,6 +370,20 @@ export default {
     },
   },
   methods: {
+    startEditingSum() {
+      this.tempInsuranceSum = this.insuranceSum;
+      this.isEditingSum = true;
+      this.$nextTick(() => {
+        const input = this.$el.querySelector(".slider__input-edit");
+        if (input) input.focus();
+      });
+    },
+
+    saveEditedSum() {
+      let value = Math.max(this.min, Math.min(this.max, this.tempInsuranceSum));
+      this.insuranceSum = Math.round(value);
+      this.isEditingSum = false;
+    },
     calculateInsuranceSubmit($event) {
       const formData = new FormData($event.target);
       formData.append("material", JSON.stringify(this.selectedItems));
@@ -482,8 +531,13 @@ export default {
     margin: 0;
   }
   &__main {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 30px;
+    @media (max-width: 767px) {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
   }
   &__left {
     background: white;
@@ -581,107 +635,6 @@ export default {
     gap: 8px;
     margin-bottom: 10px;
     cursor: pointer;
-  }
-}
-
-.slider {
-  margin-bottom: 60px;
-  &__label {
-    font-size: 16px;
-    margin-bottom: 10px;
-    color: rgb(var(--text));
-  }
-
-  &__input {
-    position: relative;
-    width: 100%;
-  }
-  &__track {
-    margin: 10px auto;
-  }
-
-  &__value-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 16px;
-    font-weight: 500;
-  }
-
-  &__value {
-    font-size: 20px;
-    font-weight: 500;
-    color: rgb(var(--primary));
-  }
-
-  &__edit-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    color: rgb(var(--primary));
-  }
-
-  &__track {
-    position: relative;
-    width: 100%;
-    height: 4px;
-    background: rgba(var(--text), 0.1);
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  &__progress {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 4px;
-    width: 0;
-    background: rgb(var(--primary));
-    border-radius: 4px;
-    transition: width 0.1s ease;
-  }
-
-  &__thumb {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 0;
-    width: 20px;
-    height: 20px;
-    background: white;
-    border: 1px solid rgb(var(--primary));
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    &:after {
-      content: "";
-      display: block;
-      width: 0.7em;
-      height: 0.7em;
-      background-color: rgb(var(--primary));
-      border-radius: 50%;
-    }
-  }
-
-  &__min,
-  &__max {
-    position: absolute;
-    bottom: -30px;
-    font-size: 14px;
-    color: rgba(var(--text), 0.6);
-  }
-
-  &__min {
-    left: 0;
-  }
-
-  &__max {
-    right: 0;
   }
 }
 

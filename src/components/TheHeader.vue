@@ -3,7 +3,6 @@
     <div class="header__wrap">
       <div class="header__item">
         <TheNetwork type="logo" />
-        <p @click="test">click me</p>
         <nav class="header-nav desktop-item">
           <ul>
             <li v-for="(item, i) in nav" :key="i">
@@ -94,9 +93,9 @@ export default {
     };
   },
   methods: {
-    test() {
-      fetch("/api/test.php").then((res) => console.log(res));
-    },
+    // test() {
+    //   fetch("/api/test.php").then((res) => console.log(res));
+    // },
     menuOpen() {
       if (!this.isOpenMenu) document.body.classList.add("lock");
       else document.body.classList.remove("lock");
@@ -172,6 +171,23 @@ export default {
     color: rgb(var(--primary));
     font-size: 16px;
     font-weight: 400;
+    border: solid 1px rgba(var(--primary), 1);
+    border-radius: 50px;
+    padding: 4px 6px;
+    transition: 0.3s;
+    &:hover {
+      @media (any-hover: hover) {
+        background-color: rgb(var(--primary));
+        color: rgb(var(--white));
+      }
+    }
+    @media (max-width: 1200px) {
+      border-color: transparent;
+    }
+    &.router-link-active {
+      background-color: rgb(var(--primary));
+      color: rgb(var(--white));
+    }
   }
 }
 

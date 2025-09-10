@@ -23,6 +23,10 @@
         background-color: rgba(var(--primary), 0.9);
       }
     }
+    &:disabled {
+      opacity: 1;
+      background-color: rgba(var(--text), 0.2);
+    }
   }
   &.btn-light {
     background-color: rgba(var(--primary), 0.2);
@@ -32,6 +36,10 @@
         background-color: rgba(var(--primary), 0.3);
       }
     }
+  }
+  &.btn-border-primary {
+    border-color: rgb(var(--primary));
+    color: rgb(var(--primary));
   }
   &.btn-disabled {
     color: #dedede;

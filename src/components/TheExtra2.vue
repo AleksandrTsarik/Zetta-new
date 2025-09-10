@@ -104,26 +104,36 @@
 
               <div class="tab-content-card">
                 <div class="tab-content-card__img">
-                  <img src="/img/tabs/item2.webp" alt="picture" />
+                  <img src="/img/tabs/item4.webp" alt="picture" />
                 </div>
-                <div class="tab-content-card__text">
-                  Несчастный случай на дороге
+                <div class="tab-content-card__info">
+                  <div class="tab-content-card__title">Финансовые риски</div>
+                  <div class="tab-content-card__list">
+                    <div class="tab-content-card__list-text">
+                      Судебные и внесудебные расходы, связанные с рассмотрением
+                      дела о причинении вреда (если включены в покрытие).
+                    </div>
+                  </div>
                 </div>
-                <div class="tab-content-card__more">
-                  <div>
-                    Инструкция действий
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M21.2704 10.1026L17.4487 6L16.2703 7.26495L19.8221 11.0786L2 11.1054V12.8946L19.8721 12.8677L16.2695 16.7351L17.4478 18L21.2704 13.8974C21.7377 13.3933 22 12.7111 22 12C22 11.2889 21.7377 10.6067 21.2704 10.1026Z"
-                        fill="#7D51FE"
-                      />
-                    </svg>
+              </div>
+
+              <div class="tab-content-card">
+                <div class="tab-content-card__info">
+                  <div class="tab-content-card__title">
+                    Страховой случай признаётся таковым, если:
+                  </div>
+                  <div class="tab-content-card__list">
+                    <ol>
+                      <li>произошёл в период действия договора;</li>
+                      <li>
+                        вред причинён непреднамеренно при осуществлении охранной
+                        деятельности;
+                      </li>
+                      <li>
+                        претензия предъявлена в рамках срока действия договора
+                        и в соответствии с законодательством РФ.
+                      </li>
+                    </ol>
                   </div>
                 </div>
               </div>
@@ -149,7 +159,12 @@
                   </svg>
                   Основные условия страхования
                 </p>
-                <a href="#" class="btn btn-light" target="_blank">Смотреть</a>
+                <a
+                  href="/pdf/Основные_условия_страхования_ЧОП.pdf"
+                  class="btn btn-light"
+                  target="_blank"
+                  >Смотреть</a
+                >
               </div>
 
               <div class="tab-link__item">
@@ -274,6 +289,15 @@ export default {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 24px;
+    grid-template-areas: "a b c";
+    @media (max-width: 1023px) {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: "a b" "c c";
+    }
+    @media (max-width: 767px) {
+      grid-template-columns: 1fr;
+      grid-template-areas: "a" "b" "c";
+    }
   }
 }
 .tab-content-card {
@@ -283,6 +307,51 @@ export default {
   flex-direction: column;
   background-color: rgb(var(--bg));
   transition: 0.3s;
+
+  &:first-child {
+    grid-area: a;
+  }
+  &:nth-child(2) {
+    grid-row: b;
+  }
+  &:last-child {
+    grid-area: c;
+    color: rgb(var(--white));
+    background: linear-gradient(
+      123.1deg,
+      rgba(var(--primary), 0.5) 0%,
+      rgb(var(--primary)) 100%
+    );
+    .choice__text {
+      color: rgb(var(--white));
+    }
+    .tab-content-card__title {
+      font-size: 28px;
+      flex-grow: 1;
+    }
+    .tab-content-card__info {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .tab-content-card__list {
+      margin-bottom: 0;
+      ol {
+        margin-top: auto;
+        list-style-type: decimal;
+        padding-left: 1.3em;
+        color: rgb(var(--white));
+        li {
+          font-size: 16px;
+          font-weight: 400;
+          margin-bottom: 0.8em;
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
   &__img {
     margin-bottom: 24px;
     transition: 0.3s;
