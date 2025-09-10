@@ -104,7 +104,7 @@
 
               <div class="tab-content-card">
                 <div class="tab-content-card__img">
-                  <img src="/img/tabs/item2.webp" alt="picture" />
+                  <img src="/img/tabs/item4.webp" alt="picture" />
                 </div>
                 <div class="tab-content-card__info">
                   <div class="tab-content-card__title">Финансовые риски</div>

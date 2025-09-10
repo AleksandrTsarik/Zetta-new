@@ -137,8 +137,8 @@
               </svg>
               КОДСЕВЕН 2025
             </p>
-            <router-link to="/"
-              >Политика обработки персональных данных</router-link
+            <a href="https://codeseven.ru/pdf/opd.pdf" target="_blank"
+              >Политика обработки персональных данных</a
             >
           </div>
         </div>

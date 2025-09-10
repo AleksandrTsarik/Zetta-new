@@ -171,6 +171,23 @@ export default {
     color: rgb(var(--primary));
     font-size: 16px;
     font-weight: 400;
+    border: solid 1px rgba(var(--primary), 1);
+    border-radius: 50px;
+    padding: 4px 6px;
+    transition: 0.3s;
+    &:hover {
+      @media (any-hover: hover) {
+        background-color: rgb(var(--primary));
+        color: rgb(var(--white));
+      }
+    }
+    @media (max-width: 1200px) {
+      border-color: transparent;
+    }
+    &.router-link-active {
+      background-color: rgb(var(--primary));
+      color: rgb(var(--white));
+    }
   }
 }
 
