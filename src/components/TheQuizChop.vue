@@ -637,7 +637,7 @@ export default {
         formData.append("file", this.uploadedFile);
       }
 
-      fetch("/api/mailer-chop.php", {
+      fetch("/php/api/mailer-chop.php", {
         method: "POST",
         body: formData,
       })

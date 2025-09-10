@@ -396,7 +396,7 @@ export default {
       formData.append("material", JSON.stringify(this.selectedItems));
       formData.set("price", this.formatCurrency(this.totalCost));
 
-      fetch("/api/mailer.php", {
+      fetch("/php/api/mailer.php", {
         method: "POST",
         body: formData,
       })

@@ -2,9 +2,9 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'Exception.php';
-require 'PHPMailer.php';
-require 'SMTP.php';
+require '../lib/Exception.php';
+require '../lib/PHPMailer.php';
+require '../lib/SMTP.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $companyName = $_POST['companyName'] ?? '';
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $mail->setFrom('info@codeseven.ru', 'Zetta - Заявка ЧОП');
         $mail->addAddress('info@codeseven.ru');
-
+        
         $mail->isHTML(true);
         $mail->CharSet = 'UTF-8';
         $mail->Subject = 'Новая заявка с сайта';

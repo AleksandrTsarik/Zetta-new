@@ -2,9 +2,9 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'Exception.php';
-require 'PHPMailer.php';
-require 'SMTP.php';
+require '../lib/Exception.php';
+require '../lib/PHPMailer.php';
+require '../lib/SMTP.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $inn = $_POST['inn'] ?? '';
