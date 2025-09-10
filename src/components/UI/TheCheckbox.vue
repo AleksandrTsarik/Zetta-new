@@ -59,7 +59,7 @@ export default {
     &::before {
       content: "";
       display: block;
-      background-image: url("img/check.svg");
+      background-image: url("/img/check.svg");
       background-position: center;
       background-repeat: no-repeat;
       background-size: contain;
