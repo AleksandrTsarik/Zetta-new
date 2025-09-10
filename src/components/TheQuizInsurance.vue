@@ -136,7 +136,7 @@
                 v-for="(field, key) in formFields"
                 :key="key"
               >
-                <!-- ИНН -->
+                <!-- ИНН — добавлены @keypress и @paste -->
                 <TheInput
                   v-if="key === 'inn'"
                   v-model="formData.inn"
@@ -144,6 +144,9 @@
                   :placeholder="field.label"
                   :invalid="innError"
                   :name="key"
+                  maxlength="12"
+                  @keypress="validateInnKeypress"
+                  @paste="validateInnPaste"
                 />
                 <!-- Телефон с маской -->
                 <TheInput
@@ -370,9 +373,9 @@ export default {
   methods: {
     closeSuccess() {
       this.showSuccess = false;
-      this.currentStep = 1;
       this.resetForm();
     },
+
     startEditingSum() {
       this.tempInsuranceSum = this.insuranceSum;
       this.isEditingSum = true;
@@ -387,6 +390,7 @@ export default {
       this.insuranceSum = Math.round(value);
       this.isEditingSum = false;
     },
+
     calculateInsuranceSubmit($event) {
       const formData = new FormData($event.target);
       formData.append("material", JSON.stringify(this.selectedItems));
@@ -409,7 +413,6 @@ export default {
           }
 
           if (data.success) {
-            // this.resetForm();
             this.showSuccess = true;
           } else {
           }
@@ -431,11 +434,6 @@ export default {
       ];
       this.isDetailsOpen = true;
       this.detailsOpen = true;
-    },
-
-    closeSuccess() {
-      this.showSuccess = false;
-      this.resetForm();
     },
 
     toggleCheckbox(value) {
@@ -508,10 +506,31 @@ export default {
     getLabel(key) {
       return this.checkboxItems.find((i) => i.value === key)?.label || key;
     },
+
+    // ✅ Валидация ИНН — разрешаем только цифры
+    validateInnKeypress(event) {
+      const charCode = event.which ? event.which : event.keyCode;
+      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        event.preventDefault();
+      }
+    },
+
+    // ✅ Валидация вставки ИНН — фильтруем нецифровые символы и обрезаем до 12
+    validateInnPaste(event) {
+      event.preventDefault();
+      let paste = (event.clipboardData || window.clipboardData).getData("text");
+      paste = paste.replace(/\D/g, "").slice(0, 12);
+      const start = event.target.selectionStart;
+      const end = event.target.selectionEnd;
+      const currentValue = this.formData.inn || "";
+      this.formData.inn =
+        currentValue.substring(0, start) + paste + currentValue.substring(end);
+    },
   },
 };
 </script>
 
+<!-- СТИЛИ НЕ ИЗМЕНЕНЫ — ОСТАЛИСЬ КАК БЫЛИ -->
 <style lang="scss" scoped>
 .quiz {
   color: #333;

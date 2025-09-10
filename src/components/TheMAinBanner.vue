@@ -172,24 +172,32 @@ export default {
   }
   &__inner {
     padding: 140px 0;
+    @media (max-width: 1023px) {
+      padding: 0;
+    }
     &:after {
       content: "";
       display: block;
       width: 100%;
       height: 500px;
-      background-image: url(/img/circle/item1.png);
+      background-image: url("/img/circle/item1.png");
       background-position: 50% 50%;
       background-repeat: no-repeat;
       position: absolute;
       left: 0;
       top: 0;
       background-size: contain;
+      @media (max-width: 767px) {
+      }
     }
   }
   &__title {
     text-align: center;
     max-width: 80%;
     margin: 0 auto;
+    @media (max-width: 1023px) {
+      max-width: 100%;
+    }
     .color-primary {
       display: block;
     }
@@ -210,6 +218,10 @@ export default {
     margin: 40px;
     position: relative;
     z-index: 1;
+    flex-wrap: wrap;
+    a {
+      white-space: nowrap;
+    }
   }
 }
 .m-banner-offer {
@@ -220,6 +232,9 @@ export default {
     gap: 20px;
     @media (max-width: 1023px) {
       grid-template-columns: repeat(2, 1fr);
+    }
+    @media (max-width: 340px) {
+      grid-template-columns: repeat(1, 1fr);
     }
   }
   &__item {

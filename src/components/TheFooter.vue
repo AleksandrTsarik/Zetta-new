@@ -294,6 +294,9 @@ export default {
   }
   &__logo {
     flex-grow: 1;
+    svg {
+      max-width: 100%;
+    }
   }
   &__item {
     display: flex;

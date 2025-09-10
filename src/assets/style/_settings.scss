@@ -75,6 +75,12 @@ h1 {
     font-weight: 500;
     line-height: 120%;
     margin-bottom: 24px;
+    @media (max-width: 1023px) {
+      font-size: 48px;
+    }
+    @media (max-width: 767px) {
+      font-size: 34px;
+    }
   }
 }
 
