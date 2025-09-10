@@ -602,16 +602,14 @@ export default {
       this.tempInsuranceSum = this.insuranceSum;
       this.isEditingSum = true;
       this.$nextTick(() => {
-        // Фокус на input в следующем тике, когда он появится
         const input = this.$el.querySelector(".slider__input-edit");
         if (input) input.focus();
       });
     },
 
     saveEditedSum() {
-      // Ограничиваем значение
       let value = Math.max(this.min, Math.min(this.max, this.tempInsuranceSum));
-      this.insuranceSum = Math.round(value); // Округляем, если нужно
+      this.insuranceSum = Math.round(value);
       this.isEditingSum = false;
     },
     formatPhone(event) {
@@ -949,7 +947,6 @@ export default {
   margin-bottom: 12px;
 }
 
-// // Радио-группы
 .radio-group {
   margin-top: 8px;
 }
@@ -959,7 +956,6 @@ export default {
   color: #333;
 }
 
-// Файл
 .file-upload {
   margin-top: 12px;
 }
@@ -990,7 +986,6 @@ export default {
   margin-top: 24px;
 }
 
-// Сводка
 .summary-card {
   border-radius: 8px;
   overflow: hidden;
@@ -1051,7 +1046,6 @@ export default {
   }
 }
 
-// Успех
 .success-modal {
   position: fixed;
   top: 0;
@@ -1090,7 +1084,6 @@ export default {
   margin-bottom: 24px;
 }
 
-// Адаптив
 @media (max-width: 900px) {
   .quiz__container {
     flex-direction: column;

@@ -1,4 +1,3 @@
-<!-- TheQuizInsurance.vue -->
 <template>
   <div class="quiz">
     <div class="quiz__container">
@@ -413,12 +412,9 @@ export default {
             // this.resetForm();
             this.showSuccess = true;
           } else {
-            // Можно добавить уведомление об ошибке
           }
         })
-        .catch((error) => {
-          // Можно добавить уведомление об ошибке сети
-        });
+        .catch((error) => {});
     },
 
     resetForm() {
@@ -517,7 +513,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/* Без изменений */
 .quiz {
   color: #333;
   margin: 0 auto;
