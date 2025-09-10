@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <TheMBanner />
+    <MainBanner />
   </section>
   <section class="section" id="turn">
     <TurnCard
@@ -26,14 +26,14 @@
 </template>
 
 <script>
-import TheMBanner from "../components/TheMBanner.vue";
+// import MainBanner from "../components/TheMainBanner.vue";
 import TurnCard from "../components/TheTurnCard.vue";
 import Choice from "../components/TheChoice.vue";
 import Service from "../components/TheService.vue";
 import FAQ from "../components/TheFAQ.vue";
 export default {
   components: {
-    TheMBanner,
+    // MainBanner,
     TurnCard,
     Choice,
     Service,
