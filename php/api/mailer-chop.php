@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->Host = 'smtp.timeweb.ru';
         $mail->SMTPAuth = true;
         $mail->Username = 'info@codeseven.ru';
-        $mail->Password = 'm9fsz83kk9';
+       $mail->Password = 'm9fsz83kk9';
         $mail->SMTPSecure = 'ssl';
         $mail->Port = 465;
 

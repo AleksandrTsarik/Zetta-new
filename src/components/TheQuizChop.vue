@@ -421,10 +421,10 @@
               <span>Страховая сумма</span>
               <span>{{ formatCurrency(insuranceSum) }}</span>
             </div>
-            <div class="summary-card__total">
-              <span>Итого:</span>
-              <span>{{ formatCurrency(totalCost) }}</span>
-            </div>
+          </div>
+          <div class="summary-card__total">
+            <span>Итого:</span>
+            <span>{{ formatCurrency(totalCost) }}</span>
           </div>
         </div>
       </div>
@@ -1035,7 +1035,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 16px;
+
     font-size: 14px;
     font-weight: 500;
     background: rgb(var(--white));
@@ -1047,7 +1047,7 @@ export default {
   }
 
   &__body {
-    padding: 16px;
+    margin-top: 16px;
   }
 
   &__item {
