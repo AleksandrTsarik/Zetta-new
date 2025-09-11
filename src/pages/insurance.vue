@@ -56,7 +56,7 @@ export default {
           "<span class='color-primary'>Страхование имущества</span> — защита бизнеса от рисков",
         subtitle:
           "Рассчитайте стоимость страхования имущества и оформите заявку на полис за пару минут.",
-        url: "#anhkor",
+        url: "#policy",
         btn: "Рассчитать стоимость",
         target: false,
         list: [
