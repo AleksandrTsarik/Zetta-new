@@ -253,6 +253,9 @@ export default {
   border-radius: 5px;
   margin: 0 auto;
   justify-content: center;
+  @media (max-width: 340px) {
+    flex-direction: column;
+  }
   &__item {
     display: flex;
     align-items: center;
@@ -261,6 +264,10 @@ export default {
     border-radius: 4px;
     transition: 0.3s;
     cursor: pointer;
+    font-size: 16px;
+    @media (max-width: 767px) {
+      font-size: 12px;
+    }
     svg {
       transition: 0.3s;
       path {

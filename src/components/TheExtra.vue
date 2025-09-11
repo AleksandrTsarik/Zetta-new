@@ -269,7 +269,9 @@ export default {
     padding: 24px;
   }
   @media (max-width: 767px) {
-    padding: 16px;
+    padding: 16px 0;
+  }
+  @media (max-width: 340px) {
   }
 }
 .extra-tab-name {
@@ -281,6 +283,9 @@ export default {
   border-radius: 5px;
   margin: 0 auto;
   justify-content: center;
+  @media (max-width: 340px) {
+    flex-direction: column;
+  }
   &__item {
     display: flex;
     align-items: center;
@@ -289,6 +294,10 @@ export default {
     border-radius: 4px;
     transition: 0.3s;
     cursor: pointer;
+    font-size: 16px;
+    @media (max-width: 767px) {
+      font-size: 12px;
+    }
     svg {
       transition: 0.3s;
       path {
@@ -320,6 +329,9 @@ export default {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 24px;
+    @media (max-width: 1023px) {
+      grid-template-columns: 1fr;
+    }
   }
 }
 .tab-content-card {
@@ -350,6 +362,9 @@ export default {
     border-radius: var(--radius);
     img {
       transition: 0.3s;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
   &__text {
@@ -368,6 +383,16 @@ export default {
       padding: 12px 24px;
       border-radius: 50px;
       transition: 0.3s;
+      font-size: 14px;
+      @media (max-width: 767px) {
+        padding: 12px;
+        text-align: center;
+        justify-content: center;
+        font-size: 12px;
+      }
+      @media (max-width: 575px) {
+        width: 100%;
+      }
     }
   }
 }
