@@ -867,12 +867,30 @@ export default {
     flex: 1;
   }
   &__right {
+    @media (max-width: 767px) {
+      padding: 16px;
+    }
   }
   &__steps {
     margin-bottom: 20px;
   }
   &__step-content {
     margin-top: 40px;
+  }
+  &__buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 24px;
+    @media (max-width: 374px) {
+      flex-wrap: wrap;
+    }
+    button {
+      white-space: nowrap;
+      @media (max-width: 374px) {
+        flex-grow: 1;
+      }
+    }
   }
 }
 
@@ -979,12 +997,21 @@ export default {
   cursor: pointer;
 }
 
-.quiz__buttons {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 24px;
-}
+// .quiz__buttons {
+//   display: flex;
+//   justify-content: space-between;
+//   gap: 10px;
+//   margin-top: 24px;
+//   @media (max-width: 374px) {
+//     flex-wrap: wrap;
+//   }
+//   button {
+//     white-space: nowrap;
+//     @media (max-width: 374px) {
+//       flex-grow: 1;
+//     }
+//   }
+// }
 
 .summary-card {
   border-radius: 8px;
@@ -996,6 +1023,9 @@ export default {
   box-shadow: 0 1px 4px rgba(var(--text), 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
+  &:last-child {
+    margin-bottom: 0;
+  }
   &.active {
     .summary-card__header svg {
       transform: rotate(180deg);
@@ -1028,6 +1058,9 @@ export default {
     gap: 10px;
     font-size: 14px;
     color: rgb(var(--text));
+    @media (max-width: 575px) {
+      font-size: 10px;
+    }
     span {
       display: block;
       &:last-child {

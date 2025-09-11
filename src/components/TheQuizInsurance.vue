@@ -533,10 +533,10 @@ export default {
 <!-- СТИЛИ НЕ ИЗМЕНЕНЫ — ОСТАЛИСЬ КАК БЫЛИ -->
 <style lang="scss" scoped>
 .quiz {
-  color: #333;
+  // color: #333;
   margin: 0 auto;
-  max-width: 1200px;
-  padding: 20px;
+  // max-width: 1200px;
+  // padding: 20px;
   &__header {
     text-align: center;
     margin-bottom: 30px;
@@ -574,6 +574,15 @@ export default {
     display: flex;
     justify-content: space-between;
     gap: 10px;
+    @media (max-width: 374px) {
+      flex-wrap: wrap;
+    }
+    button {
+      white-space: nowrap;
+      @media (max-width: 374px) {
+        flex-grow: 1;
+      }
+    }
   }
 }
 
@@ -676,7 +685,9 @@ export default {
   box-shadow: 0 1px 4px rgba(var(--text), 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
-
+  &:last-child {
+    margin-bottom: 0;
+  }
   &.active {
     border: 1px solid rgba(var(--text), 0.2);
 

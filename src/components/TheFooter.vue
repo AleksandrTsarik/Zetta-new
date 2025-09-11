@@ -296,6 +296,9 @@ export default {
     flex-grow: 1;
     svg {
       max-width: 100%;
+      @media (max-width: 575px) {
+        max-width: 70%;
+      }
     }
   }
   &__item {
@@ -368,8 +371,17 @@ export default {
     display: flex;
     justify-content: space-between;
     margin-bottom: 35px;
+    @media (max-width: 575px) {
+      flex-direction: column;
+      gap: 10px;
+    }
   }
   &__head-item {
+    &:first-child {
+      span {
+        position: relative;
+      }
+    }
     &:last-child {
       display: flex;
       gap: 10px;
@@ -399,11 +411,17 @@ export default {
         font-size: 28px;
         font-weight: 500;
         color: rgb(var(--primary));
+        @media (max-width: 575px) {
+          font-size: 22px;
+        }
       }
       &:last-child {
         font-size: 20px;
         font-weight: 500;
         color: rgba(var(--text), 0.6);
+        @media (max-width: 575px) {
+          font-size: 18px;
+        }
       }
     }
   }

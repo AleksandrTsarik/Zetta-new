@@ -287,6 +287,19 @@ section.section {
   }
 }
 
+.header-contact__social {
+  a {
+    display: block;
+    @media (max-width: 1200px) {
+      // width: 50px;
+      svg {
+        height: 24px;
+        width: 24px;
+      }
+    }
+  }
+}
+
 //---для теста! потом удалить!!!
 .color-primary2 {
   color: rgb(var(--primary2)) !important;

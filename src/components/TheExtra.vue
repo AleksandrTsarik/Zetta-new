@@ -268,6 +268,9 @@ export default {
     border-radius: var(--radius);
     padding: 24px;
   }
+  @media (max-width: 767px) {
+    padding: 16px;
+  }
 }
 .extra-tab-name {
   display: inline-flex;
@@ -379,7 +382,13 @@ export default {
     font-size: 16px;
     font-weight: 400;
     border-radius: 50px;
-    margin: 10px;
+    margin-bottom: 10px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    @media (max-width: 767px) {
+      border-radius: 8px;
+    }
     @media (max-width: 575px) {
       flex-direction: column;
       align-items: flex-start;

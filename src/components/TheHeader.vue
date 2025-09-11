@@ -14,8 +14,8 @@
       <div class="header__item desktop-item">
         <div class="header-contact">
           <div class="header-contact__social">
-            <TheNetwork type="wp" />
-            <TheNetwork type="tg" />
+            <TheNetwork type="wp" class="header-contact__social-wp" />
+            <TheNetwork type="tg" class="header-contact__social-tg" />
           </div>
           <div class="header-contact__phone">
             <a href="tel:+7 (909) 005-85-85">+7 (909) 005-85-85</a>
@@ -204,13 +204,35 @@ export default {
     display: flex;
     align-items: center;
     gap: 10px;
+
+    a {
+      border: solid 1px;
+      @media (max-width: 1200px) {
+        width: 50px;
+        display: block;
+      }
+    }
   }
+
   &__phone {
     a {
       white-space: nowrap;
       color: rgb(var(--primary));
       font-size: 16px;
       font-weight: 400;
+      @media (max-width: 1200px) {
+        font-size: 20px;
+      }
+    }
+  }
+  &__write {
+    @media (max-width: 1200px) {
+      width: 100%;
+      a,
+      button {
+        width: 100%;
+        text-align: center;
+      }
     }
   }
 }
